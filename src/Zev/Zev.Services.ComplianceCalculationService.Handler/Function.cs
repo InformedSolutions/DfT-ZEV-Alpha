@@ -2,7 +2,7 @@ using Google.Cloud.Functions.Framework;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace Zev.Services.Importer.Function;
+namespace Zev.Services.ComplianceCalculationService.Handler;
 
 public class Function : IHttpFunction
 {
@@ -13,6 +13,6 @@ public class Function : IHttpFunction
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task HandleAsync(HttpContext context)
     {
-        await context.Response.WriteAsync("Hello World");
+        await context.Response.WriteAsync("Hello, Functions Framework.");
     }
 }

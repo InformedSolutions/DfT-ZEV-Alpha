@@ -28,10 +28,10 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
 
   build_config {
     runtime     = "dotnet6"
-    entry_point = "Zev.Services.Importer.Function.Function"
+    entry_point = "Zev.Services.ComplianceCalculationService.Handler"
 
     environment_variables = {
-      GOOGLE_BUILDABLE = "./Zev/Zev.Services.Importer.Function"
+      GOOGLE_BUILDABLE = "./Zev/Zev.Services.ComplianceCalculationService.Handler"
     }
 
     source {
