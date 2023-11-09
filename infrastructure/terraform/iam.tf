@@ -1,6 +1,6 @@
 resource "google_service_account" "compliance_calculation_service" {
-  account_id   = "${var.environment}-zev-compl-calc-svc"
-  display_name = "${var.environment}-zev-compliance-calculation-service"
+  account_id   = "${local.name_prefix}-compl-calc-svc"
+  display_name = "${local.name_prefix}-compliance-calculation-service"
   description  = "Service Account for ZEV Compliance Calculation Service to run in Cloud Functions"
 }
 
@@ -8,6 +8,8 @@ resource "google_secret_manager_secret_iam_member" "compliance_calculation_servi
   for_each = {
     for i, value in flatten([
       google_secret_manager_secret.postgres_password,
+      google_secret_manager_secret.postgres_client_certificate,
+      google_secret_manager_secret.postgres_client_key,
     ]) : i => value
   }
 
