@@ -52,8 +52,6 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
 
     # TODO: Enable to limit access after configuring Cloud Tasks
     #            ingress_settings = "ALLOW_INTERNAL_ONLY"
-    #        vpc_connector_egress_settings = # TODO: Set in ZEVMITSD-67
-    #        vpc_connector                 = # TODO: Set in ZEVMITSD-67
     vpc_connector_egress_settings = "PRIVATE_RANGES_ONLY"
     vpc_connector                 = google_vpc_access_connector.serverless_connector.id
 
@@ -61,6 +59,7 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
     service_account_email          = google_service_account.compliance_calculation_service.email
 
     environment_variables = {
+      # Postgres config
       Postgres__Host        = module.postgres_db.private_ip_address
       Postgres__Port        = "5432",
       Postgres__User        = var.database_username
@@ -69,6 +68,8 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
       Postgres__MaxPoolSize = var.compliance_calculation_svc_max_db_connections
       PGSSLCERT             = "/etc/secrets/postgres-cert/${google_secret_manager_secret.postgres_client_certificate.secret_id}"
       PGSSLKEY              = "/etc/secrets/postgres-key/${google_secret_manager_secret.postgres_client_key.secret_id}"
+
+      Manufacturer_Data_Bucket_Name = google_storage_bucket.manufacturer_data.id
     }
 
     secret_environment_variables {

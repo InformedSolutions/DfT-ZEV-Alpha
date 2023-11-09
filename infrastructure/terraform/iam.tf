@@ -18,3 +18,14 @@ resource "google_secret_manager_secret_iam_member" "compliance_calculation_servi
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.compliance_calculation_service.email}"
 }
+
+resource "google_project_iam_member" "compliance_calculation_service_read_manufacturer_data_objects" {
+  project = var.project
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_service_account.compliance_calculation_service.email}"
+
+  condition {
+    title      = "allow-manufacturer-data-bucket"
+    expression = "resource.name.startsWith(\"projects/_/buckets/${google_storage_bucket.manufacturer_data.name}\")"
+  }
+}
