@@ -22,7 +22,7 @@ resource "google_storage_bucket_object" "compliance_calculation_service_package"
 }
 
 resource "google_cloudfunctions2_function" "compliance_calculation_service" {
-  name        = "${var.environment}-zev-compliance-calculation-service"
+  name        = "${local.name_prefix}-compliance-calculation-service"
   location    = var.region
   description = "ZEV Compliance Calculation Service"
 
@@ -44,23 +44,32 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
 
   service_config {
     min_instance_count               = 0
-    max_instance_count               = var.resource_quotas_compliance_calculation_svc.max_instance_count
-    max_instance_request_concurrency = var.resource_quotas_compliance_calculation_svc.max_instance_request_concurrency
-    timeout_seconds                  = var.resource_quotas_compliance_calculation_svc.timeout_seconds
-    available_memory                 = var.resource_quotas_compliance_calculation_svc.available_memory
-    available_cpu                    = var.resource_quotas_compliance_calculation_svc.available_cpu
+    max_instance_count               = var.compliance_calculation_svc_resource_quotas.max_instance_count
+    max_instance_request_concurrency = var.compliance_calculation_svc_resource_quotas.max_instance_request_concurrency
+    timeout_seconds                  = var.compliance_calculation_svc_resource_quotas.timeout_seconds
+    available_memory                 = var.compliance_calculation_svc_resource_quotas.available_memory
+    available_cpu                    = var.compliance_calculation_svc_resource_quotas.available_cpu
 
     # TODO: Enable to limit access after configuring Cloud Tasks
     #            ingress_settings = "ALLOW_INTERNAL_ONLY"
-    #        vpc_connector_egress_settings = # TODO: Set in ZEVMITSD-67
-    #        vpc_connector                 = # TODO: Set in ZEVMITSD-67
+    vpc_connector_egress_settings = "PRIVATE_RANGES_ONLY"
+    vpc_connector                 = google_vpc_access_connector.serverless_connector.id
 
     all_traffic_on_latest_revision = true
     service_account_email          = google_service_account.compliance_calculation_service.email
 
-
     environment_variables = {
-      Postgres__Host = "placeholder-value" # TODO: Use in ZEVMITSD-67
+      # Postgres config
+      Postgres__Host        = module.postgres_db.private_ip_address
+      Postgres__Port        = "5432",
+      Postgres__User        = var.database_username
+      Postgres__DbName      = local.database_name
+      Postgres__UseSsl      = true
+      Postgres__MaxPoolSize = var.compliance_calculation_svc_max_db_connections
+      PGSSLCERT             = "/etc/secrets/postgres-cert/${google_secret_manager_secret.postgres_client_certificate.secret_id}"
+      PGSSLKEY              = "/etc/secrets/postgres-key/${google_secret_manager_secret.postgres_client_key.secret_id}"
+
+      Manufacturer_Data_Bucket_Name = google_storage_bucket.manufacturer_data.id
     }
 
     secret_environment_variables {
@@ -72,8 +81,19 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
 
     secret_volumes {
       project_id = var.project
-      mount_path = "/etc/secrets"                                           # TODO: Adjust in ZEVMITSD-67
-      secret     = google_secret_manager_secret.postgres_password.secret_id # TODO: Adjust in ZEVMITSD-67
+      mount_path = "/etc/secrets/postgres-cert"
+      secret     = google_secret_manager_secret.postgres_client_certificate.secret_id
+    }
+
+    secret_volumes {
+      project_id = var.project
+      mount_path = "/etc/secrets/postgres-key"
+      secret     = google_secret_manager_secret.postgres_client_key.secret_id
     }
   }
+
+  depends_on = [
+    # Access to secrets is required to create the function
+    google_secret_manager_secret_iam_member.compliance_calculation_service_secrets,
+  ]
 }
