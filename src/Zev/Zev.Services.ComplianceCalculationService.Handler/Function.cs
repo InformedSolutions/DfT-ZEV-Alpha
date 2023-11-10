@@ -3,6 +3,7 @@ using System.Text.Json;
 using Google.Cloud.Functions.Framework;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using Google.Cloud.Functions.Hosting;
 using Microsoft.Extensions.Logging;
 using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
@@ -10,6 +11,7 @@ using Zev.Services.ComplianceCalculationService.Handler.Extensions;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
+[FunctionsStartup(typeof(CalculationServiceStartup))]
 public class Function : IHttpFunction
 {
     private readonly ILogger _logger = SerilogHelper.GetLoggerFactory().CreateLogger<Function>(); 
@@ -25,19 +27,8 @@ public class Function : IHttpFunction
         var settingsJson = JsonSerializer.Serialize(EnvironmentExtensions.GetPostgresSettings());
         _logger.LogInformation("Postgres settings: {@PostgresSettings}", settingsJson);
 
-        try
-        {
-            await using var db = new AppDbContext(EnvironmentExtensions.GetPostgresSettings().ConnectionString);
-            var created = await db.Database.EnsureCreatedAsync();
-            _logger.LogInformation("Database created: {Created}", created);
-            await context.Response.WriteAsync($"Db up and running: {created}");
-        }
-        catch (Exception e)
-        {
-            _logger.LogCritical("Database error {Error}",e);
-            await context.Response.WriteAsync($"Db error: {e.Message}");
-        }
+       
         
-        //await context.Response.WriteAsync($"Hello!");
+        await context.Response.WriteAsync($"Hello!");
     }
 }

@@ -1,16 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using Zev.Core.Domain.Examples;
 
 namespace Zev.Core.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
+    public DbSet<ExampleModel> ExampleModels { get; set; } = null!;
     
-    
-    public AppDbContext() { }
-    public AppDbContext(string connectionString) : base(GetOptions(connectionString)) { }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    private static DbContextOptions GetOptions(string connectionString)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        return new DbContextOptionsBuilder().UseNpgsql(connectionString).Options;
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppContext).Assembly);
     }
 }

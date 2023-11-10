@@ -15,4 +15,8 @@
       <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Zev.Core.Domain\Zev.Core.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
