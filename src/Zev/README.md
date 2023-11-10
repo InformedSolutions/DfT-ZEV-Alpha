@@ -39,3 +39,16 @@ Make sure to replace dev-zev-compliance-calculation-service with an appropriate 
 ## Deployment Notice
 Before deploying any service, ensure that you have the necessary credentials and configurations set up for your target environment. Refer to the service-specific deployment commands provided in the service descriptions.
 
+## Local Development:
+ This project utilizes docker-compose for creating local development environment. You can check `../../infrastructure/docker` directory for more info.
+  All of environment variables required are located in `.env` file
+
+ To run your local environment. Go to `../../infrastructure/docker` and run command
+  ``` bash
+  docker-compose up 
+  ```
+
+### Local Services
+ 1. Postgres:
+   
+    Default connection string: `Host=localhost; Database=zev-dev; Username=root; Password=root`
