@@ -1,12 +1,8 @@
-using System;
-using System.Text.Json;
 using Google.Cloud.Functions.Framework;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Google.Cloud.Functions.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
@@ -14,12 +10,13 @@ namespace Zev.Services.ComplianceCalculationService.Handler;
 [FunctionsStartup(typeof(CalculationServiceStartup))]
 public class Function : IHttpFunction
 {
-    private readonly ILogger _logger = SerilogHelper.GetLoggerFactory().CreateLogger<Function>();
+    private readonly ILogger<Function> _logger;
     private readonly AppDbContext _context;
 
-    public Function(AppDbContext context)
+    public Function(AppDbContext context, ILogger<Function> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task HandleAsync(HttpContext context)

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Zev.Core.Infrastructure.Configuration;
+using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
@@ -24,5 +25,7 @@ public class CalculationServiceStartup : FunctionsStartup
         {
             opt.UseNpgsql(settings.ConnectionString);
         });
+
+        services.AddSerilog(configuration);
     }
 }
