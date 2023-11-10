@@ -7,10 +7,24 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
+        var connectionString = GetConnectionString(args);
+
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        
-        optionsBuilder.UseNpgsql("Server=localhost;Database=Zev;Trusted_Connection=True;MultipleActiveResultSets=true");
+        optionsBuilder.UseNpgsql(connectionString);
 
         return new AppDbContext(optionsBuilder.Options);
+    }
+
+    private string GetConnectionString(string[] args)
+    {
+        var connectionString = args.Length > 0 ? args[0] : null;
+        connectionString = connectionString ?? Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
+
+        if (connectionString is null or "")
+        {
+            throw new ArgumentNullException(nameof(connectionString));
+        }
+
+        return connectionString;
     }
 }
