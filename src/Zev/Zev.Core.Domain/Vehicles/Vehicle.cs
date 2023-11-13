@@ -10,8 +10,6 @@ public sealed class Vehicle
     public bool IsZevApplicable { get; set; }
     public bool IsZev { get; set; }
     public float BonusCreditValue { get; set; }
-    
-    
     public string Vin { get; set; }
     public string Vfn { get; set; }
     public string Mh { get; set; }
@@ -43,10 +41,10 @@ public sealed class Vehicle
     public DateTime DoFr { get; set; }
     public string SchemeYear { get; set; }
     public string Postcode { get; set; }
-    public bool Spvc { get; set; }
+    public string Spvc { get; set; }
     public bool Wrm { get; set; }
     public int Mnp { get; set; }
-    public int Rlce { get; set; }
+    public string Rlce { get; set; }
     public int Fa { get; set; }
     public string Trrc { get; set; }
     public string RegisteredInNation { get; set; }

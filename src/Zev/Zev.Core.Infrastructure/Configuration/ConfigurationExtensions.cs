@@ -26,4 +26,16 @@ public static class ConfigurationExtensions
 
         return settings;
     }
+    
+    public static BucketsConfiguration ConfigureBucketSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        var settings = new BucketsConfiguration();
+        configuration.Bind(BucketsConfiguration.SectionName, settings);
+        
+        //To-Do: Add Validation of configurations.
+        services.AddOptions<BucketsConfiguration>()
+            .BindConfiguration(BucketsConfiguration.SectionName);
+
+        return settings;
+    }
 }

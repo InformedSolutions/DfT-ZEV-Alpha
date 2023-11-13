@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Persistence;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
+using Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
@@ -21,14 +22,15 @@ namespace Zev.Services.ComplianceCalculationService.Handler;
 public class Function : IHttpFunction
 {
     private readonly ILogger<Function> _logger;
+    private readonly IProcessingStrategy _processingStrategy;
     private readonly AppDbContext _context;
-    private readonly PostgresConfiguration _postgresConfiguration;
+
     private readonly string _bucketName;
-    public Function(AppDbContext context, ILogger<Function> logger,  IOptions<PostgresConfiguration> postgresConfiguration)
+    public Function(AppDbContext context, ILogger<Function> logger, IProcessingStrategy processingStrategy)
     {
         _context = context;
         _logger = logger;
-        _postgresConfiguration = postgresConfiguration.Value;
+        _processingStrategy = processingStrategy;
         _bucketName = Environment.GetEnvironmentVariable("Manufacturer_Data_Bucket_Name") ?? throw new ArgumentNullException("ENV VAR Manufacturer_Data_Bucket_Name");
     }
 
@@ -41,37 +43,15 @@ public class Function : IHttpFunction
         var storage = await StorageClient.CreateAsync();
         var stream = new MemoryStream();
         await storage.DownloadObjectAsync(_bucketName, $"{body.FileName}", stream).ConfigureAwait(false);
-
         stream.Position = 0;
-        using var reader = new StreamReader(stream);
-        using var csv = new CsvReader(reader, GetCsvConfig());
-        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
 
-        while (await csv.ReadAsync())
-        {
-            try
-            {
-                var record = csv.GetRecord<RawVehicleDTO>();
-                var json = JsonSerializer.Serialize(record);
-               _logger.LogInformation($"Processing: {json}");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error processing record {csv.CurrentIndex}");
-            }
-        }
+        var res = await _processingStrategy.ProcessAsync(stream);
         
-        await context.Response.WriteAsync($"Hello!");
+        
+        var response = JsonSerializer.Serialize(res);
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(response);
     }
-    
-    private static CsvConfiguration GetCsvConfig() => 
-        new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = true,
-            Delimiter = ",",
-            IgnoreBlankLines = true,
-            TrimOptions = TrimOptions.Trim,
-        };
     
     private static async Task<CalculateComplianceRequestDTO> GetRequestBody(HttpContext context)
     {

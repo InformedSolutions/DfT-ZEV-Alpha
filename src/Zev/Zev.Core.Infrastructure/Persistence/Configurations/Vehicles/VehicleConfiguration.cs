@@ -8,6 +8,7 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
+            
             builder.HasKey(x => x.Vin);
 
             builder.Property(x => x.VehicleDetails)
@@ -75,12 +76,8 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
 
             builder.Property(x => x.Postcode)
                 .HasMaxLength(8);
-
             
-
             builder.Property(x => x.Trrc)
                 .HasMaxLength(1);
-
-          
         }
     }

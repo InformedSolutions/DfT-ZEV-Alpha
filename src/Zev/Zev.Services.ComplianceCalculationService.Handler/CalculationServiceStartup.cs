@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
+using Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
@@ -20,10 +21,12 @@ public class CalculationServiceStartup : FunctionsStartup
             .AddEnvironmentVariables()
             .Build();
 
-        var settings = services.ConfigurePostgresSettings(configuration);
+        var postgresSettings = services.ConfigurePostgresSettings(configuration);
+        var bucketSettings = services.ConfigureBucketSettings(configuration);
+        
         services.AddDbContext<AppDbContext>(opt =>
         {
-            opt.UseNpgsql(settings.ConnectionString,
+            opt.UseNpgsql(postgresSettings.ConnectionString,
                 npgsqlDbContextOptionsBuilder =>
                 {
                     npgsqlDbContextOptionsBuilder.EnableRetryOnFailure();
@@ -31,5 +34,7 @@ public class CalculationServiceStartup : FunctionsStartup
         });
 
         services.AddSerilog(configuration);
+
+        services.AddTransient<IProcessingStrategy, ChunkProcessingStrategy>();
     }
 }
