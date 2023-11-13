@@ -1,13 +1,19 @@
 using System;
+using System.Globalization;
+using System.IO;
 using System.Text.Json;
 using Google.Cloud.Functions.Framework;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Google.Cloud.Functions.Hosting;
+using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Persistence;
+using Zev.Services.ComplianceCalculationService.Handler.DTO;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
@@ -17,35 +23,63 @@ public class Function : IHttpFunction
     private readonly ILogger<Function> _logger;
     private readonly AppDbContext _context;
     private readonly PostgresConfiguration _postgresConfiguration;
+    private readonly string _bucketName;
     public Function(AppDbContext context, ILogger<Function> logger,  IOptions<PostgresConfiguration> postgresConfiguration)
     {
         _context = context;
         _logger = logger;
         _postgresConfiguration = postgresConfiguration.Value;
+        _bucketName = Environment.GetEnvironmentVariable("Manufacturer_Data_Bucket_Name") ?? throw new ArgumentNullException("ENV VAR Manufacturer_Data_Bucket_Name");
     }
 
     public async Task HandleAsync(HttpContext context)
     {
-        _logger.LogInformation("Started processing request.");
-        var settingsJson = JsonSerializer.Serialize(_postgresConfiguration);
-        _logger.LogInformation("Postgres settings: {settingsJson}", settingsJson);
+        var body = await GetRequestBody(context);
         
-        try
+        _logger.LogInformation($"Requested processing file: {body.FileName} from bucket: {_bucketName}");
+        
+        var storage = await StorageClient.CreateAsync();
+        var stream = new MemoryStream();
+        await storage.DownloadObjectAsync(_bucketName, $"{body.FileName}", stream).ConfigureAwait(false);
+
+        stream.Position = 0;
+        using var reader = new StreamReader(stream);
+        using var csv = new CsvReader(reader, GetCsvConfig());
+        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
+
+        while (await csv.ReadAsync())
         {
-            var canConnect = await _context.Database.CanConnectAsync();
-            if (canConnect)
+            try
             {
-                _logger.LogInformation("Successfully connected to database.");
+                var record = csv.GetRecord<RawVehicleDTO>();
+                var json = JsonSerializer.Serialize(record);
+               _logger.LogInformation($"Processing: {json}");
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogCritical("Failed to connect to database.");
+                _logger.LogError(ex, $"Error processing record {csv.CurrentIndex}");
             }
-        } catch (Exception e)
-        {
-            _logger.LogError(e, "Error while connecting to db.");
         }
         
         await context.Response.WriteAsync($"Hello!");
+    }
+    
+    private static CsvConfiguration GetCsvConfig() => 
+        new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = true,
+            Delimiter = ",",
+            IgnoreBlankLines = true,
+            TrimOptions = TrimOptions.Trim,
+        };
+    
+    private static async Task<CalculateComplianceRequestDTO> GetRequestBody(HttpContext context)
+    {
+        using TextReader reader = new StreamReader(context.Request.Body);
+        
+        var json = await reader.ReadToEndAsync();
+        var body = JsonSerializer.Deserialize<CalculateComplianceRequestDTO>(json);
+
+        return body;
     }
 }
