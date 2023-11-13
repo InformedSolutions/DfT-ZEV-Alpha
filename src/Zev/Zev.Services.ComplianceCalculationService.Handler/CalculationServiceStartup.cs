@@ -23,7 +23,11 @@ public class CalculationServiceStartup : FunctionsStartup
         var settings = services.ConfigurePostgresSettings(configuration);
         services.AddDbContext<AppDbContext>(opt =>
         {
-            opt.UseNpgsql(settings.ConnectionString);
+            opt.UseNpgsql(settings.ConnectionString,
+                npgsqlDbContextOptionsBuilder =>
+                {
+                    npgsqlDbContextOptionsBuilder.EnableRetryOnFailure();
+                });
         });
 
         services.AddSerilog(configuration);
