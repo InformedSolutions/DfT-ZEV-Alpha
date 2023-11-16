@@ -1,0 +1,35 @@
+name: DfT.ZEV (Push to develop)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+      - hotfix/**
+    paths:
+      - '!README.md'
+      - '!**/README.MD'
+      - '**/**.cs'
+      - '**/**.json'
+      - 'infrastructure/terraform/**'
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Postgres Database for tests
+      run: docker compose -f docker/dev/docker-compose.yml up -d
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: "6.0.x"
+
+    - name: Build
+      run: make build-test
+
+# TODO: ZEVMITSD-69 set up deployment pipeline
