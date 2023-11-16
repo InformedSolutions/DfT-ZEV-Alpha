@@ -13,6 +13,9 @@ on:
       - '**/**.json'
       - 'infrastructure/terraform/**'
 
+env:
+    DEPLOY_ENVIRONMENT: dev
+
 jobs:
 
   deploy:
@@ -32,4 +35,23 @@ jobs:
     - name: Build
       run: make build-test
 
-# TODO: ZEVMITSD-69 set up deployment pipeline
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.6.3
+
+    - name: Terraform init
+      run: make init
+
+    - name: Deploy
+      run: make plan
+
+#    - name: Deploy
+#      run: |
+#        make deploy
+
