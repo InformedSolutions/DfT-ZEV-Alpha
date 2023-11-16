@@ -40,7 +40,10 @@ echo "CSV uploaded successfully"
 echo
 
 # Run the Cloud Function
-response=$(gcloud functions call "$FUNCTION_NAME" --region "$REGION" --data "{ \"FileName\": \"$BUCKET_FOLDER/$csv_filename\" }")
+echo "Running the function with chunk size $2"
+echo
+
+response=$(gcloud functions call "$FUNCTION_NAME" --region "$REGION" --data "{ \"FileName\": \"$BUCKET_FOLDER/$csv_filename\", \"ChunkSize\": $2 }")
 json_response=$(echo $response | tr -d "'")
 exit_code=$?
 
@@ -53,8 +56,13 @@ total_time=$(jq -r '.ExecutionTime' <<< "$json_response")
 processing_time=$(jq -r '.ProcessingTime' <<< "$json_response")
 
 # Print logs
+echo "Waiting 5 seconds for logs (if logs are not complete, use command printed below)"
+sleep 5
 echo "Execution logs:"
-gcloud functions logs read "$FUNCTION_NAME" --region "$REGION" --execution-id "$execution_id"
+gcloud logging read --format="table(timestamp,severity,textPayload)" --freshness 3h "SEARCH(textPayload, \"$execution_id\")"
+
+echo
+echo Run "gcloud logging read --format=\"table(timestamp,severity,textPayload)\" --freshness 3h \"SEARCH(textPayload, \"$execution_id\")\"" to retrieve more logs
 
 echo
 echo "Total function execution time:                      $total_time"
