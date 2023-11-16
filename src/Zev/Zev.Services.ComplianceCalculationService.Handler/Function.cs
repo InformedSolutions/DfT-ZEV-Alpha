@@ -12,8 +12,8 @@ namespace Zev.Services.ComplianceCalculationService.Handler;
 
 public class Function : IHttpFunction
 {
-    private readonly ILogger _logger = SerilogHelper.GetLoggerFactory().CreateLogger<Function>(); 
-        
+    private readonly ILogger _logger = SerilogHelper.GetLoggerFactory().CreateLogger<Function>();
+
     /// <summary>
     /// Logic for your function goes here.
     /// </summary>
@@ -24,6 +24,7 @@ public class Function : IHttpFunction
         _logger.LogInformation("Started processing request.");
         var settingsJson = JsonSerializer.Serialize(EnvironmentExtensions.GetPostgresSettings());
         _logger.LogInformation("Postgres settings: {@PostgresSettings}", settingsJson);
+
 
         try
         {
@@ -37,7 +38,7 @@ public class Function : IHttpFunction
             _logger.LogCritical("Database error {Error}",e);
             await context.Response.WriteAsync($"Db error: {e.Message}");
         }
-        
+
         //await context.Response.WriteAsync($"Hello!");
     }
 }
