@@ -1,18 +1,17 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Zev.Core.Domain.Examples;
+using Zev.Core.Domain.Vehicles;
 
 namespace Zev.Core.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<ExampleModel> ExampleModels { get; set; } = null!;
-    
+    public virtual DbSet<Vehicle> Vehicles { get; set; } = null!;
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+    public AppDbContext() { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

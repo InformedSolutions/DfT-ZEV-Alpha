@@ -11,15 +11,6 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             
             builder.HasKey(x => x.Vin);
 
-            builder.Property(x => x.VehicleDetails)
-                .HasMaxLength(255);
-
-            builder.Property(x => x.Co2Value)
-                .IsRequired();
-
-            builder.Property(x => x.BonusCreditValue)
-                .HasColumnType("decimal(18,2)");
-
             builder.Property(x => x.Vin)
                 .HasMaxLength(17);
 

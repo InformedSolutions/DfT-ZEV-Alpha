@@ -32,7 +32,7 @@ public sealed class RawVehicleDTO
     public string IT { get; set; }
     public float Erwltp { get; set; }
     public float Ber { get; set; }
-    public DateTime DoFr { get; set; }
+    public DateOnly DoFr { get; set; }
     public string SchemeYear { get; set; }
     public string Postcode { get; set; }
     public string Spvc { get; set; }

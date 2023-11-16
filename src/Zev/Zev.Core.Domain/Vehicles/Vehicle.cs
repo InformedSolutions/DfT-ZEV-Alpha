@@ -3,13 +3,6 @@ namespace Zev.Core.Domain.Vehicles;
 
 public sealed class Vehicle
 {
-    public Guid ManufacturerId { get; set; }
-    public string VehicleDetails { get; set; }
-    public bool IsCo2Applicable { get; set; }
-    public int Co2Value { get; set; }
-    public bool IsZevApplicable { get; set; }
-    public bool IsZev { get; set; }
-    public float BonusCreditValue { get; set; }
     public string Vin { get; set; }
     public string Vfn { get; set; }
     public string Mh { get; set; }
@@ -38,7 +31,7 @@ public sealed class Vehicle
     public string IT { get; set; }
     public float Erwltp { get; set; }
     public float Ber { get; set; }
-    public DateTime DoFr { get; set; }
+    public DateOnly DoFr { get; set; }
     public string SchemeYear { get; set; }
     public string Postcode { get; set; }
     public string Spvc { get; set; }

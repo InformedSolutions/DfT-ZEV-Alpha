@@ -19,19 +19,25 @@ public static class ConfigurationExtensions
     {
         var settings = new PostgresConfiguration();
         configuration.Bind(PostgresConfiguration.SectionName, settings);
-        
+
         //To-Do: Add Validation of configurations.
         services.AddOptions<PostgresConfiguration>()
             .BindConfiguration(PostgresConfiguration.SectionName);
 
         return settings;
     }
-    
+
+    /// <summary>
+    /// Configures the settings for a bucket.
+    /// </summary>
+    /// <param name="services">The IServiceCollection to add the settings to.</param>
+    /// <param name="configuration">The configuration that contains the bucket settings.</param>
+    /// <returns>The IServiceCollection so that additional calls can be chained.</returns>
     public static BucketsConfiguration ConfigureBucketSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var settings = new BucketsConfiguration();
         configuration.Bind(BucketsConfiguration.SectionName, settings);
-        
+
         //To-Do: Add Validation of configurations.
         services.AddOptions<BucketsConfiguration>()
             .BindConfiguration(BucketsConfiguration.SectionName);

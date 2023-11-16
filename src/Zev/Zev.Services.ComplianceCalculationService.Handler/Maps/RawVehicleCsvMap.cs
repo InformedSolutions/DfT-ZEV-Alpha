@@ -1,7 +1,7 @@
 using CsvHelper.Configuration;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 
-namespace Zev.Services.ComplianceCalculationService.Handler;
+namespace Zev.Services.ComplianceCalculationService.Handler.Maps;
 
 public sealed class RawVehicleCsvMap : ClassMap<RawVehicleDTO>
 {

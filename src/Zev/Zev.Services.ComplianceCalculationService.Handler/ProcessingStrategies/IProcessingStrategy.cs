@@ -3,7 +3,15 @@ using System.Threading.Tasks;
 
 namespace Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
 
+/// <summary>
+/// Interface for processing strategies used by the compliance calculation service.
+/// </summary>
 public interface IProcessingStrategy
 {
-    public Task<ProcessingResult> ProcessAsync(Stream stream);
+    /// <summary>
+    /// Processes the given stream and returns the result of the processing.
+    /// </summary>
+    /// <param name="stream">The stream to process.</param>
+    /// <returns>The result of the processing.</returns>
+    public Task<ProcessingResult> ProcessAsync(Stream stream, int chunkSize);
 }

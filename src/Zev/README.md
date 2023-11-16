@@ -34,6 +34,16 @@ gcloud functions deploy dev-zev-compliance-calculation-service --allow-unauthent
 ```
 Make sure to replace dev-zev-compliance-calculation-service with an appropriate service name and adjust other parameters as needed.
 
+### 2. Migrator
+- **Type**: GCP Cloud Function
+- **Description**: This cloud function runs ef core migrations, experimental use only.
+
+#### Deployment
+To deploy migrator service, use the following command:
+``` bash
+gcloud functions deploy dev-migrator --allow-unauthenticated --entry-point Migrator.Function --gen2 --region europe-west1 --runtime dotnet6 --trigger-http --update-build-env-vars GOOGLE_BUILDABLE=./Migrator
+```
+
 ## Running Tests
   1. Open terminal in the root directory of specific project.
   2. Run the following command
@@ -86,6 +96,6 @@ dotnet ef migrations remove TestMigration \
 
 Updating database:
 ``` bash
-dotnet ef migrations remove TestMigration \
+dotnet ef database update \
  -- "Host=localhost; Database=zev-dev; Username=root; Password=root"
 ```
