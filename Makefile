@@ -20,3 +20,11 @@ credential-scan-git-verified-no-update-no-log:
 
 credential-scan-git-unverified-no-update-no-log:
 	docker run --rm -it -v $(PWD):/opt trufflesecurity/trufflehog:latest git file:///opt --no-update --fail > /dev/null
+
+build:
+	dotnet restore src/Zev && dotnet build src/Zev
+
+test:
+	dotnet test src/Zev
+
+build-test: build test
