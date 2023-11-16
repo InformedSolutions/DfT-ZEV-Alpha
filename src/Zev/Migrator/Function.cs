@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Google.Cloud.Functions.Framework;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
@@ -24,12 +25,23 @@ public class Function : IHttpFunction
     {
         try
         {
+            var alreadyAppliedMigrations = await _context.Database.GetAppliedMigrationsAsync();
+            var pendingMigrations = await _context.Database.GetPendingMigrationsAsync();
+
             await _context.Database.MigrateAsync();
+
+            await context.Response.WriteAsJsonAsync(new MigratorResult
+            {
+                MigrationsAlreadyApplied = alreadyAppliedMigrations,
+                MigrationsAppliedInCurrentRun = pendingMigrations
+            });
         }
         catch (Exception ex)
         {
-            _logger.Fatal(ex,"Fatal error during migration.");
+            _logger.Fatal(ex, "Fatal error during migration.");
+
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync("Migration failed.");
         }
-        await context.Response.WriteAsync("Hello, Migrations.");
     }
 }
