@@ -62,7 +62,8 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         //Process the remaining records
         if(!_bufferStack.IsEmpty)
             await ProcessBuffer();
-        
+
+        await _context.SaveChangesAsync();
         _stopwatch.Stop();
         
         return new ProcessingResult
@@ -81,7 +82,7 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack);
                 
         await _context.AddRangeAsync(mappedVehicles);
-                
+        _context.ChangeTracker.Clear();
         _recordCounter += stackCount;
         _bufferCounter++;
         _bufferStack.Clear();
