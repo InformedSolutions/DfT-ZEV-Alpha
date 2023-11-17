@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -44,27 +45,39 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
 
         using var reader = new StreamReader(stream);
 
-        using (var csv = new CsvReader(reader, GetCsvConfig()))
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        _logger.Information("Beginning transaction: {TransactionId}", transaction.TransactionId);
+        try
         {
-            csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-            while (await csv.ReadAsync())
+            using (var csv = new CsvReader(reader, GetCsvConfig()))
             {
-                var record = csv.GetRecord<RawVehicleDTO>();
-                _bufferStack.Push(record);
-
-                if (_bufferStack.Count >= chunkSize)
+                csv.Context.RegisterClassMap<RawVehicleCsvMap>();
+                while (await csv.ReadAsync())
                 {
-                    await ProcessBuffer();
+                    var record = csv.GetRecord<RawVehicleDTO>();
+                    _bufferStack.Push(record);
+
+                    if (_bufferStack.Count >= chunkSize)
+                    {
+                        await ProcessBuffer();
+                    }
                 }
             }
+
+
+            //Process the remaining records
+            if (!_bufferStack.IsEmpty)
+                await ProcessBuffer();
+            
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            _logger.Error(ex, "Error processing file");
+            throw;
         }
 
-
-        //Process the remaining records
-        if (!_bufferStack.IsEmpty)
-            await ProcessBuffer();
-
-        await _context.SaveChangesAsync();
         _stopwatch.Stop();
 
         return new ProcessingResult
@@ -83,7 +96,9 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack);
 
         await _context.AddRangeAsync(mappedVehicles);
-
+        await _context.SaveChangesAsync();
+        _context.ChangeTracker.Clear();
+        
         _recordCounter += stackCount;
         _bufferCounter++;
         _bufferStack.Clear();
