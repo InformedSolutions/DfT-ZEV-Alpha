@@ -44,7 +44,7 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         _stopwatch.Start();
 
         using var reader = new StreamReader(stream);
-
+        _context.ChangeTracker.AutoDetectChangesEnabled = false;
         await using var transaction = await _context.Database.BeginTransactionAsync();
         _logger.Information("Beginning transaction: {TransactionId}", transaction.TransactionId);
         try
