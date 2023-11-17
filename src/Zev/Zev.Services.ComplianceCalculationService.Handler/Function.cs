@@ -69,7 +69,7 @@ public class Function : IHttpFunction
             res.ExecutionTime = stopwatch.ElapsedMilliseconds; 
             res.ExecutionId = executionId.ToString();
             
-            _logger.Information($"Finished processing file: {res}",res);
+            _logger.Information("Finished processing file: {res}",res);
 
             var response = JsonSerializer.Serialize(res);
             context.Response.ContentType = "application/json"; 

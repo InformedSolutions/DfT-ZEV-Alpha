@@ -58,7 +58,8 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         }
         
         //Process the remaining records
-        await ProcessBuffer();
+        if(!_bufferStack.IsEmpty)
+            await ProcessBuffer();
         
         _stopwatch.Stop();
         
