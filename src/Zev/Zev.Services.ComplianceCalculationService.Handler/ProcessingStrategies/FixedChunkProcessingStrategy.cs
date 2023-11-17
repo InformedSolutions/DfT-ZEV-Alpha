@@ -95,6 +95,7 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         _logger.Information("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack);
 
+        
         await _context.AddRangeAsync(mappedVehicles);
         await _context.SaveChangesAsync();
         _context.ChangeTracker.Clear();

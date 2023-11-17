@@ -57,7 +57,9 @@ public class Function : IHttpFunction
        
             _logger.Information($"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
         
-            var stopwatch = new Stopwatch(); stopwatch.Start();
+            var stopwatch = new Stopwatch(); 
+            stopwatch.Start();
+            
             var storage = await StorageClient.CreateAsync(); 
             var stream = new MemoryStream(); 
             await storage.DownloadObjectAsync(_bucketsConfiguration.ManufacturerImport, $"{body.FileName}", stream).ConfigureAwait(false); 
@@ -68,13 +70,13 @@ public class Function : IHttpFunction
             stopwatch.Stop(); 
             res.ExecutionTime = stopwatch.ElapsedMilliseconds; 
             res.ExecutionId = executionId.ToString();
-            
-            _logger.Information("Finished processing file: {res}",res);
+
+            var resJson = JsonSerializer.Serialize(res);
+            _logger.Information("Finished processing file: {resJson}",resJson);
 
             var response = JsonSerializer.Serialize(res);
             context.Response.ContentType = "application/json"; 
             await context.Response.WriteAsync(response);
-
         }        
         
         
