@@ -9,7 +9,7 @@ resource "google_storage_bucket" "cloud_function_packages" {
 data "archive_file" "compliance_calculation_service_package" {
   type        = "zip"
   output_path = "${path.module}/build/compliance-calculation-service-package.zip"
-  source_dir  = "../../src"
+  source_dir  = "../../src/Zev"
   excludes    = []
 }
 
@@ -31,7 +31,7 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
     entry_point = "Zev.Services.ComplianceCalculationService.Handler.Function"
 
     environment_variables = {
-      GOOGLE_BUILDABLE = "./Zev/Zev.Services.ComplianceCalculationService.Handler"
+      GOOGLE_BUILDABLE = "./Zev.Services.ComplianceCalculationService.Handler"
     }
 
     source {
@@ -69,7 +69,7 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
       PGSSLCERT             = "/etc/secrets/postgres-cert/${google_secret_manager_secret.postgres_client_certificate.secret_id}"
       PGSSLKEY              = "/etc/secrets/postgres-key/${google_secret_manager_secret.postgres_client_key.secret_id}"
 
-      Manufacturer_Data_Bucket_Name = google_storage_bucket.manufacturer_data.id
+      Buckets__ManufacturerImport = google_storage_bucket.manufacturer_data.id
     }
 
     secret_environment_variables {
