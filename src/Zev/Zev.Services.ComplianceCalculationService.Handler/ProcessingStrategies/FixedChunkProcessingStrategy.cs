@@ -22,7 +22,7 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
     private readonly ILogger _logger;
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
-    
+
     //Fields
     private readonly Stopwatch _stopwatch;
     private readonly ConcurrentStack<RawVehicleDTO> _bufferStack;
@@ -41,31 +41,32 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
     public async Task<ProcessingResult> ProcessAsync(Stream stream, int chunkSize)
     {
         _stopwatch.Start();
-        
+
         using var reader = new StreamReader(stream);
-        using(var csv = new CsvReader(reader, GetCsvConfig()))
+
+        using (var csv = new CsvReader(reader, GetCsvConfig()))
         {
             csv.Context.RegisterClassMap<RawVehicleCsvMap>();
             while (await csv.ReadAsync())
             {
                 var record = csv.GetRecord<RawVehicleDTO>();
                 _bufferStack.Push(record);
-            
+
                 if (_bufferStack.Count >= chunkSize)
                 {
                     await ProcessBuffer();
                 }
             }
         }
-     
-        
+
+
         //Process the remaining records
-        if(!_bufferStack.IsEmpty)
+        if (!_bufferStack.IsEmpty)
             await ProcessBuffer();
 
         await _context.SaveChangesAsync();
         _stopwatch.Stop();
-        
+
         return new ProcessingResult
         {
             Success = true,
@@ -80,14 +81,14 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         var stackCount = _bufferStack.Count;
         _logger.Information("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack);
-                
+
         await _context.AddRangeAsync(mappedVehicles);
-        _context.ChangeTracker.Clear();
+
         _recordCounter += stackCount;
         _bufferCounter++;
         _bufferStack.Clear();
     }
-    
+
     private static CsvConfiguration GetCsvConfig() =>
         new(CultureInfo.InvariantCulture)
         {

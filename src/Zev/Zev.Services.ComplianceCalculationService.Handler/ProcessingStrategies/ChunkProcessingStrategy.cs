@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
 using CsvHelper.Configuration;
-using EFCore.BulkExtensions;
 using Serilog;
 using Zev.Core.Domain.Vehicles;
 using Zev.Core.Infrastructure.Persistence;
