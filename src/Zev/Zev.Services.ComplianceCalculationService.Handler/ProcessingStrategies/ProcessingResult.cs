@@ -7,4 +7,5 @@ public class ProcessingResult
     public long ProcessingTime { get; set; }
     public long ExecutionTime { get; set; }
     public string ExecutionId { get; set; }
+    public int BufferCount { get; set; }
 }

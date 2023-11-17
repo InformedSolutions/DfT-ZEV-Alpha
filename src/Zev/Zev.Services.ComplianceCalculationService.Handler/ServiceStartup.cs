@@ -32,7 +32,7 @@ public class ServiceStartup : FunctionsStartup
         
         services.AddSerilog(configuration);
 
-        services.AddTransient<IProcessingStrategy, ChunkProcessingStrategy>();
+        services.AddTransient<IProcessingStrategy, FixedChunkProcessingStrategy>();
         services.AddAutoMapper(typeof(VehicleMapper));
 
         services.AddHttpContextAccessor();
