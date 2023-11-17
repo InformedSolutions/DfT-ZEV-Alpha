@@ -43,19 +43,21 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         _stopwatch.Start();
         
         using var reader = new StreamReader(stream);
-        using var csv = new CsvReader(reader, GetCsvConfig());
-        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-
-        while (await csv.ReadAsync())
+        using(var csv = new CsvReader(reader, GetCsvConfig()))
         {
-            var record = csv.GetRecord<RawVehicleDTO>();
-            _bufferStack.Push(record);
-            
-            if (_bufferStack.Count >= chunkSize)
+            csv.Context.RegisterClassMap<RawVehicleCsvMap>();
+            while (await csv.ReadAsync())
             {
-                await ProcessBuffer();
+                var record = csv.GetRecord<RawVehicleDTO>();
+                _bufferStack.Push(record);
+            
+                if (_bufferStack.Count >= chunkSize)
+                {
+                    await ProcessBuffer();
+                }
             }
         }
+     
         
         //Process the remaining records
         if(!_bufferStack.IsEmpty)
