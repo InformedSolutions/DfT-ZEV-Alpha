@@ -8,7 +8,7 @@ namespace Zev.Services.ComplianceCalculationService.Handler.Middleware;
 
 public class GlobalErrorHandler : IMiddleware
 {
-    private ILogger _logger;
+    private readonly ILogger _logger;
 
     public GlobalErrorHandler(ILogger logger)
     {
