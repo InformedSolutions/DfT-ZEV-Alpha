@@ -1,5 +1,6 @@
 using System.IO;
 using Google.Cloud.Functions.Hosting;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
+using Zev.Services.ComplianceCalculationService.Handler.Middleware;
 using Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
@@ -35,9 +37,14 @@ public class ServiceStartup : FunctionsStartup
         
         services.AddSerilog(configuration);
 
-        services.AddTransient<IProcessingStrategy, FixedChunkProcessingStrategy>();
+        services.AddTransient<IProcessingService, ChunkProcessingService>();
         services.AddAutoMapper(typeof(VehicleMapper));
 
         services.AddHttpContextAccessor();
+    }
+    
+    public virtual void Configure(WebHostBuilderContext context, IApplicationBuilder app)
+    {
+        app.UseMiddleware<GlobalErrorHandler>();
     }
 }
