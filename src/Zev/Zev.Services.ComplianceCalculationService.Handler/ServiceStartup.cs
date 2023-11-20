@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
+using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
 using Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
 
@@ -29,6 +30,8 @@ public class ServiceStartup : FunctionsStartup
         {
             opt.UseNpgsql(postgresSettings.ConnectionString);
         });
+        
+        services.AddRepositories();
         
         services.AddSerilog(configuration);
 
