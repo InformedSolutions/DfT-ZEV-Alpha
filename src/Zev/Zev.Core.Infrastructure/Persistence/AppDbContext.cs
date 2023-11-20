@@ -1,16 +1,17 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Zev.Core.Domain.Vehicles;
 
 namespace Zev.Core.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
-    
-    
-    public AppDbContext() { }
-    public AppDbContext(string connectionString) : base(GetOptions(connectionString)) { }
+    public virtual DbSet<Vehicle> Vehicles { get; set; } = null!;
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    private static DbContextOptions GetOptions(string connectionString)
+    public AppDbContext() { }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        return new DbContextOptionsBuilder().UseNpgsql(connectionString).Options;
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

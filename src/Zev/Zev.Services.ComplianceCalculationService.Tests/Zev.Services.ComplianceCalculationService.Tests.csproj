@@ -20,7 +20,19 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
+      <ProjectReference Include="..\Zev.Core.Domain\Zev.Core.Domain.csproj" />
+      <ProjectReference Include="..\Zev.Services.ComplianceCalculationService.Handler\Zev.Services.ComplianceCalculationService.Handler.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="TestFiles\vehicles.csv" />
+      <EmbeddedResource Include="TestFiles\vehicles.csv">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Processing\" />
     </ItemGroup>
 
 </Project>
