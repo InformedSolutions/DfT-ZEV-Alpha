@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Builder;
@@ -30,7 +32,10 @@ public class ServiceStartup : FunctionsStartup
         
         services.AddDbContext<AppDbContext>(opt =>
         {
-            opt.UseNpgsql(postgresSettings.ConnectionString);
+            opt.UseNpgsql(postgresSettings.ConnectionString, conf =>
+            {
+                conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" });
+            });
         });
         
         services.AddRepositories();
