@@ -21,15 +21,25 @@ public class ServiceStartup : FunctionsStartup
 {
     public override void ConfigureServices(WebHostBuilderContext context, IServiceCollection services)
     {
-        var configuration = new ConfigurationBuilder()
+        var configuration = BuildConfiguration();
+
+        ConfigureDatabase(services, configuration);
+        ConfigureServices(services, configuration);
+    }
+
+    private static IConfiguration BuildConfiguration()
+    {
+        return new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .AddEnvironmentVariables()
             .Build();
+    }
 
+    private static void ConfigureDatabase(IServiceCollection services, IConfiguration configuration)
+    {
         var postgresSettings = services.ConfigurePostgresSettings(configuration);
-        var bucketSettings = services.ConfigureBucketSettings(configuration);
-        
+
         services.AddDbContext<AppDbContext>(opt =>
         {
             opt.UseNpgsql(postgresSettings.ConnectionString, conf =>
@@ -37,18 +47,19 @@ public class ServiceStartup : FunctionsStartup
                 conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" });
             });
         });
-        
-        services.AddRepositories();
-        
-        services.AddSerilog(configuration);
+    }
 
+    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.ConfigureBucketSettings(configuration);
+        services.AddRepositories();
+        services.AddSerilog(configuration);
         services.AddTransient<GlobalErrorHandler>();
         services.AddTransient<IProcessingService, ChunkProcessingService>();
         services.AddAutoMapper(typeof(VehicleMapper));
-
         services.AddHttpContextAccessor();
     }
-    
+
     public override void Configure(WebHostBuilderContext context, IApplicationBuilder app)
     {
         app.UseMiddleware<GlobalErrorHandler>();
