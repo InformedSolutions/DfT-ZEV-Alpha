@@ -48,7 +48,7 @@ public class ServiceStartup : FunctionsStartup
         services.AddHttpContextAccessor();
     }
     
-    public virtual void Configure(WebHostBuilderContext context, IApplicationBuilder app)
+    public override void Configure(WebHostBuilderContext context, IApplicationBuilder app)
     {
         app.UseMiddleware<GlobalErrorHandler>();
     }
