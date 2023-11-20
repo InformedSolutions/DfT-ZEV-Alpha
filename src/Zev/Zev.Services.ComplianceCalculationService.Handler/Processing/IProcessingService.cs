@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
+namespace Zev.Services.ComplianceCalculationService.Handler.Processing;
 
 /// <summary>
 /// Interface for processing strategies used by the compliance calculation service.

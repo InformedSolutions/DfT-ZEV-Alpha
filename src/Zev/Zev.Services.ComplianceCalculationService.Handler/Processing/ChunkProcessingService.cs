@@ -14,7 +14,7 @@ using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
 
-namespace Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
+namespace Zev.Services.ComplianceCalculationService.Handler.Processing;
 
 /// <summary>
 /// Implements the IProcessingStrategy interface to provide a strategy for processing data in fixed chunks.

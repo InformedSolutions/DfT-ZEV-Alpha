@@ -1,4 +1,4 @@
-namespace Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies;
+namespace Zev.Services.ComplianceCalculationService.Handler.Processing;
 
 public class ProcessingResult
 {
