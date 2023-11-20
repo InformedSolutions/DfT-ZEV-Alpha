@@ -4,7 +4,7 @@ using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Core.Infrastructure.Repositories;
 
-public class VehicleRepository : IVehicleRepository, IDisposable
+public sealed class VehicleRepository : IVehicleRepository, IDisposable
 {
     private readonly AppDbContext _context;
 
@@ -25,7 +25,7 @@ public class VehicleRepository : IVehicleRepository, IDisposable
     
     private bool _disposed = false;
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposed)
         {
