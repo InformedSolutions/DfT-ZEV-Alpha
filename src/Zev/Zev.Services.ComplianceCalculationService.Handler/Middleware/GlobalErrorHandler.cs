@@ -24,7 +24,7 @@ public class GlobalErrorHandler : IMiddleware
         catch (Exception ex)
         {
             // log the error
-            _logger.Error(ex, "error during executing {Context}", context.Request.Path.Value);
+            _logger.Error(ex, "error during executing {Context} message: {Message}", context.Request.Path.Value, ex.Message);
             var response = context.Response;
             response.ContentType = "application/json";
             

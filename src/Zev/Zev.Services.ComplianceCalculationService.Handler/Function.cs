@@ -48,37 +48,54 @@ public class Function : IHttpFunction
     public async Task HandleAsync(HttpContext context)
     {
         var executionId = Guid.NewGuid();
-
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
-            await _context.Vehicles.ExecuteDeleteAsync();
-            await _context.SaveChangesAsync();
+            await ClearVehiclesFromDatabase();
+
             var body = await GetRequestBody(context);
-       
             _logger.Information($"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
-        
-            var stopwatch = new Stopwatch(); 
-            stopwatch.Start();
-            
-            var storage = await StorageClient.CreateAsync(); 
-            var stream = new MemoryStream(); 
-            await storage.DownloadObjectAsync(_bucketsConfiguration.ManufacturerImport, $"{body.FileName}", stream).ConfigureAwait(false); 
-            stream.Position = 0;
-        
-            var res = await _processingService.ProcessAsync(stream, body.ChunkSize);
-            
-            stopwatch.Stop(); 
-           
 
-            var response = new ComplianceServiceResponse(res, stopwatch.ElapsedMilliseconds, executionId);
-            var resJson = JsonSerializer.Serialize(res);
-            _logger.Information("Finished processing file: {resJson}",resJson);
+            var stopwatch = StartStopwatch();
 
-            context.Response.ContentType = "application/json"; 
-            await context.Response.WriteAsync(resJson);
-        }        
-        
-        
+            var stream = await DownloadFileFromStorage(body);
+            var processingResult = await _processingService.ProcessAsync(stream, body.ChunkSize);
+
+            stopwatch.Stop();
+
+            await WriteResponse(context, processingResult, stopwatch.ElapsedMilliseconds, executionId);
+        }
+    }
+
+    private async Task ClearVehiclesFromDatabase()
+    {
+        await _context.Vehicles.ExecuteDeleteAsync();
+        await _context.SaveChangesAsync();
+    }
+
+    private Stopwatch StartStopwatch()
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        return stopwatch;
+    }
+
+    private async Task<MemoryStream> DownloadFileFromStorage(CalculateComplianceRequestDto body)
+    {
+        var storage = await StorageClient.CreateAsync();
+        var stream = new MemoryStream();
+        await storage.DownloadObjectAsync(_bucketsConfiguration.ManufacturerImport, $"{body.FileName}", stream).ConfigureAwait(false);
+        stream.Position = 0;
+        return stream;
+    }
+
+    private async Task WriteResponse(HttpContext context, ProcessingResult processingResult, long elapsedMilliseconds, Guid executionId)
+    {
+        var response = new ComplianceServiceResponse(processingResult, elapsedMilliseconds, executionId);
+        var resJson = JsonSerializer.Serialize(response);
+        _logger.Information("Finished processing file: {resJson}", resJson);
+
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(resJson);
     }
 
     /// <summary>
