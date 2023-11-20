@@ -63,30 +63,22 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
                 }
             }
 
-
             //Process the remaining records
             if (!_bufferStack.IsEmpty)
                 await ProcessBuffer();
             
-
             await transaction.CommitAsync();
         }
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
             _logger.Error(ex, "Error processing file");
-            throw;
+            return ProcessingResult.Fail(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
         }
 
         _stopwatch.Stop();
-
-        return new ProcessingResult
-        {
-            Success = true,
-            Count = _recordCounter,
-            BufferCount = _bufferCounter,
-            ProcessingTime = _stopwatch.ElapsedMilliseconds,
-        };
+        
+        return ProcessingResult.Successful(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
     }
 
     private async Task ProcessBuffer()
@@ -94,11 +86,9 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
         var stackCount = _bufferStack.Count;
         //_logger.Information("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack);
-
         
         //await _context.AddRangeAsync(mappedVehicles); 
         await _unitOfWork.Vehicles.BulkInsertAsync(mappedVehicles);
-         
         
         _recordCounter += stackCount;
         _bufferCounter++;

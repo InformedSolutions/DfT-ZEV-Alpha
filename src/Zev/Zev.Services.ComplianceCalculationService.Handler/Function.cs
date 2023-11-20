@@ -68,15 +68,14 @@ public class Function : IHttpFunction
             var res = await _processingStrategy.ProcessAsync(stream, body.ChunkSize);
             
             stopwatch.Stop(); 
-            res.ExecutionTime = stopwatch.ElapsedMilliseconds; 
-            res.ExecutionId = executionId.ToString();
+           
 
+            var response = new ComplianceServiceResponse(res, stopwatch.ElapsedMilliseconds, executionId);
             var resJson = JsonSerializer.Serialize(res);
             _logger.Information("Finished processing file: {resJson}",resJson);
 
-            var response = JsonSerializer.Serialize(res);
             context.Response.ContentType = "application/json"; 
-            await context.Response.WriteAsync(response);
+            await context.Response.WriteAsync(resJson);
         }        
         
         
