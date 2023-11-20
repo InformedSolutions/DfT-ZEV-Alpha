@@ -19,7 +19,7 @@ namespace Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies
 /// <summary>
 /// Implements the IProcessingStrategy interface to provide a strategy for processing data in fixed chunks.
 /// </summary>
-public class FixedChunkProcessingStrategy : IProcessingStrategy
+public class ChunkProcessingService : IProcessingService
 {
     private readonly ILogger _logger;
     private readonly IUnitOfWork _unitOfWork;
@@ -31,7 +31,7 @@ public class FixedChunkProcessingStrategy : IProcessingStrategy
     private int _recordCounter = 0;
     private int _bufferCounter = 0;
 
-    public FixedChunkProcessingStrategy(ILogger logger, IUnitOfWork unitOfWork, IMapper mapper)
+    public ChunkProcessingService(ILogger logger, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;

@@ -28,16 +28,16 @@ namespace Zev.Services.ComplianceCalculationService.Handler;
 public class Function : IHttpFunction
 {
     private readonly ILogger _logger;
-    private readonly IProcessingStrategy _processingStrategy;
+    private readonly IProcessingService _processingService;
     private readonly AppDbContext _context;
     private readonly BucketsConfiguration _bucketsConfiguration;
 
 
-    public Function(AppDbContext context, ILogger logger, IProcessingStrategy processingStrategy, IOptions<BucketsConfiguration> bucketsConfiguration)
+    public Function(AppDbContext context, ILogger logger, IProcessingService processingService, IOptions<BucketsConfiguration> bucketsConfiguration)
     {
         _context = context;
         _logger = logger;
-        _processingStrategy = processingStrategy;
+        _processingService = processingService;
         _bucketsConfiguration = bucketsConfiguration.Value;
     }
 
@@ -65,7 +65,7 @@ public class Function : IHttpFunction
             await storage.DownloadObjectAsync(_bucketsConfiguration.ManufacturerImport, $"{body.FileName}", stream).ConfigureAwait(false); 
             stream.Position = 0;
         
-            var res = await _processingStrategy.ProcessAsync(stream, body.ChunkSize);
+            var res = await _processingService.ProcessAsync(stream, body.ChunkSize);
             
             stopwatch.Stop(); 
            

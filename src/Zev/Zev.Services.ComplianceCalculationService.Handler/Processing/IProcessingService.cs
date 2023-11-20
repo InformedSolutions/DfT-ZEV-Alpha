@@ -6,7 +6,7 @@ namespace Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies
 /// <summary>
 /// Interface for processing strategies used by the compliance calculation service.
 /// </summary>
-public interface IProcessingStrategy
+public interface IProcessingService
 {
     /// <summary>
     /// Processes the given stream and returns the result of the processing.
