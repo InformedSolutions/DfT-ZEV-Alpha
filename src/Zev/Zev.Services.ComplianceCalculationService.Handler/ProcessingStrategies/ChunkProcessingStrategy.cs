@@ -20,6 +20,7 @@ namespace Zev.Services.ComplianceCalculationService.Handler.ProcessingStrategies
 /// <summary>
 /// Implements the <see cref="IProcessingStrategy"/> interface to process a stream of CSV data in chunks.
 /// </summary>
+[Obsolete("Use FixedChunkProcessingStrategy instead")]
 public class ChunkProcessingStrategy : IProcessingStrategy
 {
     private readonly ILogger _logger;
