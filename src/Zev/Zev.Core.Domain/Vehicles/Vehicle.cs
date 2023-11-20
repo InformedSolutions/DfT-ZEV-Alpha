@@ -18,7 +18,7 @@ public sealed class Vehicle
     public string Cr { get; set; }
     public int M { get; set; }
     public int MT { get; set; }
-    public int MRVL { get; set; }
+    public int? MRVL { get; set; }
     public int Ewltp { get; set; }
     public int TPMLM { get; set; }
     public int W { get; set; }
@@ -34,11 +34,16 @@ public sealed class Vehicle
     public DateOnly DoFr { get; set; }
     public string SchemeYear { get; set; }
     public string Postcode { get; set; }
-    public string Spvc { get; set; }
+    public string? Spvc { get; set; }
+    
     public bool Wrm { get; set; }
     public int Mnp { get; set; }
     public string Rlce { get; set; }
     public int Fa { get; set; }
+    
+    public int? MM { get; set; }
     public string Trrc { get; set; }
     public string RegisteredInNation { get; set; }
+
+    public VehicleSummary Summary { get; set; } = new();
 }
