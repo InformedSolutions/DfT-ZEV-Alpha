@@ -42,6 +42,7 @@ public class ServiceStartup : FunctionsStartup
         
         services.AddSerilog(configuration);
 
+        services.AddTransient<GlobalErrorHandler>();
         services.AddTransient<IProcessingService, ChunkProcessingService>();
         services.AddAutoMapper(typeof(VehicleMapper));
 
