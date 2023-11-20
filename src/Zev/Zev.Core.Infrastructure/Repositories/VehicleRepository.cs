@@ -1,4 +1,5 @@
 using EFCore.BulkExtensions;
+using Serilog;
 using Zev.Core.Domain.Vehicles;
 using Zev.Core.Infrastructure.Persistence;
 
@@ -7,10 +8,11 @@ namespace Zev.Core.Infrastructure.Repositories;
 public sealed class VehicleRepository : IVehicleRepository, IDisposable
 {
     private readonly AppDbContext _context;
-
-    public VehicleRepository(AppDbContext context)
+    private readonly ILogger _logger;
+    public VehicleRepository(AppDbContext context, ILogger logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task BulkInsertAsync(IEnumerable<Vehicle> vehicles, CancellationToken ct = default)
