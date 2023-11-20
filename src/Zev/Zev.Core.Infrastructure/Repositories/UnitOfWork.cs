@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore.Storage;
-using Zev.Core.Domain;
 using Zev.Core.Domain.Vehicles;
 using Zev.Core.Infrastructure.Persistence;
 
