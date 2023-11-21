@@ -8,9 +8,6 @@ namespace Zev.Core.Infrastructure.Logging;
 
 public static class LoggingExtensions
 {
-    /// <summary>
-    /// This methods adds Serilog to the application.
-    /// </summary>
     public static IServiceCollection AddSerilog(this IServiceCollection services, IConfiguration configuration)
     {
         

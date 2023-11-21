@@ -5,7 +5,6 @@ using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Core.Infrastructure.Repositories;
 
-/// <inheritdoc cref="Zev.Core.Infrastructure.Repositories.IUnitOfWork"/>
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly AppDbContext _context;
@@ -13,9 +12,6 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private readonly ILogger _logger;
     public IVehicleRepository Vehicles { get; }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
-    /// </summary>
     public UnitOfWork(AppDbContext context, ILogger logger)
     {
         _context = context;
@@ -23,25 +19,22 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         Vehicles = new VehicleRepository(_context, logger);
     }
 
-    /// <inheritdoc/>
+    
     public int SaveChanges()
     {
         return _context.SaveChanges();
     }
 
-    /// <inheritdoc/>
     public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();
     }
 
-    /// <inheritdoc/>
     public IDbContextTransaction BeginTransaction()
     {
         return _context.Database.BeginTransaction();
     }
 
-    /// <inheritdoc/>
     public async Task<IDbContextTransaction> BeginTransactionAsync()
     {
         return await _context.Database.BeginTransactionAsync();
