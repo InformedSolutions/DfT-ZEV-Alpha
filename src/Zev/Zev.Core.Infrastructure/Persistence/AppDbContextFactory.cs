@@ -5,10 +5,6 @@ namespace Zev.Core.Infrastructure.Persistence;
 
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    /// <summary>
-    /// This method is called by the EF Core CLI tools when running migrations.
-    /// </summary>
-    /// <param name="args">CLI arguments</param>
     public AppDbContext CreateDbContext(string[] args)
     {
         var connectionString = GetConnectionString(args);

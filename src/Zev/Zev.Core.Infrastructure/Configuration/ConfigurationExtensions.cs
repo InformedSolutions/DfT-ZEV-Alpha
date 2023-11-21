@@ -44,13 +44,7 @@ public static class ConfigurationExtensions
 
         return settings;
     }
-    
-    /// <summary>
-    /// Configures the settings for a GCP.
-    /// </summary>
-    /// <param name="services">The IServiceCollection to add the settings to.</param>
-    /// <param name="configuration">The configuration that contains the GCP settings.</param>
-    /// <returns>The IServiceCollection so that additional calls can be chained.</returns>
+
     public static GoogleCloudConfiguration ConfigureGoogleCloudSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var settings = new GoogleCloudConfiguration();
