@@ -22,6 +22,8 @@ public class ServiceStartup : FunctionsStartup
 {
     public override void ConfigureServices(WebHostBuilderContext context, IServiceCollection services)
     {
+        base.ConfigureServices(context, services);
+
         var configuration = BuildConfiguration();
 
         ConfigureDatabase(services, configuration);
@@ -52,6 +54,7 @@ public class ServiceStartup : FunctionsStartup
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        
         services.ConfigureBucketSettings(configuration);
         services.AddRepositories();
         services.AddDomainServices();
@@ -64,6 +67,8 @@ public class ServiceStartup : FunctionsStartup
 
     public override void Configure(WebHostBuilderContext context, IApplicationBuilder app)
     {
+        base.Configure(context, app);
+
         app.UseMiddleware<GlobalErrorHandler>();
     }
 }
