@@ -50,7 +50,7 @@ public class Function : IHttpFunction
         var executionId = Guid.NewGuid();
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
-            //await ClearVehiclesFromDatabase();
+            await ClearVehiclesFromDatabase();
 
             var body = await GetRequestBody(context);
             _logger.Information($"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
