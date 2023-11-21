@@ -10,6 +10,12 @@ public sealed class VehicleRepository : IVehicleRepository, IDisposable
 {
     private readonly AppDbContext _context;
     private readonly ILogger _logger;
+    
+    /// <summary>
+    /// This method initializes a new instance of the <see cref="VehicleRepository"/> class.
+    /// </summary>
+    /// <param name="context">AppDbContext</param>
+    /// <param name="logger">ILogger</param>
     public VehicleRepository(AppDbContext context, ILogger logger)
     {
         _context = context;

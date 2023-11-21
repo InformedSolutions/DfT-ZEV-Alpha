@@ -42,12 +42,7 @@ public class ChunkProcessingService : IProcessingService
         _vehicleService = vehicleService;
     }
 
-    /// <summary>
-    /// Processes the given stream in fixed-size chunks.
-    /// </summary>
-    /// <param name="stream">The stream to process.</param>
-    /// <param name="chunkSize">The size of the chunks to process.</param>
-    /// <returns>A ProcessingResult indicating the result of the processing.</returns>
+    /// <inheritdoc/>
     public async Task<ProcessingResult> ProcessAsync(Stream stream, int chunkSize)
     {
         _logger.Information("Processing started.");

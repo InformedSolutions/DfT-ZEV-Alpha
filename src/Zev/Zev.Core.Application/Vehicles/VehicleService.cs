@@ -6,6 +6,7 @@ namespace Zev.Core.Application.Vehicles;
 /// <inheritdoc/>
 public class VehicleService : IVehicleService
 {
+    /// <inheritdoc/>
     public void ApplyRules(IList<Vehicle> vehicles)
     {
         foreach (var vehicle in vehicles)
