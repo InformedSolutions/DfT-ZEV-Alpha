@@ -12,5 +12,6 @@ To deploy this project, the following GCP APIs need to be enabled at a project l
 1. Identity and Access Management (IAM) API
 1. Cloud Resource Manager API
 1. Cloud SQL Admin API
-
+1. Cloud Run API
+1. Cloud Build API
 
