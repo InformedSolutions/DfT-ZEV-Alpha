@@ -25,6 +25,7 @@ public class VehicleServiceTests
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
             .Without(x => x.Spvc) // Exclude auto-generation for this property
+            .With(x => x.Summary, new VehicleSummary())
             .With(v => v.TAN, "M1")
             .Create();
 
@@ -43,6 +44,7 @@ public class VehicleServiceTests
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
             .Without(x => x.Spvc) // Exclude auto-generation for this property
+            .With(x => x.Summary, new VehicleSummary())
             .With(v => v.TAN, "N1")
             .Create();
 
@@ -84,6 +86,7 @@ public class VehicleServiceTests
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
             .With(v => v.Spvc, "e")
+            .With(x => x.Summary, new VehicleSummary("132"))
             .Create();
 
         // Act
@@ -103,6 +106,7 @@ public class VehicleServiceTests
         var vehicle = _fixture.Build<Vehicle>()
             .With(v => v.Ewltp, 0)
             .With(v => v.Ber, 100)
+            .With(x => x.Summary, new VehicleSummary("123"))
             .Create();
 
         // Act
@@ -119,6 +123,7 @@ public class VehicleServiceTests
         var vehicle = _fixture.Build<Vehicle>()
             .With(v => v.Ewltp, 0)
             .With(v => v.Ber, 99)
+            .With(x => x.Summary, new VehicleSummary("123"))
             .Create();
 
         // Act
@@ -135,6 +140,7 @@ public class VehicleServiceTests
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
             .With(v => v.Ewltp, 1)
+            .With(x => x.Summary, new VehicleSummary("123"))
             .Create();
 
         // Act
@@ -152,7 +158,8 @@ public class VehicleServiceTests
         var vehicle = new Vehicle()
         {
             MM = null,
-            MRVL = null
+            MRVL = null,
+            Summary = new VehicleSummary("123")
         };
         
         // Act
@@ -170,7 +177,8 @@ public class VehicleServiceTests
         var vehicle = new Vehicle()
         {
             MM = 1,
-            MRVL = 2
+            MRVL = 2,
+            Summary = new VehicleSummary("123")
         };
 
         // Act
