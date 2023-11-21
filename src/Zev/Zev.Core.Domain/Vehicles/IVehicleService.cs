@@ -3,6 +3,7 @@ namespace Zev.Core.Domain.Vehicles.Services;
 public interface IVehicleService
 {
     public void ApplyRules(IList<Vehicle> vehicles);
+    public void ApplyRules(Vehicle vehicle);
     
     public Vehicle ApplyMultistageVan(Vehicle vehicle);
     public Vehicle ApplyZev(Vehicle vehicle);

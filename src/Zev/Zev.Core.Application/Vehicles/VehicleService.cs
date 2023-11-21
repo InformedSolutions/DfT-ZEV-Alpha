@@ -12,11 +12,18 @@ public class VehicleService : IVehicleService
             ApplyMultistageVan(vehicle);
             ApplyZev(vehicle);
             ApplyFlagsAndApplicability(vehicle);
-            
+
             //To be implemented later
             //DetermineBonusCredits(vehicle);
         }
 
+    }
+
+    public void ApplyRules(Vehicle vehicle)
+    {
+        ApplyMultistageVan(vehicle);
+        ApplyZev(vehicle);
+        ApplyFlagsAndApplicability(vehicle);
     }
 
     public Vehicle ApplyMultistageVan(Vehicle vehicle)
@@ -37,7 +44,7 @@ public class VehicleService : IVehicleService
     public Vehicle ApplyZev(Vehicle vehicle)
     {
         const int minRange = 100;
-        
+
         if (vehicle.Ewltp == 0)
         {
             vehicle.Summary.Wca = false;
@@ -70,7 +77,8 @@ public class VehicleService : IVehicleService
                 vehicle.Summary.ZevApplicable = true;
                 vehicle.Summary.Co2Applicable = true;
                 vehicle.Summary.VehicleScheme = VehicleScheme.Car;
-            }else if (vehicle.TAN == VehicleTan.N1)
+            }
+            else if (vehicle.TAN == VehicleTan.N1)
             {
                 vehicle.Summary.ZevApplicable = true;
                 vehicle.Summary.Co2Applicable = true;

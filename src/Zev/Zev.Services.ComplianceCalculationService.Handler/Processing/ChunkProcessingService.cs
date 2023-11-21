@@ -27,7 +27,7 @@ public class ChunkProcessingService : IProcessingService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IVehicleService _vehicleService;
-    
+
     private readonly Stopwatch _stopwatch = new Stopwatch();
     private readonly ConcurrentStack<RawVehicleDTO> _bufferStack = new ConcurrentStack<RawVehicleDTO>();
 
@@ -104,9 +104,11 @@ public class ChunkProcessingService : IProcessingService
     {
         var stackCount = _bufferStack.Count;
         _logger.Information("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
-        
+
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack).ToList();
-        _vehicleService.ApplyRules(mappedVehicles);
+        //_vehicleService.ApplyRules(mappedVehicles);
+        Parallel.ForEach(mappedVehicles, vehicle => _vehicleService.ApplyRules(vehicle));
+
         await _unitOfWork.Vehicles.BulkInsertAsync(mappedVehicles);
 
         _recordCounter += stackCount;
