@@ -68,7 +68,7 @@ public class Function : IHttpFunction
 
     private async Task ClearVehiclesFromDatabase()
     {
-        await _context.Vehicles.ExecuteDeleteAsync();
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE Vehicles CASCADE");
         await _context.SaveChangesAsync();
     }
 
