@@ -15,9 +15,10 @@ public sealed class VehicleRepository : IVehicleRepository, IDisposable
         _logger = logger;
     }
 
-    public async Task BulkInsertAsync(IEnumerable<Vehicle> vehicles, CancellationToken ct = default)
+    public async Task BulkInsertAsync(IList<Vehicle> vehicles, CancellationToken ct = default)
     {
-        await _context.BulkInsertAsync(vehicles.ToList(), cancellationToken: ct);
+        await _context.BulkInsertAsync(vehicles,cancellationToken: ct);
+        await _context.BulkInsertAsync(vehicles.Select(x => x.Summary).ToList(), cancellationToken: ct);
     }
 
     public async Task Save()

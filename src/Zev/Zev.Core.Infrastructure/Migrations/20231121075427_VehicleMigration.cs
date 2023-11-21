@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Zev.Core.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class BaseVehicleMigration : Migration
+    public partial class VehicleMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,7 +30,7 @@ namespace Zev.Core.Infrastructure.Migrations
                     Cr = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     M = table.Column<int>(type: "integer", nullable: false),
                     MT = table.Column<int>(type: "integer", nullable: false),
-                    MRVL = table.Column<int>(type: "integer", nullable: false),
+                    MRVL = table.Column<int>(type: "integer", nullable: true),
                     Ewltp = table.Column<int>(type: "integer", nullable: false),
                     TPMLM = table.Column<int>(type: "integer", nullable: false),
                     W = table.Column<int>(type: "integer", nullable: false),
@@ -46,11 +46,12 @@ namespace Zev.Core.Infrastructure.Migrations
                     DoFr = table.Column<DateOnly>(type: "date", nullable: false),
                     SchemeYear = table.Column<string>(type: "text", nullable: false),
                     Postcode = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false),
-                    Spvc = table.Column<string>(type: "text", nullable: false),
+                    Spvc = table.Column<string>(type: "text", nullable: true),
                     Wrm = table.Column<bool>(type: "boolean", nullable: false),
                     Mnp = table.Column<int>(type: "integer", nullable: false),
                     Rlce = table.Column<string>(type: "text", nullable: false),
                     Fa = table.Column<int>(type: "integer", nullable: false),
+                    MM = table.Column<int>(type: "integer", nullable: true),
                     Trrc = table.Column<string>(type: "character varying(1)", maxLength: 1, nullable: false),
                     RegisteredInNation = table.Column<string>(type: "text", nullable: false)
                 },
@@ -58,11 +59,40 @@ namespace Zev.Core.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Vehicles", x => x.Vin);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "VehicleSummary",
+                columns: table => new
+                {
+                    Vin = table.Column<string>(type: "character varying(17)", nullable: false),
+                    msv = table.Column<bool>(type: "boolean", nullable: false),
+                    Zev = table.Column<bool>(type: "boolean", nullable: false),
+                    Wca = table.Column<bool>(type: "boolean", nullable: false),
+                    Wcs = table.Column<bool>(type: "boolean", nullable: false),
+                    Rrr = table.Column<bool>(type: "boolean", nullable: false),
+                    ZevApplicable = table.Column<bool>(type: "boolean", nullable: false),
+                    Co2Applicable = table.Column<bool>(type: "boolean", nullable: false),
+                    VehicleScheme = table.Column<string>(type: "text", nullable: false),
+                    IncompleteMsv = table.Column<bool>(type: "boolean", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleSummary", x => x.Vin);
+                    table.ForeignKey(
+                        name: "FK_VehicleSummary_Vehicles_Vin",
+                        column: x => x.Vin,
+                        principalTable: "Vehicles",
+                        principalColumn: "Vin",
+                        onDelete: ReferentialAction.Cascade);
+                });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "VehicleSummary");
+
             migrationBuilder.DropTable(
                 name: "Vehicles");
         }

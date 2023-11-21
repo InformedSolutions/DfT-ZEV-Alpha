@@ -44,4 +44,15 @@ public static class ConfigurationExtensions
 
         return settings;
     }
+
+    public static GoogleCloudConfiguration ConfigureGoogleCloudSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        var settings = new GoogleCloudConfiguration();
+        configuration.Bind(GoogleCloudConfiguration.SectionName, settings);
+
+        services.AddOptions<GoogleCloudConfiguration>()
+            .BindConfiguration(GoogleCloudConfiguration.SectionName);
+
+        return settings;
+    }
 }

@@ -12,8 +12,8 @@ using Zev.Core.Infrastructure.Persistence;
 namespace Zev.Core.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231116061948_BaseVehicleMigration")]
-    partial class BaseVehicleMigration
+    [Migration("20231121084031_VehicleSummaryMigration")]
+    partial class VehicleSummaryMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,12 +88,15 @@ namespace Zev.Core.Infrastructure.Migrations
                     b.Property<int>("M")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("MM")
+                        .HasColumnType("integer");
+
                     b.Property<string>("MMS")
                         .IsRequired()
                         .HasMaxLength(125)
                         .HasColumnType("character varying(125)");
 
-                    b.Property<int>("MRVL")
+                    b.Property<int?>("MRVL")
                         .HasColumnType("integer");
 
                     b.Property<int>("MT")
@@ -135,7 +138,6 @@ namespace Zev.Core.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Spvc")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("T")
@@ -183,6 +185,60 @@ namespace Zev.Core.Infrastructure.Migrations
                     b.HasKey("Vin");
 
                     b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("Zev.Core.Domain.Vehicles.VehicleSummary", b =>
+                {
+                    b.Property<string>("Vin")
+                        .HasColumnType("character varying(17)");
+
+                    b.Property<bool?>("Co2Applicable")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("IncompleteMsv")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("Rrr")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("VehicleScheme")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("Wca")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("Wcs")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("Zev")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("ZevApplicable")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("msv")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Vin");
+
+                    b.ToTable("VehicleSummary");
+                });
+
+            modelBuilder.Entity("Zev.Core.Domain.Vehicles.VehicleSummary", b =>
+                {
+                    b.HasOne("Zev.Core.Domain.Vehicles.Vehicle", "Vehicle")
+                        .WithOne("Summary")
+                        .HasForeignKey("Zev.Core.Domain.Vehicles.VehicleSummary", "Vin")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("Zev.Core.Domain.Vehicles.Vehicle", b =>
+                {
+                    b.Navigation("Summary")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

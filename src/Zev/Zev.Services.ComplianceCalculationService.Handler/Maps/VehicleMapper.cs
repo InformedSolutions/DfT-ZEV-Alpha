@@ -8,6 +8,7 @@ public class VehicleMapper : Profile
 {
     public VehicleMapper()
     {
-        CreateMap<RawVehicleDTO, Vehicle>();
+        CreateMap<RawVehicleDTO, Vehicle>()
+            .ForMember(x => x.Summary, opt => opt.MapFrom(src => new VehicleSummary(src.Vin)));
     }
 }
