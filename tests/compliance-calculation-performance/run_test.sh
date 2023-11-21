@@ -19,9 +19,10 @@ EOM
 
 
 REGION=europe-west1
-FUNCTION_NAME=dev-zev-compliance-calculation-service
+FUNCTION_NAME=release-zev-compliance-calculation-service
+PROJECT=vital-platform-404314
 
-BUCKET_NAME=dev-zev-manufacturer-data
+BUCKET_NAME=release-zev-manufacturer-data
 BUCKET_FOLDER=test_script_data
 
 csv_filename=$(date '+%Y-%m-%d-%H-%M-%S').csv
@@ -43,7 +44,7 @@ echo
 echo "Running the function with chunk size $2"
 echo
 
-response=$(gcloud functions call "$FUNCTION_NAME" --region "$REGION" --data "{ \"FileName\": \"$BUCKET_FOLDER/$csv_filename\", \"ChunkSize\": $2 }")
+response=$(gcloud functions call "$FUNCTION_NAME" --project "$PROJECT" --region "$REGION" --data "{ \"FileName\": \"$BUCKET_FOLDER/$csv_filename\", \"ChunkSize\": $2 }")
 json_response=$(echo $response | tr -d "'")
 exit_code=$?
 
