@@ -12,6 +12,7 @@ using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
 using Zev.Core.Infrastructure.Repositories;
+using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
 using Zev.Services.ComplianceCalculationService.Handler.Middleware;
 using Zev.Services.ComplianceCalculationService.Handler.Processing;
@@ -23,7 +24,9 @@ public class ServiceStartup : FunctionsStartup
     public override void ConfigureServices(WebHostBuilderContext context, IServiceCollection services)
     {
         base.ConfigureServices(context, services);
-
+        
+       
+        
         var configuration = BuildConfiguration();
 
         ConfigureDatabase(services, configuration);
@@ -54,7 +57,6 @@ public class ServiceStartup : FunctionsStartup
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        
         services.ConfigureBucketSettings(configuration);
         services.AddRepositories();
         services.AddDomainServices();
@@ -63,12 +65,26 @@ public class ServiceStartup : FunctionsStartup
         services.AddTransient<IProcessingService, ChunkProcessingService>();
         services.AddAutoMapper(typeof(VehicleMapper));
         services.AddHttpContextAccessor();
+        services.AddTransient<ComplianceService>();
     }
 
     public override void Configure(WebHostBuilderContext context, IApplicationBuilder app)
     {
         base.Configure(context, app);
 
+        app.UseRouting();
+        app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapPost("/run", async (ComplianceService service, CalculateComplianceRequestDto request) => await service.HandleAsync(request))
+                    .WithName("Run")
+                    ;
+                
+                endpoints.MapGet("/processes", async (IUnitOfWork unitOfWork) => await unitOfWork.Processes.GetProcessesAsync())
+                    .WithName("Get Processes")
+                    ;
+            }
+        );
+        
         app.UseMiddleware<GlobalErrorHandler>();
     }
 }
