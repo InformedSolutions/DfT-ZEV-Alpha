@@ -3,6 +3,7 @@ using Zev.Core.Domain.Vehicles.Services;
 
 namespace Zev.Core.Application.Vehicles;
 
+/// <inheritdoc/>
 public class VehicleService : IVehicleService
 {
     public void ApplyRules(IList<Vehicle> vehicles)
@@ -19,6 +20,7 @@ public class VehicleService : IVehicleService
 
     }
 
+    /// <inheritdoc/>
     public void ApplyRules(Vehicle vehicle)
     {
         ApplyMultistageVan(vehicle);
@@ -26,6 +28,7 @@ public class VehicleService : IVehicleService
         ApplyFlagsAndApplicability(vehicle);
     }
 
+    /// <inheritdoc/>
     public Vehicle ApplyMultistageVan(Vehicle vehicle)
     {
         if (vehicle.MM is null && vehicle.MRVL is null)
@@ -41,6 +44,7 @@ public class VehicleService : IVehicleService
         return vehicle;
     }
 
+    /// <inheritdoc/>
     public Vehicle ApplyZev(Vehicle vehicle)
     {
         const int minRange = 100;
@@ -68,6 +72,7 @@ public class VehicleService : IVehicleService
         return vehicle;
     }
 
+    /// <inheritdoc/>
     public Vehicle ApplyFlagsAndApplicability(Vehicle vehicle)
     {
         if (vehicle.Spvc is null)
@@ -107,6 +112,7 @@ public class VehicleService : IVehicleService
         return vehicle;
     }
 
+    /// <inheritdoc/>
     public Vehicle DetermineBonusCredits(Vehicle vehicle)
     {
         throw new NotImplementedException();
