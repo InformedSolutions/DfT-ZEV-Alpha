@@ -13,7 +13,7 @@ public static class LoggingExtensions
          .Enrich.FromLogContext() // Enriches log events with properties from the log context
          .Enrich.WithExceptionDetails() // Enriches with exception details
          .WriteTo.Console(
-             outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} {CorrelationId}] {Message:lj} {NewLine}{Exception} {Properties:j}")
+             outputTemplate: "[{Service}][{Timestamp:HH:mm:ss} {Level:u3}][{CorrelationId}] {Message:lj} {NewLine}{Exception} ")
          .ReadFrom.Configuration(configuration);
 
         services.AddSingleton<ILogger>(x => serilogConfiguration.CreateLogger());
