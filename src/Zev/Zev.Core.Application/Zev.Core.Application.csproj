@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Zev.Core.Domain\Zev.Core.Domain.csproj" />
+      <ProjectReference Include="..\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

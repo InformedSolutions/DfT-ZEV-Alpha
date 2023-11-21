@@ -19,8 +19,6 @@ public sealed class VehicleRepository : IVehicleRepository, IDisposable
     {
         await _context.BulkInsertAsync(vehicles,cancellationToken: ct);
         await _context.BulkInsertAsync(vehicles.Select(x => x.Summary).ToList(), cancellationToken: ct);
-        Console.WriteLine("Bulk insert complete.");
-        //await Task.WhenAll(primaryInsert, childInsert);
     }
 
     public async Task Save()
