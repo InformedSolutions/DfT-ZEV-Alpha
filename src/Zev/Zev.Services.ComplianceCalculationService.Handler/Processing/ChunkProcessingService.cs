@@ -69,7 +69,7 @@ public class ChunkProcessingService : IProcessingService
                 await ProcessBuffer();
             }
 
-            _logger.Information("Committing transaction.");
+            _logger.Information("Committing transaction: {TransactionId}.", transaction.TransactionId);
             await transaction.CommitAsync();
         }
         catch (Exception ex)
@@ -102,14 +102,22 @@ public class ChunkProcessingService : IProcessingService
 
     private async Task ProcessBuffer()
     {
+        var stopwatch = Stopwatch.StartNew();
+
         var stackCount = _bufferStack.Count;
         _logger.Information("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
 
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack).ToList();
-        //_vehicleService.ApplyRules(mappedVehicles);
-        Parallel.ForEach(mappedVehicles, vehicle => _vehicleService.ApplyRules(vehicle));
+        _logger.Information("Mapping took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
 
+        stopwatch.Restart();
+        Parallel.ForEach(mappedVehicles, vehicle => _vehicleService.ApplyRules(vehicle));
+        _logger.Information("Applying rules took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
+
+        stopwatch.Restart();
         await _unitOfWork.Vehicles.BulkInsertAsync(mappedVehicles);
+        _logger.Information("Inserting records took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
+
 
         _recordCounter += stackCount;
         _bufferCounter++;
