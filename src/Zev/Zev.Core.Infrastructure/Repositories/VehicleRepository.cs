@@ -5,6 +5,7 @@ using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Core.Infrastructure.Repositories;
 
+/// <inheritdoc cref="Zev.Core.Domain.Vehicles.IVehicleRepository"/>
 public sealed class VehicleRepository : IVehicleRepository, IDisposable
 {
     private readonly AppDbContext _context;
@@ -15,12 +16,14 @@ public sealed class VehicleRepository : IVehicleRepository, IDisposable
         _logger = logger;
     }
 
+    /// <inheritdoc/>
     public async Task BulkInsertAsync(IList<Vehicle> vehicles, CancellationToken ct = default)
     {
         await _context.BulkInsertAsync(vehicles,cancellationToken: ct);
         await _context.BulkInsertAsync(vehicles.Select(x => x.Summary).ToList(), cancellationToken: ct);
     }
 
+    /// <inheritdoc/>
     public async Task Save()
     {
         await _context.SaveChangesAsync();
