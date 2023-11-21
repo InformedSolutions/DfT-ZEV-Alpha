@@ -114,9 +114,9 @@ variable "compliance_calculation_svc_resource_quotas" {
   default = {
     max_instance_count               = 1,
     max_instance_request_concurrency = 1
-    timeout_seconds                  = 60,
-    available_memory                 = "128Mi"
-    available_cpu                    = 0.083,
+    timeout_seconds                  = 1800,
+    available_memory                 = "2Gi"
+    available_cpu                    = 1,
   }
 }
 

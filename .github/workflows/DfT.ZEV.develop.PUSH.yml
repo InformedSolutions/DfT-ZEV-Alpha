@@ -50,3 +50,9 @@ jobs:
 
     - name: Deploy
       run: make deploy
+
+    - name: Run database migrations
+      run: |
+        curl -m 300 --fail-with-body \
+             -X POST "$(terraform -chdir=infrastructure/terraform output -raw database_migrations_runner_url)" \
+             -H "Authorization: bearer $(gcloud auth print-identity-token)"
