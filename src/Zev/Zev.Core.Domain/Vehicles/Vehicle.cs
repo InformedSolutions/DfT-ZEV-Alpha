@@ -45,5 +45,5 @@ public sealed class Vehicle
     public string Trrc { get; set; }
     public string RegisteredInNation { get; set; }
 
-    public VehicleSummary Summary { get; set; } = new();
+    public VehicleSummary Summary { get; set; }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Zev.Core.Application;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
@@ -53,6 +54,7 @@ public class ServiceStartup : FunctionsStartup
     {
         services.ConfigureBucketSettings(configuration);
         services.AddRepositories();
+        services.AddDomainServices();
         services.AddSerilog(configuration);
         services.AddTransient<GlobalErrorHandler>();
         services.AddTransient<IProcessingService, ChunkProcessingService>();

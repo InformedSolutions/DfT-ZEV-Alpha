@@ -62,7 +62,7 @@ public class VehicleServiceTests
         var vehicle = _fixture.Build<Vehicle>()
             .Without(x => x.Spvc) // Exclude auto-generation for this property
             .With(v => v.TAN, "N2")
-            .With(v => v.Summary, new VehicleSummary()
+            .With(v => v.Summary, new VehicleSummary("123")
             {
                 Zev = true
             })

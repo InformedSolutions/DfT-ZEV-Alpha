@@ -5,17 +5,18 @@ namespace Zev.Core.Application.Vehicles;
 
 public class VehicleService : IVehicleService
 {
-    public IEnumerable<Vehicle> ApplyRules(IList<Vehicle> vehicles)
+    public void ApplyRules(IList<Vehicle> vehicles)
     {
         foreach (var vehicle in vehicles)
         {
             ApplyMultistageVan(vehicle);
             ApplyZev(vehicle);
             ApplyFlagsAndApplicability(vehicle);
-            DetermineBonusCredits(vehicle);
+            
+            //To be implemented later
+            //DetermineBonusCredits(vehicle);
         }
 
-        return vehicles;
     }
 
     public Vehicle ApplyMultistageVan(Vehicle vehicle)
@@ -35,12 +36,14 @@ public class VehicleService : IVehicleService
 
     public Vehicle ApplyZev(Vehicle vehicle)
     {
+        const int minRange = 100;
+        
         if (vehicle.Ewltp == 0)
         {
             vehicle.Summary.Wca = false;
             vehicle.Summary.Wcs = false;
 
-            if (vehicle.Ber >= 100)
+            if (vehicle.Ber >= minRange)
             {
                 vehicle.Summary.Zev = true;
             }
@@ -62,24 +65,24 @@ public class VehicleService : IVehicleService
     {
         if (vehicle.Spvc is null)
         {
-            if (vehicle.TAN == "M1")
+            if (vehicle.TAN == VehicleTan.M1)
             {
                 vehicle.Summary.ZevApplicable = true;
                 vehicle.Summary.Co2Applicable = true;
-                vehicle.Summary.VehicleScheme = "car";
-            }else if (vehicle.TAN == "N1")
+                vehicle.Summary.VehicleScheme = VehicleScheme.Car;
+            }else if (vehicle.TAN == VehicleTan.N1)
             {
                 vehicle.Summary.ZevApplicable = true;
                 vehicle.Summary.Co2Applicable = true;
-                vehicle.Summary.VehicleScheme = "van";
+                vehicle.Summary.VehicleScheme = VehicleScheme.Van;
             }
             else
             {
                 vehicle.Summary.Co2Applicable = false;
-                if (vehicle is { TAN: "N2", Summary.Zev: true, TPMLM: < 4250 })
+                if (vehicle is { TAN: VehicleTan.N2, Summary.Zev: true, TPMLM: < 4250 })
                 {
                     vehicle.Summary.ZevApplicable = true;
-                    vehicle.Summary.VehicleScheme = "van";
+                    vehicle.Summary.VehicleScheme = VehicleScheme.Van;
                 }
                 else
                 {

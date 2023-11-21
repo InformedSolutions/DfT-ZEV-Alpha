@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Serilog;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
@@ -24,18 +26,20 @@ public class ChunkProcessingService : IProcessingService
     private readonly ILogger _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-
+    private readonly IVehicleService _vehicleService;
+    
     private readonly Stopwatch _stopwatch = new Stopwatch();
     private readonly ConcurrentStack<RawVehicleDTO> _bufferStack = new ConcurrentStack<RawVehicleDTO>();
 
     private int _recordCounter = 0;
     private int _bufferCounter = 0;
 
-    public ChunkProcessingService(ILogger logger, IUnitOfWork unitOfWork, IMapper mapper)
+    public ChunkProcessingService(ILogger logger, IUnitOfWork unitOfWork, IMapper mapper, IVehicleService vehicleService)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _vehicleService = vehicleService;
     }
 
     /// <summary>
@@ -100,8 +104,9 @@ public class ChunkProcessingService : IProcessingService
     {
         var stackCount = _bufferStack.Count;
         _logger.Information("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
-        var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack);
-
+        
+        var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack).ToList();
+        _vehicleService.ApplyRules(mappedVehicles);
         await _unitOfWork.Vehicles.BulkInsertAsync(mappedVehicles);
 
         _recordCounter += stackCount;

@@ -70,11 +70,14 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             
             builder.Property(x => x.Trrc)
                 .HasMaxLength(1);
-
+            
             builder.HasOne(x => x.Summary)
-                .WithOne()
+                .WithOne(x => x.Vehicle)
                 .HasForeignKey<VehicleSummary>(x => x.Vin)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                ;
+            builder.Navigation(x => x.Summary)
+                .AutoInclude();
         }
     }

@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Zev.Core.Application\Zev.Core.Application.csproj" />
       <ProjectReference Include="..\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
     </ItemGroup>
 </Project>

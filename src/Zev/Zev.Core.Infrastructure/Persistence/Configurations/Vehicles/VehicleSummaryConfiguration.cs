@@ -8,7 +8,7 @@ public class VehicleSummaryConfiguration : IEntityTypeConfiguration<VehicleSumma
 {
     public void Configure(EntityTypeBuilder<VehicleSummary> builder)
     {
-        builder.HasNoKey();
+        builder.HasKey(x => x.Vin);
         
     }
 }

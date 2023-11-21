@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Zev.Core.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Zev.Core.Infrastructure.Persistence;
 namespace Zev.Core.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121075427_VehicleMigration")]
+    partial class VehicleMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,31 +192,32 @@ namespace Zev.Core.Infrastructure.Migrations
                     b.Property<string>("Vin")
                         .HasColumnType("character varying(17)");
 
-                    b.Property<bool?>("Co2Applicable")
+                    b.Property<bool>("Co2Applicable")
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IncompleteMsv")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("Rrr")
+                    b.Property<bool>("Rrr")
                         .HasColumnType("boolean");
 
                     b.Property<string>("VehicleScheme")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("Wca")
+                    b.Property<bool>("Wca")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("Wcs")
+                    b.Property<bool>("Wcs")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("Zev")
+                    b.Property<bool>("Zev")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("ZevApplicable")
+                    b.Property<bool>("ZevApplicable")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("msv")
+                    b.Property<bool>("msv")
                         .HasColumnType("boolean");
 
                     b.HasKey("Vin");
