@@ -74,7 +74,7 @@ public class ChunkProcessingService : IProcessingService
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error processing file. Rolling back transaction.");
+            _logger.Error(ex, "Error processing file. Rolling back transaction: {TransactionId}.", transaction.TransactionId);
             await transaction.RollbackAsync();
             return ProcessingResult.Fail(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
         }
