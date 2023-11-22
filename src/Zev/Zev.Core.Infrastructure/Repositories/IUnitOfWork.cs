@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.Storage;
+using Zev.Core.Domain.Processes.Services;
 using Zev.Core.Domain.Vehicles;
 using Zev.Core.Domain.Vehicles.Services;
 
@@ -14,6 +15,10 @@ public interface IUnitOfWork
     /// </summary>
     IVehicleRepository Vehicles { get; }
 
+    /// <summary>
+    /// Gets the repository for managing process entities.
+    /// </summary>
+    IProcessRepository Processes { get; }
     /// <summary>
     /// Saves all changes made in the unit of work to the underlying database.
     /// </summary>

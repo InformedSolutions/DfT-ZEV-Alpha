@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Zev.Core.Domain.Processes.Services;
 using Zev.Core.Domain.Vehicles;
 using Zev.Core.Domain.Vehicles.Services;
 
@@ -13,6 +14,7 @@ public static class DependencyInjection
     public static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IVehicleRepository, VehicleRepository>();
+        services.AddScoped<IProcessRepository, ProcessRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
