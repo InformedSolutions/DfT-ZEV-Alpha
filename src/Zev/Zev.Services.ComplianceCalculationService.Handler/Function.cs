@@ -50,12 +50,14 @@ public class Function : IHttpFunction
         var executionId = Guid.NewGuid();
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
-            await ClearVehiclesFromDatabase();
-
             var body = await GetRequestBody(context);
             _logger.Information($"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
 
             var stopwatch = StartStopwatch();
+
+            _logger.Information("Starting truncation of vehicle data");
+            await ClearVehiclesFromDatabase();
+            _logger.Information($"Vehicle data successfully truncated after {stopwatch.ElapsedMilliseconds}ms");
 
             var stream = await DownloadFileFromStorage(body);
             var processingResult = await _processingService.ProcessAsync(stream, body.ChunkSize);
