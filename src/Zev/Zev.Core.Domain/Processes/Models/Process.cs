@@ -20,12 +20,13 @@ public sealed class Process
     public DateTime? Finished { get; set; }
 
     public Process() {}
-    public Process(Guid id)
+    public Process(Guid id, ProcessTypeEnum processType)
     {
         Id = id;
         Created = DateTime.UtcNow;
         State = ProcessStateEnum.Waiting;
         LastUpdated = DateTime.UtcNow;
+        Type = processType;
     }
     
     public void Start()

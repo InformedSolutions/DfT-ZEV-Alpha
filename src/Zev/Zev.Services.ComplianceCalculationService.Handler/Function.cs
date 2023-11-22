@@ -11,6 +11,7 @@ using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Context;
+using Zev.Core.Domain.Processes.Values;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
@@ -49,7 +50,7 @@ public class Function : IHttpFunction
     {
         var executionId = Guid.NewGuid();
         var body = await GetRequestBody(context);
-        var process = new Process(executionId);
+        var process = new Process(executionId, ProcessTypeEnum.ComplianceDataImport);
         process.Start(JsonSerializer.SerializeToDocument(body));
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
