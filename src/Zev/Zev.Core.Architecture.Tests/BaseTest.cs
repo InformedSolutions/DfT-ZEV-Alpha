@@ -1,6 +1,7 @@
 using System.Reflection;
 using Zev.Core.Application.Vehicles;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
 using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Core.Architecture.Tests;

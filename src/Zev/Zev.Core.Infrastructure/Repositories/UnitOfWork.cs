@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Core.Infrastructure.Repositories;

@@ -11,6 +11,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Serilog;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
 using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;

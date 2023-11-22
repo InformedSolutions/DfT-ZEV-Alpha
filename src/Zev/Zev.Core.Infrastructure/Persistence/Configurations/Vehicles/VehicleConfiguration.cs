@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
 
 namespace Zev.Core.Infrastructure.Persistence.Configurations.Vehicles;
 

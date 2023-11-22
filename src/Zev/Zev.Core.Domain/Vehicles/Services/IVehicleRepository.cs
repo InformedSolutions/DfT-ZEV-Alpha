@@ -1,4 +1,6 @@
-namespace Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
+
+namespace Zev.Core.Domain.Vehicles.Services;
 
 /// <summary>
 /// Represents a repository for managing vehicles.

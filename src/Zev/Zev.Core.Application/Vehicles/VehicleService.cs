@@ -1,5 +1,7 @@
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
 using Zev.Core.Domain.Vehicles.Services;
+using Zev.Core.Domain.Vehicles.Values;
 
 namespace Zev.Core.Application.Vehicles;
 
