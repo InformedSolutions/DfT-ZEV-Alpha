@@ -27,8 +27,6 @@ public static class Setup
 
    public static WebApplication SetupWebApplication(this WebApplication app)
    {
-      
-      app.MapGet("/", () => "Hello World!");
       app.MapEndpoints();
       return app;
    }

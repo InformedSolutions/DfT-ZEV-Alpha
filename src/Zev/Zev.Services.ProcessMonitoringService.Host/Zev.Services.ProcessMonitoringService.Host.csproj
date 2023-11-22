@@ -10,11 +10,4 @@
       <ProjectReference Include="..\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\DeleteProcess\" />
-      <Folder Include="Features\GetProcessById\" />
-      <Folder Include="Features\GetProcesses\" />
-      <Folder Include="Features\UpdateProcess\" />
-    </ItemGroup>
-
 </Project>
