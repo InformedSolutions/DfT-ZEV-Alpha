@@ -19,7 +19,7 @@ public sealed class RawVehicleDTO
     public string Cr { get; set; }
     public int M { get; set; }
     public int MT { get; set; }
-    public int MRVL { get; set; }
+    public int? MRVL { get; set; }
     public int Ewltp { get; set; }
     public int TPMLM { get; set; }
     public int W { get; set; }
