@@ -1,6 +1,5 @@
 using AutoFixture;
 using Zev.Core.Application.Vehicles;
-using Zev.Core.Domain.Vehicles;
 using Zev.Core.Domain.Vehicles.Models;
 
 namespace Zev.Core.Application.Tests.Vehicles;
@@ -27,7 +26,7 @@ public class VehicleServiceTests
         var vehicle = _fixture.Build<Vehicle>()
             .Without(x => x.Spvc) // Exclude auto-generation for this property
             .With(x => x.Summary, new VehicleSummary())
-            .With(v => v.TAN, "M1")
+            .With(v => v.Ct, "M1")
             .Create();
 
         // Act
@@ -46,7 +45,7 @@ public class VehicleServiceTests
         var vehicle = _fixture.Build<Vehicle>()
             .Without(x => x.Spvc) // Exclude auto-generation for this property
             .With(x => x.Summary, new VehicleSummary())
-            .With(v => v.TAN, "N1")
+            .With(v => v.Ct, "N1")
             .Create();
 
         // Act
@@ -64,7 +63,7 @@ public class VehicleServiceTests
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
             .Without(x => x.Spvc) // Exclude auto-generation for this property
-            .With(v => v.TAN, "N2")
+            .With(v => v.Ct, "N2")
             .With(v => v.Summary, new VehicleSummary("123")
             {
                 Zev = true
@@ -168,7 +167,7 @@ public class VehicleServiceTests
 
         // Assert
         vehicle.Summary.msv.Should().BeFalse(); // Assuming ApplyMultistageVan sets msv to true
-        vehicle.Summary.IncompleteMsv.Should().BeNull(); // Default
+        vehicle.Summary.IncompleteMsv.Should().BeFalse(); // Default
     }
 
     [Test]
