@@ -16,6 +16,7 @@ using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
+using Zev.Services.ComplianceCalculationService.Handler.Validators;
 
 namespace Zev.Services.ComplianceCalculationService.Handler.Processing;
 
@@ -29,6 +30,7 @@ public class ChunkProcessingService : IProcessingService
     private readonly IMapper _mapper;
     private readonly IVehicleService _vehicleService;
 
+    private readonly RawVehicleDTOValidator _validator = new();
     private readonly Stopwatch _stopwatch = new Stopwatch();
     private readonly ConcurrentStack<RawVehicleDTO> _bufferStack = new ConcurrentStack<RawVehicleDTO>();
 
@@ -83,7 +85,10 @@ public class ChunkProcessingService : IProcessingService
     {
         using var csv = new CsvReader(reader, GetCsvConfig());
         csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-
+        await ValidateCsv(reader);
+        
+        reader.
+        
         while (await csv.ReadAsync())
         {
             var record = csv.GetRecord<RawVehicleDTO>();
@@ -92,6 +97,21 @@ public class ChunkProcessingService : IProcessingService
             if (_bufferStack.Count >= chunkSize)
             {
                 await ProcessBuffer();
+            }
+        }
+    }
+
+    private async Task ValidateCsv(StreamReader reader)
+    {
+        using var csv = new CsvReader(reader, GetCsvConfig());
+        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
+        while (await csv.ReadAsync())
+        {
+            var record = csv.GetRecord<RawVehicleDTO>();
+            var result = await _validator.ValidateAsync(record);
+            if (!result.IsValid)
+            {
+                _logger.Error("Validation failed for record {RecordNumber}. Errors: {Errors}", csv.CurrentIndex, result.Errors);
             }
         }
     }

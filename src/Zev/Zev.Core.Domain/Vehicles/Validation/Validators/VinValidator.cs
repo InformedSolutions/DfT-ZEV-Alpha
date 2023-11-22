@@ -3,9 +3,9 @@ using FluentValidation.Validators;
 
 namespace Zev.Core.Domain.Vehicles.Validation.Validators;
 
-public class VinValidator<T> : PropertyValidator<T, string>
+public class VinValidator<T> : AsyncPropertyValidator<T, string>
 {
-    public override bool IsValid(ValidationContext<T> context, string vin)
+    public override async Task<bool> IsValidAsync(ValidationContext<T> context, string vin, CancellationToken token)
     {
         if (vin.Length != 17)
             return false;
@@ -38,7 +38,6 @@ public class VinValidator<T> : PropertyValidator<T, string>
 
     protected override string GetDefaultMessageTemplate(string errorCode)
         => "{PropertyName} must be a valid VIN number.";
-
     private static int CalculateResult(char c)
     {
         if (char.IsNumber(c))

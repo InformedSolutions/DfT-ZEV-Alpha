@@ -23,10 +23,10 @@ public class VinValidatorTests
     [TestCase("EHE1UNFH1NZU0ZL4L")]
     [TestCase("MGFHZB2J5DBHZUMVD")]
     [TestCase("YZK9XFDC706EV78AZ")]
-    public void IsValid_WhenCalledWithValidVin_ShouldReturnTrue(string validVin)
+    public async Task IsValid_WhenCalledWithValidVin_ShouldReturnTrue(string validVin)
     {
         // Act
-        var result = _validator.IsValid(new ValidationContext<string>(validVin), validVin);
+        var result = await _validator.IsValidAsync(new ValidationContext<string>(validVin), validVin, default);
 
         // Assert
         result.Should().BeTrue();
@@ -38,10 +38,10 @@ public class VinValidatorTests
     [TestCase("YZK9XFDC706EV78AQ")]
     [TestCase("YYYY1231231ZZZZZZ")]
     [TestCase("PL3EM2W48UR96GFJB")]
-    public void IsValid_WhenCalledWithInvalidVin_ShouldReturnFalse(string invalidVin)
+    public async Task IsValid_WhenCalledWithInvalidVin_ShouldReturnFalse(string invalidVin)
     {
         // Act
-        var result = _validator.IsValid(new ValidationContext<string>(invalidVin), invalidVin);
+        var result = await _validator.IsValidAsync(new ValidationContext<string>(invalidVin), invalidVin, default);
 
         // Assert
         result.Should().BeFalse();
