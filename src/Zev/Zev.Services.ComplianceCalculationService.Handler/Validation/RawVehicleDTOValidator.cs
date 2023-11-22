@@ -2,7 +2,7 @@ using FluentValidation;
 using Zev.Core.Domain.Vehicles.Validation.Validators;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 
-namespace Zev.Services.ComplianceCalculationService.Handler.Validators;
+namespace Zev.Services.ComplianceCalculationService.Handler.Validation;
 
 public class RawVehicleDTOValidator : AbstractValidator<RawVehicleDTO>
 {

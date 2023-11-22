@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Google.Cloud.Functions.Framework;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +19,7 @@ using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Persistence;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Processing;
+using Zev.Services.ComplianceCalculationService.Handler.Validation;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
@@ -58,9 +60,15 @@ public class Function : IHttpFunction
             var stopwatch = StartStopwatch();
 
             var stream = await DownloadFileFromStorage(body);
-            await _csvValidatorService.ValidateCsv(stream);
             
-            //There might be memory spikes here, but we are not sure how big the file is going to be.
+            var validationResult = await _csvValidatorService.ValidateAsync(stream);
+            if (validationResult.Errors.Any())
+            {
+                stopwatch.Stop();
+                await WriteErrorResponse(context, stopwatch.ElapsedMilliseconds, executionId, validationResult);
+                return;
+            }
+            //There might be memory spikes here. Need to test this.
             stream = new MemoryStream(stream.ToArray());
             var processingResult = await _processingService.ProcessAsync(stream, body.ChunkSize);
 
@@ -102,6 +110,21 @@ public class Function : IHttpFunction
         await context.Response.WriteAsync(resJson);
     }
 
+    private async Task WriteErrorResponse(HttpContext context, long elapsedMilliseconds, Guid executionId, CsvValidationResponse validationResult)
+    {
+        var res = new
+        {
+            ExecutionId = executionId,
+            ExecutionTime = elapsedMilliseconds,
+            Errors = validationResult.Errors,
+        };
+        var resJson = JsonSerializer.Serialize(res);
+        _logger.Information("Finished validating file: {resJson}", resJson);
+
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(resJson);
+    }
+    
     /// <summary>
     /// Gets the request body from the HTTP context.
     /// </summary>

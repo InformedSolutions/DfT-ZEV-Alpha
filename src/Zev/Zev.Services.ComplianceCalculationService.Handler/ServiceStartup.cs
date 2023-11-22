@@ -15,6 +15,7 @@ using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
 using Zev.Services.ComplianceCalculationService.Handler.Middleware;
 using Zev.Services.ComplianceCalculationService.Handler.Processing;
+using Zev.Services.ComplianceCalculationService.Handler.Validation;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 

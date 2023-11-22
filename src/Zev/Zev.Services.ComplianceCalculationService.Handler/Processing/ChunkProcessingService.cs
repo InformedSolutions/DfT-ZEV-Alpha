@@ -16,7 +16,7 @@ using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
-using Zev.Services.ComplianceCalculationService.Handler.Validators;
+using Zev.Services.ComplianceCalculationService.Handler.Validation;
 
 namespace Zev.Services.ComplianceCalculationService.Handler.Processing;
 
