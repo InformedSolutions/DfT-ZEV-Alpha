@@ -4,7 +4,6 @@
         <TargetFramework>net6.0</TargetFramework>
         <PublishReadyToRun>true</PublishReadyToRun>
         <PublishTrimmed>copyused</PublishTrimmed>
-        
     </PropertyGroup>
 
     <ItemGroup>
