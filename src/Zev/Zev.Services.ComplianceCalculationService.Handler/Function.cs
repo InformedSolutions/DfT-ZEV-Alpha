@@ -1,25 +1,22 @@
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Google.Cloud.Functions.Framework;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using CsvHelper;
-using CsvHelper.Configuration;
 using Google.Cloud.Functions.Hosting;
 using Google.Cloud.Storage.V1;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Context;
 using Zev.Core.Infrastructure.Configuration;
-using Zev.Core.Infrastructure.Persistence;
+using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Processing;
 using Zev.Services.ComplianceCalculationService.Handler.Validation;
+using Process = Zev.Core.Domain.Processes.Models.Process;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
@@ -32,16 +29,15 @@ public class Function : IHttpFunction
     private readonly ILogger _logger;
     private readonly IProcessingService _processingService;
     private readonly CsvValidatorService _csvValidatorService;
-    private readonly AppDbContext _context;
     private readonly BucketsConfiguration _bucketsConfiguration;
+    private readonly IUnitOfWork _unitOfWork;
 
-
-    public Function(AppDbContext context, ILogger logger, IProcessingService processingService, IOptions<BucketsConfiguration> bucketsConfiguration, CsvValidatorService csvValidatorService)
+    public Function(ILogger logger, IProcessingService processingService, IOptions<BucketsConfiguration> bucketsConfiguration, CsvValidatorService csvValidatorService, IUnitOfWork unitOfWork)
     {
-        _context = context;
         _logger = logger;
         _processingService = processingService;
         _csvValidatorService = csvValidatorService;
+        _unitOfWork = unitOfWork;
         _bucketsConfiguration = bucketsConfiguration.Value;
     }
 
@@ -52,36 +48,77 @@ public class Function : IHttpFunction
     public async Task HandleAsync(HttpContext context)
     {
         var executionId = Guid.NewGuid();
+        var body = await GetRequestBody(context);
+        var process = new Process(executionId);
+        process.Start(JsonSerializer.SerializeToDocument(body));
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
-            var body = await GetRequestBody(context);
-            _logger.Information($"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
+            await _unitOfWork.Processes.AddAsync(process);
+            await _unitOfWork.SaveChangesAsync();
 
-            var stopwatch = StartStopwatch();
-
-            var stream = await DownloadFileFromStorage(body);
-            
-            var validationResult = await _csvValidatorService.ValidateAsync(stream);
-            if (validationResult.Errors.Any())
-            {
-                stopwatch.Stop();
-                await WriteErrorResponse(context, stopwatch.ElapsedMilliseconds, executionId, validationResult);
-                return;
-            }
-            //There might be memory spikes here. Need to test this.
-            stream = new MemoryStream(stream.ToArray());
-            var processingResult = await _processingService.ProcessAsync(stream, body.ChunkSize);
-
-            stopwatch.Stop();
-
-            await WriteResponse(context, processingResult, stopwatch.ElapsedMilliseconds, executionId);
+            await Run(body, process).ConfigureAwait(false);
         }
+
+        var res = new FunctionResponse()
+        {
+            ExecutionId = executionId,
+            StartDate = process.Created
+        };
+
+        var resJson = JsonSerializer.Serialize(res);
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(resJson);
     }
 
-    private async Task ClearVehiclesFromDatabase()
+    private async Task Run(CalculateComplianceRequestDto body, Core.Domain.Processes.Models.Process process)
     {
-        await _context.Vehicles.ExecuteDeleteAsync();
-        await _context.SaveChangesAsync();
+        _logger.Information($"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
+
+        var stopwatch = StartStopwatch();
+
+        var stream = await DownloadFileFromStorage(body);
+
+        var validationResult = await _csvValidatorService.ValidateAsync(stream);
+        if (validationResult.Errors.Any())
+        {
+            await HandleValidationErrors(validationResult, process, stopwatch);
+            return;
+        }
+
+        //There might be memory spikes here. Need to test this.
+        stream = new MemoryStream(stream.ToArray());
+        var processingResult = await _processingService.ProcessAsync(stream, body.ChunkSize);
+        stopwatch.Stop();
+        await HandleProcessingResult(processingResult, process, stopwatch);
+    }
+
+    private async Task HandleValidationErrors(CsvValidationResponse validationResult, Process process, Stopwatch stopwatch)
+    {
+        stopwatch.Stop();
+        process.Fail(JsonSerializer.SerializeToDocument(validationResult));
+        _unitOfWork.Processes.Update(process);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    private async Task HandleProcessingResult(ProcessingResult processingResult, Process process, Stopwatch stopwatch)
+    {
+        var response = new ComplianceServiceResult(processingResult, stopwatch.ElapsedMilliseconds);
+        if (response.Success)
+        {
+            process.Finish(JsonSerializer.SerializeToDocument(response));
+            _unitOfWork.Processes.Update(process);
+            await _unitOfWork.SaveChangesAsync();
+            var resJson = JsonSerializer.Serialize(response);
+            _logger.Information("Finished processing file: {resJson}", resJson);
+        }
+        else
+        {
+            process.Fail(JsonSerializer.SerializeToDocument(response));
+            _unitOfWork.Processes.Update(process);
+            await _unitOfWork.SaveChangesAsync();
+            var resJson = JsonSerializer.Serialize(response);
+            _logger.Information("Failed processing file: {resJson}", resJson);
+        }
     }
 
     private Stopwatch StartStopwatch()
@@ -100,31 +137,6 @@ public class Function : IHttpFunction
         return stream;
     }
 
-    private async Task WriteResponse(HttpContext context, ProcessingResult processingResult, long elapsedMilliseconds, Guid executionId)
-    {
-        var response = new ComplianceServiceResponse(processingResult, elapsedMilliseconds, executionId);
-        var resJson = JsonSerializer.Serialize(response);
-        _logger.Information("Finished processing file: {resJson}", resJson);
-
-        context.Response.ContentType = "application/json";
-        await context.Response.WriteAsync(resJson);
-    }
-
-    private async Task WriteErrorResponse(HttpContext context, long elapsedMilliseconds, Guid executionId, CsvValidationResponse validationResult)
-    {
-        var res = new
-        {
-            ExecutionId = executionId,
-            ExecutionTime = elapsedMilliseconds,
-            Errors = validationResult.Errors,
-        };
-        var resJson = JsonSerializer.Serialize(res);
-        _logger.Information("Finished validating file: {resJson}", resJson);
-
-        context.Response.ContentType = "application/json";
-        await context.Response.WriteAsync(resJson);
-    }
-    
     /// <summary>
     /// Gets the request body from the HTTP context.
     /// </summary>

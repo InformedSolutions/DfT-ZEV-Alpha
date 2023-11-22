@@ -3,19 +3,17 @@ using Zev.Services.ComplianceCalculationService.Handler.Processing;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
-public sealed class ComplianceServiceResponse
+public sealed class ComplianceServiceResult
 {
     public long ExecutionTime { get; set; }
-    public Guid ExecutionId { get; set; }
     public bool Success { get; set; }
     public int Count { get; set; }
     public long ProcessingTime { get; set; }
     public int BufferCount { get; set; }
 
-    public ComplianceServiceResponse(ProcessingResult processingResult, long executionTime, Guid executionId)
+    public ComplianceServiceResult(ProcessingResult processingResult, long executionTime)
     {
         ExecutionTime = executionTime;
-        ExecutionId = executionId;
         Count = processingResult.Count;
         Success = processingResult.Success;
         ProcessingTime = processingResult.ProcessingTime;

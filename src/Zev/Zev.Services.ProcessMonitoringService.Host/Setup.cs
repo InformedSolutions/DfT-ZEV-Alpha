@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Logging;
@@ -11,6 +13,8 @@ public static class Setup
 {
    public static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
    {
+      builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+      
       var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
       
       builder.Services.AddDbContext<AppDbContext>(opt =>
