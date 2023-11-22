@@ -51,6 +51,7 @@ public class ChunkProcessingService : IProcessingService
         _logger.Information("Processing started.");
         _stopwatch.Start();
 
+        
         using var reader = new StreamReader(stream);
         await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
@@ -83,11 +84,9 @@ public class ChunkProcessingService : IProcessingService
 
     private async Task ReadFromCsvAndProcessBuffer(StreamReader reader, int chunkSize)
     {
-        using var csv = new CsvReader(reader, GetCsvConfig());
+        using var csv = new CsvReader(reader, CsvHelper.GetCsvConfig());
         csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-        await ValidateCsv(reader);
         
-        reader.
         
         while (await csv.ReadAsync())
         {
@@ -100,22 +99,6 @@ public class ChunkProcessingService : IProcessingService
             }
         }
     }
-
-    private async Task ValidateCsv(StreamReader reader)
-    {
-        using var csv = new CsvReader(reader, GetCsvConfig());
-        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-        while (await csv.ReadAsync())
-        {
-            var record = csv.GetRecord<RawVehicleDTO>();
-            var result = await _validator.ValidateAsync(record);
-            if (!result.IsValid)
-            {
-                _logger.Error("Validation failed for record {RecordNumber}. Errors: {Errors}", csv.CurrentIndex, result.Errors);
-            }
-        }
-    }
-
     private async Task ProcessBuffer()
     {
         var stopwatch = Stopwatch.StartNew();
@@ -139,13 +122,4 @@ public class ChunkProcessingService : IProcessingService
         _bufferCounter++;
         _bufferStack.Clear();
     }
-
-    private static CsvConfiguration GetCsvConfig() =>
-        new(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = true,
-            Delimiter = ",",
-            IgnoreBlankLines = true,
-            TrimOptions = TrimOptions.Trim,
-        };
 }

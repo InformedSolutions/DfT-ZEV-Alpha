@@ -58,6 +58,7 @@ public class ServiceStartup : FunctionsStartup
         services.AddSerilog(configuration);
         services.AddTransient<GlobalErrorHandler>();
         services.AddTransient<IProcessingService, ChunkProcessingService>();
+        services.AddTransient<CsvValidatorService>();
         services.AddAutoMapper(typeof(VehicleMapper));
         services.AddHttpContextAccessor();
     }
