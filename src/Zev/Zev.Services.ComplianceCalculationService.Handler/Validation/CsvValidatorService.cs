@@ -24,6 +24,7 @@ public class CsvValidatorService : ICsvValidatorService
         _logger = logger;
     }
 
+
     public async Task<CsvValidationResponse> ValidateAsync(Stream stream)
     {
         using var reader = new StreamReader(stream);
@@ -43,23 +44,13 @@ public class CsvValidatorService : ICsvValidatorService
                 errors.Add(new ValidatorError()
                 {
                     Index = index,
-                    Messages = new []{ex.Message},
+                    Messages = new[] { ex.Message },
                 });
             }
 
             if (record is not null)
             {
-                var result = await _validator.ValidateAsync(record);
-                if (!result.IsValid)
-                {
-                    errors.Add(new ValidatorError()
-                    {
-                        Index = index, 
-                        Messages = result.Errors.Select(x => x.ErrorMessage).ToArray()
-                    });
-                
-                    _logger.Error("Validation failed for record {RecordNumber}. Errors: {Errors}", index, result.Errors);
-                }
+                await ValidateRecordAsync(record, errors);
             }
 
             if (errors.Count >= ErrorCap)
@@ -71,5 +62,20 @@ public class CsvValidatorService : ICsvValidatorService
         {
             Errors = errors
         };
+    }
+
+    private async Task ValidateRecordAsync(RawVehicleDTO record, List<ValidatorError> errors)
+    {
+        var result = await _validator.ValidateAsync(record);
+        if (!result.IsValid)
+        {
+            errors.Add(new ValidatorError()
+            {
+                Index = index,
+                Messages = result.Errors.Select(x => x.ErrorMessage).ToArray()
+            });
+
+            _logger.Error("Validation failed for record {RecordNumber}. Errors: {Errors}", index, result.Errors);
+        }
     }
 }
