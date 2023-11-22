@@ -37,6 +37,7 @@ public class VehicleService : IVehicleService
         if (vehicle.MM is null && vehicle.MRVL is null)
         {
             vehicle.Summary.msv = false;
+            vehicle.Summary.IncompleteMsv = false;
         }
         else
         {
@@ -56,14 +57,10 @@ public class VehicleService : IVehicleService
         {
             vehicle.Summary.Wca = false;
             vehicle.Summary.Wcs = false;
+            vehicle.Summary.Zev = true;
 
-            if (vehicle.Ber >= minRange)
+            if (vehicle.Ber <= minRange)
             {
-                vehicle.Summary.Zev = true;
-            }
-            else
-            {
-                vehicle.Summary.Zev = true;
                 vehicle.Summary.Rrr = false;
             }
         }
@@ -80,13 +77,13 @@ public class VehicleService : IVehicleService
     {
         if (vehicle.Spvc is null)
         {
-            if (vehicle.TAN == VehicleTan.M1)
+            if (vehicle.Ct == VehicleTan.M1)
             {
                 vehicle.Summary.ZevApplicable = true;
                 vehicle.Summary.Co2Applicable = true;
                 vehicle.Summary.VehicleScheme = VehicleScheme.Car;
             }
-            else if (vehicle.TAN == VehicleTan.N1)
+            else if (vehicle.Ct == VehicleTan.N1)
             {
                 vehicle.Summary.ZevApplicable = true;
                 vehicle.Summary.Co2Applicable = true;
@@ -95,7 +92,7 @@ public class VehicleService : IVehicleService
             else
             {
                 vehicle.Summary.Co2Applicable = false;
-                if (vehicle is { TAN: VehicleTan.N2, Summary.Zev: true, TPMLM: < 4250 })
+                if (vehicle is { Ct: VehicleTan.N2, Summary.Zev: true, TPMLM: < 4250 })
                 {
                     vehicle.Summary.ZevApplicable = true;
                     vehicle.Summary.VehicleScheme = VehicleScheme.Van;
