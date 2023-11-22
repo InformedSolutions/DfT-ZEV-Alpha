@@ -1,4 +1,4 @@
-namespace Zev.Core.Domain.Vehicles;
+namespace Zev.Core.Domain.Vehicles.Values;
 
 public class VehicleTan
 {

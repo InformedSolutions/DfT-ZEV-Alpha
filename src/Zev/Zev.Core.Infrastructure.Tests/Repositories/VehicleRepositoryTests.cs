@@ -2,6 +2,7 @@ using AutoFixture;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
 using Zev.Core.Infrastructure.Persistence;
 using Zev.Core.Infrastructure.Repositories;
 
