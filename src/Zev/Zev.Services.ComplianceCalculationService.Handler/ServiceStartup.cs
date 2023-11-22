@@ -15,6 +15,7 @@ using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
 using Zev.Services.ComplianceCalculationService.Handler.Middleware;
 using Zev.Services.ComplianceCalculationService.Handler.Processing;
+using Zev.Services.ComplianceCalculationService.Handler.Validation;
 
 namespace Zev.Services.ComplianceCalculationService.Handler;
 
@@ -58,6 +59,7 @@ public class ServiceStartup : FunctionsStartup
         services.AddSerilog(configuration);
         services.AddTransient<GlobalErrorHandler>();
         services.AddTransient<IProcessingService, ChunkProcessingService>();
+        services.AddTransient<CsvValidatorService>();
         services.AddAutoMapper(typeof(VehicleMapper));
         services.AddHttpContextAccessor();
     }

@@ -1,6 +1,7 @@
 using AutoFixture;
 using Zev.Core.Application.Vehicles;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
 
 namespace Zev.Core.Application.Tests.Vehicles;
 

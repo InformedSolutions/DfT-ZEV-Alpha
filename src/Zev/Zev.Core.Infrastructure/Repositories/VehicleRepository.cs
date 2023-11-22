@@ -1,11 +1,13 @@
 using EFCore.BulkExtensions;
 using Serilog;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
+using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Persistence;
 
 namespace Zev.Core.Infrastructure.Repositories;
 
-/// <inheritdoc cref="Zev.Core.Domain.Vehicles.IVehicleRepository"/>
+/// <inheritdoc cref="IVehicleRepository"/>
 public sealed class VehicleRepository : IVehicleRepository, IDisposable
 {
     private readonly AppDbContext _context;

@@ -11,10 +11,12 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Serilog;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Models;
 using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Maps;
+using Zev.Services.ComplianceCalculationService.Handler.Validation;
 
 namespace Zev.Services.ComplianceCalculationService.Handler.Processing;
 
@@ -28,6 +30,7 @@ public class ChunkProcessingService : IProcessingService
     private readonly IMapper _mapper;
     private readonly IVehicleService _vehicleService;
 
+    private readonly RawVehicleDTOValidator _validator = new();
     private readonly Stopwatch _stopwatch = new Stopwatch();
     private readonly ConcurrentStack<RawVehicleDTO> _bufferStack = new ConcurrentStack<RawVehicleDTO>();
 
@@ -48,6 +51,7 @@ public class ChunkProcessingService : IProcessingService
         _logger.Information("Processing started.");
         _stopwatch.Start();
 
+        
         using var reader = new StreamReader(stream);
         await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
@@ -80,9 +84,10 @@ public class ChunkProcessingService : IProcessingService
 
     private async Task ReadFromCsvAndProcessBuffer(StreamReader reader, int chunkSize)
     {
-        using var csv = new CsvReader(reader, GetCsvConfig());
+        using var csv = new CsvReader(reader, CsvHelper.GetCsvConfig());
         csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-
+        
+        
         while (await csv.ReadAsync())
         {
             var record = csv.GetRecord<RawVehicleDTO>();
@@ -94,7 +99,6 @@ public class ChunkProcessingService : IProcessingService
             }
         }
     }
-
     private async Task ProcessBuffer()
     {
         var stopwatch = Stopwatch.StartNew();
@@ -118,13 +122,4 @@ public class ChunkProcessingService : IProcessingService
         _bufferCounter++;
         _bufferStack.Clear();
     }
-
-    private static CsvConfiguration GetCsvConfig() =>
-        new(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = true,
-            Delimiter = ",",
-            IgnoreBlankLines = true,
-            TrimOptions = TrimOptions.Trim,
-        };
 }

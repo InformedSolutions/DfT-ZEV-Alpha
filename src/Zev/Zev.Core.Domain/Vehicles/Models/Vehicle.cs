@@ -1,4 +1,4 @@
-namespace Zev.Core.Domain.Vehicles;
+namespace Zev.Core.Domain.Vehicles.Models;
 
 
 public sealed class Vehicle

@@ -1,3 +1,5 @@
+using Zev.Core.Domain.Vehicles.Models;
+
 namespace Zev.Core.Domain.Vehicles.Services;
 
 /// <summary>

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using Zev.Core.Domain.Vehicles;
+using Zev.Core.Domain.Vehicles.Services;
 
 namespace Zev.Core.Infrastructure.Repositories;
 
