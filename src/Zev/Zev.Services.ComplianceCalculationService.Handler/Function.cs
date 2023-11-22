@@ -59,6 +59,10 @@ public class Function : IHttpFunction
 
             var stopwatch = StartStopwatch();
 
+            _logger.Information("Starting truncation of vehicle data");
+            await ClearVehiclesFromDatabase();
+            _logger.Information($"Vehicle data successfully truncated after {stopwatch.ElapsedMilliseconds}ms");
+
             var stream = await DownloadFileFromStorage(body);
             
             var validationResult = await _csvValidatorService.ValidateAsync(stream);
@@ -80,8 +84,9 @@ public class Function : IHttpFunction
 
     private async Task ClearVehiclesFromDatabase()
     {
-        await _context.Vehicles.ExecuteDeleteAsync();
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE public.\"Vehicles\" CASCADE;");
         await _context.SaveChangesAsync();
+        await _context.Database.ExecuteSqlRawAsync("VACUUM ANALYZE;");
     }
 
     private Stopwatch StartStopwatch()
