@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Core\Zev.Core.Domain\Zev.Core.Domain.csproj" />
+      <ProjectReference Include="..\Zev.Core.Domain\Zev.Core.Domain.csproj" />
     </ItemGroup>
 
 </Project>
