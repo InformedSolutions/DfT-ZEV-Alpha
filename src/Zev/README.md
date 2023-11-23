@@ -8,53 +8,36 @@ This GitHub repository contains the source code for the Zev Services project, wh
 
 - [Project Name: Zev Services](#project-name-zev-services)
   - [Overview](#overview)
+  - [Core](#core)
   - [Services](#services)
-    - [1. Compliance Calculation Service](#1-compliance-calculation-service)
-      - [Deployment](#deployment)
-  - [Running Unit Tests](#running-unit-tests)
+  - [Running Unit Tests](#running-tests)
   - [Deployment](#deployment)
   - [Local Development](#local-development)
       - [Docker](#docker)
       - [Running dotnet apps locally](#running-dotnet-apps-locally)
       - [Working with Entity Framework](#working-with-entity-framework)
 
+## Core
+This directory contains shared code for this solution, it resemblies onion structure. In there you can find:
+
+ - Domain (Entity models, Value object, Interfaces for repositories/services, validation rules)
+ - Infrastructure (Implementations of repositories, all of common infrastructure, entity configurations, logging etc)
+ - Application (strictly for buisness logic)
+
 ## Services
+This directory contains all services for this solution. Including cloud runs, cloud functions etc. You can find out more about services in `./Services/README.md`
 
-### 1. Compliance Calculation Service
+## Deployment Notice
+Before deploying any service, ensure that you have the necessary credentials and configurations set up for your target environment. Refer to the service-specific deployment commands provided in the service descriptions.
 
-- **Type**: GCP Cloud Function
-- **Description**: This service is responsible for importing vehicle data from a CSV file, validating it, and then inserting the data into a PostgreSQL database. It plays a crucial role in the compliance calculation process for zero-emission vehicles.
-
-#### Deployment
-
-To deploy the Compliance Calculation Service, use the following command:
-
-```bash
-gcloud functions deploy dev-zev-compliance-calculation-service --allow-unauthenticated --entry-point Zev.Services.ComplianceCalculationService.Handler.Function --gen2 --region europe-west1 --runtime dotnet6 --trigger-http --update-build-env-vars GOOGLE_BUILDABLE=./Zev.Services.ComplianceCalculationService.Handler
-```
-Make sure to replace dev-zev-compliance-calculation-service with an appropriate service name and adjust other parameters as needed.
-
-### 2. Migrator
-- **Type**: GCP Cloud Function
-- **Description**: This cloud function runs ef core migrations, experimental use only.
-
-#### Deployment
-To deploy migrator service, use the following command:
-``` bash
-gcloud functions deploy dev-migrator --allow-unauthenticated --entry-point Migrator.Function --gen2 --region europe-west1 --runtime dotnet6 --trigger-http --update-build-env-vars GOOGLE_BUILDABLE=./Migrator
-```
+## Local Development:
 
 ## Running Tests
   1. Open terminal in the root directory of specific project.
   2. Run the following command
   ``` bash
   dotnet test
-  ```
-## Deployment Notice
-Before deploying any service, ensure that you have the necessary credentials and configurations set up for your target environment. Refer to the service-specific deployment commands provided in the service descriptions.
-
-## Local Development:
- 
+  ``` 
 
 ### Docker
 This project utilizes docker-compose for creating local development environment. You can check `../../infrastructure/docker` directory for more info.
