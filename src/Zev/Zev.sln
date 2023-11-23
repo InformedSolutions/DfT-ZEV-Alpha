@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zev.Core.Domain.Tests", "Ze
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SchemeData", "SchemeData", "{4D459E78-223E-4034-85F9-2C7D4DF702D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zev.Services.SchemeData.Api", "Services\Zev.Services.SchemeData.Api\Zev.Services.SchemeData.Api.csproj", "{D4CDD427-5A04-496F-80B4-BF1AF6158BC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zev.Services.SchemeData.Api", "Services\SchemeData\Zev.Services.SchemeData.Api\Zev.Services.SchemeData.Api.csproj", "{D4CDD427-5A04-496F-80B4-BF1AF6158BC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
