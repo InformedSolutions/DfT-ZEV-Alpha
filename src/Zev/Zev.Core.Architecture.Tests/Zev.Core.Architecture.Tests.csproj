@@ -19,9 +19,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Zev.Core.Application\Zev.Core.Application.csproj" />
-      <ProjectReference Include="..\Zev.Core.Domain\Zev.Core.Domain.csproj" />
-      <ProjectReference Include="..\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
+      <ProjectReference Include="..\Core\Zev.Core.Application\Zev.Core.Application.csproj" />
+      <ProjectReference Include="..\Core\Zev.Core.Domain\Zev.Core.Domain.csproj" />
+      <ProjectReference Include="..\Core\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

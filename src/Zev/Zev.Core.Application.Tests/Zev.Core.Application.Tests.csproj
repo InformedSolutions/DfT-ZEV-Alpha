@@ -19,8 +19,4 @@
         <PackageReference Include="coverlet.collector" Version="3.1.2"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Zev.Core.Application\Zev.Core.Application.csproj" />
-    </ItemGroup>
-
 </Project>
