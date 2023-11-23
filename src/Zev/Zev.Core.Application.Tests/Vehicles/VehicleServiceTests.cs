@@ -245,4 +245,23 @@ public class VehicleServiceTests
         vehicle.Summary.msv.Should().BeTrue(); // Assuming ApplyMultistageVan sets msv to true
         vehicle.Summary.IncompleteMsv.Should().BeTrue(); // Default
     }
+    
+    [Test]
+    public void DetermineBonusCredits_WhenCalled_ShouldThrowNotImplementedException()
+    {
+        // Arrange
+        var vehicle =_fixture.Build<Vehicle>()
+            .Without(x => x.Spvc) // Exclude auto-generation for this property
+            .With(x => x.Summary, new VehicleSummary())
+            .With(v => v.Ct, "M1")
+            .With(v => v.Ewltp, 0)
+            .With(v => v.Ber, 100)
+            .With(x => x.Summary, new VehicleSummary("123"))
+            .With(x => x.MM,1)
+            .With(x => x.MRVL,2)
+            .Create();
+
+        // Act & Assert
+        Assert.Throws<NotImplementedException>(() => _service.DetermineBonusCredits(vehicle));
+    }
 }
