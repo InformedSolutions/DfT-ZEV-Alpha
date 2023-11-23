@@ -28,6 +28,9 @@ build:
 test:
 	dotnet test src/Zev
 
+test-coverage:
+	dotnet test src/Zev /p:CollectCoverage=true  /p:CoverletOutput=../CoverageResults/ /p:MergeWith="../CoverageResults/coverage.json" -m:1
+
 build-test: build test
 
 # Infrastructure and deployment
