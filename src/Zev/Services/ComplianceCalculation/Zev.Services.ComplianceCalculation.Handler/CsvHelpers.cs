@@ -4,9 +4,8 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
 using Zev.Services.ComplianceCalculation.Handler.Maps;
-using Zev.Services.ComplianceCalculationService.Handler.Maps;
 
-namespace Zev.Services.ComplianceCalculationService.Handler;
+namespace Zev.Services.ComplianceCalculation.Handler;
 
 public class CsvHelpers
 {

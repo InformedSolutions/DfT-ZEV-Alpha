@@ -14,7 +14,6 @@ using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculation.Handler.DTO;
 using Zev.Services.ComplianceCalculation.Handler.Maps;
 using Zev.Services.ComplianceCalculation.Handler.Validation;
-using Zev.Services.ComplianceCalculationService.Handler;
 
 namespace Zev.Services.ComplianceCalculation.Handler.Processing;
 
