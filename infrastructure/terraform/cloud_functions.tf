@@ -36,10 +36,10 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
 
   build_config {
     runtime     = "dotnet6"
-    entry_point = "Zev.Services.ComplianceCalculationService.Handler.Function"
+    entry_point = "Zev.Services.ComplianceCalculation.Handler.Function"
 
     environment_variables = {
-      GOOGLE_BUILDABLE = "./Zev.Services.ComplianceCalculationService.Handler"
+      GOOGLE_BUILDABLE = "./Services/ComplianceCalculation/Zev.Services.ComplianceCalculation.Handler"
     }
 
     source {
@@ -130,10 +130,10 @@ resource "google_cloudfunctions2_function" "database_migrations_runner" {
 
   build_config {
     runtime     = "dotnet6"
-    entry_point = "Migrator.Function"
+    entry_point = "Zev.Services.Migrator.Handler.Function"
 
     environment_variables = {
-      GOOGLE_BUILDABLE = "./Migrator"
+      GOOGLE_BUILDABLE = "./Services/Migrator/Zev.Services.Migrator.Handler"
     }
 
     source {
