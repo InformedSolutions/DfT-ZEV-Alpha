@@ -7,19 +7,25 @@ public class ProcessingResult
     public long ProcessingTime { get; set; }
     public int BufferCount { get; set; }
 
-    public static ProcessingResult Fail(int count, long processingTime, int bufferCount) => new ProcessingResult()
+    public static ProcessingResult Fail(int count, long processingTime, int bufferCount)
     {
-        Success = false,
-        Count = count,
-        ProcessingTime = processingTime,
-        BufferCount = bufferCount
-    };
-    
-    public static ProcessingResult Successful(int count, long processingTime, int bufferCount) => new ProcessingResult()
+        return new ProcessingResult()
+        {
+            Success = false,
+            Count = count,
+            ProcessingTime = processingTime,
+            BufferCount = bufferCount
+        };
+    }
+
+    public static ProcessingResult Successful(int count, long processingTime, int bufferCount)
     {
-        Success = true,
-        Count = count,
-        ProcessingTime = processingTime,
-        BufferCount = bufferCount
-    };
+        return new ProcessingResult()
+        {
+            Success = true,
+            Count = count,
+            ProcessingTime = processingTime,
+            BufferCount = bufferCount
+        };
+    }
 }

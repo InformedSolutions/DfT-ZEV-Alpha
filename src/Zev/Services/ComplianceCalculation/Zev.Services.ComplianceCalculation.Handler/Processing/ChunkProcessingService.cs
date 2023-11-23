@@ -18,23 +18,24 @@ using Zev.Services.ComplianceCalculation.Handler.Validation;
 namespace Zev.Services.ComplianceCalculation.Handler.Processing;
 
 /// <summary>
-/// Implements the IProcessingStrategy interface to provide a strategy for processing data in fixed chunks.
+///     Implements the IProcessingStrategy interface to provide a strategy for processing data in fixed chunks.
 /// </summary>
 public class ChunkProcessingService : IProcessingService
 {
+    private readonly ConcurrentStack<RawVehicleDTO> _bufferStack = new();
     private readonly ILogger _logger;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IVehicleService _vehicleService;
+    private readonly Stopwatch _stopwatch = new();
+    private readonly IUnitOfWork _unitOfWork;
 
     private readonly RawVehicleDTOValidator _validator = new();
-    private readonly Stopwatch _stopwatch = new Stopwatch();
-    private readonly ConcurrentStack<RawVehicleDTO> _bufferStack = new ConcurrentStack<RawVehicleDTO>();
+    private readonly IVehicleService _vehicleService;
+    private int _bufferCounter;
 
-    private int _recordCounter = 0;
-    private int _bufferCounter = 0;
+    private int _recordCounter;
 
-    public ChunkProcessingService(ILogger logger, IUnitOfWork unitOfWork, IMapper mapper, IVehicleService vehicleService)
+    public ChunkProcessingService(ILogger logger, IUnitOfWork unitOfWork, IMapper mapper,
+        IVehicleService vehicleService)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -42,13 +43,13 @@ public class ChunkProcessingService : IProcessingService
         _vehicleService = vehicleService;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async Task<ProcessingResult> ProcessAsync(Stream stream, int chunkSize)
     {
         _logger.Information("Processing started.");
         _stopwatch.Start();
 
-        
+
         using var reader = new StreamReader(stream);
         await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
@@ -70,12 +71,15 @@ public class ChunkProcessingService : IProcessingService
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error processing file. Rolling back transaction: {TransactionId}.", transaction.TransactionId);
+            _logger.Error(ex, "Error processing file. Rolling back transaction: {TransactionId}.",
+                transaction.TransactionId);
             await transaction.RollbackAsync();
             return ProcessingResult.Fail(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
         }
 
-        _logger.Information("Processing completed. Processed {RecordCounter} records in {ElapsedMilliseconds} milliseconds.", _recordCounter, _stopwatch.ElapsedMilliseconds);
+        _logger.Information(
+            "Processing completed. Processed {RecordCounter} records in {ElapsedMilliseconds} milliseconds.",
+            _recordCounter, _stopwatch.ElapsedMilliseconds);
         return ProcessingResult.Successful(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
     }
 
@@ -83,19 +87,17 @@ public class ChunkProcessingService : IProcessingService
     {
         using var csv = new CsvReader(reader, CsvHelper.GetCsvConfig());
         csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-        
-        
+
+
         while (await csv.ReadAsync())
         {
             var record = csv.GetRecord<RawVehicleDTO>();
             _bufferStack.Push(record);
 
-            if (_bufferStack.Count >= chunkSize)
-            {
-                await ProcessBuffer();
-            }
+            if (_bufferStack.Count >= chunkSize) await ProcessBuffer();
         }
     }
+
     private async Task ProcessBuffer()
     {
         var stopwatch = Stopwatch.StartNew();

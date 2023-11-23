@@ -8,11 +8,11 @@
         <PackageReference Include="Google.Cloud.Functions.Hosting" Version="2.1.0"/>
         <None Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest"/>
         <None Update="appsettings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Core\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Core\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj"/>
     </ItemGroup>
 </Project>

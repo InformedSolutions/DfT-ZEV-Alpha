@@ -4,18 +4,18 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Zev.Core.Infrastructure.Configuration;
 
 /// <summary>
-/// Provides extension methods for configuring settings in the application's configuration.
+///     Provides extension methods for configuring settings in the application's configuration.
 /// </summary>
 public static class ConfigurationExtensions
 {
-
     /// <summary>
-    /// Extension method to configure and validate Postgres settings from IConfiguration.
+    ///     Extension method to configure and validate Postgres settings from IConfiguration.
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
-    /// <param name="configuration">The <see cref="IConfiguration"/> instance.</param>
-    /// <returns>The <see cref="PostgresConfiguration"/> instance with data.</returns>
-    public static PostgresConfiguration ConfigurePostgresSettings(this IServiceCollection services, IConfiguration configuration)
+    /// <param name="services">The <see cref="IServiceCollection" /> to add the service to.</param>
+    /// <param name="configuration">The <see cref="IConfiguration" /> instance.</param>
+    /// <returns>The <see cref="PostgresConfiguration" /> instance with data.</returns>
+    public static PostgresConfiguration ConfigurePostgresSettings(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var settings = new PostgresConfiguration();
         configuration.Bind(PostgresConfiguration.SectionName, settings);
@@ -28,12 +28,13 @@ public static class ConfigurationExtensions
     }
 
     /// <summary>
-    /// Configures the settings for a bucket.
+    ///     Configures the settings for a bucket.
     /// </summary>
     /// <param name="services">The IServiceCollection to add the settings to.</param>
     /// <param name="configuration">The configuration that contains the bucket settings.</param>
     /// <returns>The IServiceCollection so that additional calls can be chained.</returns>
-    public static BucketsConfiguration ConfigureBucketSettings(this IServiceCollection services, IConfiguration configuration)
+    public static BucketsConfiguration ConfigureBucketSettings(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var settings = new BucketsConfiguration();
         configuration.Bind(BucketsConfiguration.SectionName, settings);
@@ -44,14 +45,15 @@ public static class ConfigurationExtensions
 
         return settings;
     }
-    
+
     /// <summary>
-    /// Configures the settings for a GCP.
+    ///     Configures the settings for a GCP.
     /// </summary>
     /// <param name="services">The IServiceCollection to add the settings to.</param>
     /// <param name="configuration">The configuration that contains the GCP settings.</param>
     /// <returns>The IServiceCollection so that additional calls can be chained.</returns>
-    public static GoogleCloudConfiguration ConfigureGoogleCloudSettings(this IServiceCollection services, IConfiguration configuration)
+    public static GoogleCloudConfiguration ConfigureGoogleCloudSettings(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var settings = new GoogleCloudConfiguration();
         configuration.Bind(GoogleCloudConfiguration.SectionName, settings);

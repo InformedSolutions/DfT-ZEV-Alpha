@@ -10,7 +10,11 @@ public abstract class BaseTest
     protected static readonly Assembly DomainAssembly = typeof(Vehicle).Assembly;
     protected static readonly Assembly ApplicationAssembly = typeof(VehicleService).Assembly;
     protected static readonly Assembly InfrastructureAssembly = typeof(AppDbContext).Assembly;
-    
-    static readonly Assembly[] Assemblies = { DomainAssembly, ApplicationAssembly, InfrastructureAssembly };
-    public static Assembly[] GetAssembliesWithout(params Assembly[] toExclude) => Assemblies.Exclude(toExclude);
+
+    private static readonly Assembly[] Assemblies = { DomainAssembly, ApplicationAssembly, InfrastructureAssembly };
+
+    public static Assembly[] GetAssembliesWithout(params Assembly[] toExclude)
+    {
+        return Assemblies.Exclude(toExclude);
+    }
 }

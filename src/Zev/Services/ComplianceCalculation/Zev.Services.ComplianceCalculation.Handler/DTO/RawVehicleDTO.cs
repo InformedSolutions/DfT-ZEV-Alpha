@@ -42,5 +42,4 @@ public sealed class RawVehicleDTO
     public int? Fa { get; set; }
     public string Trrc { get; set; }
     public string RegisteredInNation { get; set; }
-    
 }

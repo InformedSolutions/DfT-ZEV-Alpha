@@ -13,11 +13,11 @@ namespace Zev.Services.ComplianceCalculation.Handler.Validation;
 
 public class CsvValidatorService : ICsvValidatorService
 {
-    private readonly IValidator<RawVehicleDTO> _validator;
-    private readonly ILogger _logger;
-
     private const int ErrorCap = 50;
-    private int index = 0;
+    private readonly ILogger _logger;
+    private readonly IValidator<RawVehicleDTO> _validator;
+    private int index;
+
     public CsvValidatorService(ILogger logger)
     {
         _validator = new RawVehicleDTOValidator();
@@ -41,24 +41,19 @@ public class CsvValidatorService : ICsvValidatorService
             }
             catch (Exception ex)
             {
-                errors.Add(new ValidatorError()
+                errors.Add(new ValidatorError
                 {
                     Index = index,
-                    Messages = new[] { ex.Message },
+                    Messages = new[] { ex.Message }
                 });
             }
 
-            if (record is not null)
-            {
-                await ValidateRecordAsync(record, errors);
-            }
+            if (record is not null) await ValidateRecordAsync(record, errors);
 
-            if (errors.Count >= ErrorCap)
-            {
-                break;
-            }
+            if (errors.Count >= ErrorCap) break;
         }
-        return new CsvValidationResponse()
+
+        return new CsvValidationResponse
         {
             Errors = errors
         };
@@ -69,7 +64,7 @@ public class CsvValidatorService : ICsvValidatorService
         var result = await _validator.ValidateAsync(record);
         if (!result.IsValid)
         {
-            errors.Add(new ValidatorError()
+            errors.Add(new ValidatorError
             {
                 Index = index,
                 Messages = result.Errors.Select(x => x.ErrorMessage).ToArray()

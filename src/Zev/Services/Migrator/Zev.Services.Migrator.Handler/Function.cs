@@ -4,8 +4,8 @@ using Google.Cloud.Functions.Framework;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Zev.Core.Infrastructure.Persistence;
-using ILogger = Serilog.ILogger;
 
 namespace Zev.Services.Migrator.Handler;
 
@@ -14,6 +14,7 @@ public class Function : IHttpFunction
 {
     private readonly AppDbContext _context;
     private readonly ILogger _logger;
+
     public Function(AppDbContext context, ILogger logger)
     {
         _context = context;

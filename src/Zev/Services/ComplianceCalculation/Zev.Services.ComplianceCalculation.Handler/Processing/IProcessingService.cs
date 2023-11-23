@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 namespace Zev.Services.ComplianceCalculation.Handler.Processing;
 
 /// <summary>
-/// Interface for processing strategies used by the compliance calculation service.
+///     Interface for processing strategies used by the compliance calculation service.
 /// </summary>
 public interface IProcessingService
 {
     /// <summary>
-    /// Processes the given stream in fixed-size chunks.
+    ///     Processes the given stream in fixed-size chunks.
     /// </summary>
     /// <param name="stream">The stream to process.</param>
     /// <param name="chunkSize">The size of the chunks to process.</param>

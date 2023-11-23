@@ -44,10 +44,8 @@ public class ServiceStartup : FunctionsStartup
 
         services.AddDbContext<AppDbContext>(opt =>
         {
-            opt.UseNpgsql(postgresSettings.ConnectionString, conf =>
-            {
-                conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" });
-            });
+            opt.UseNpgsql(postgresSettings.ConnectionString,
+                conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
         });
     }
 

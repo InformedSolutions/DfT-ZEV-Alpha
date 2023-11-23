@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Core\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Core\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

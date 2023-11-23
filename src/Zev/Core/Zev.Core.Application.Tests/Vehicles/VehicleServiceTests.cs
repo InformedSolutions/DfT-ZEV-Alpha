@@ -7,18 +7,18 @@ namespace Zev.Core.Application.Tests.Vehicles;
 [TestFixture]
 public class VehicleServiceTests
 {
-    private VehicleService _service;
-    private IFixture _fixture;
-
     [SetUp]
     public void SetUp()
     {
         _service = new VehicleService();
         _fixture = new Fixture().Customize(new CompositeCustomization(new DateOnlyCustomization()));
     }
-    
+
+    private VehicleService _service;
+    private IFixture _fixture;
+
     //ApplyFlags Tests
-    
+
     [Test]
     public void ApplyFlagsAndApplicability_WhenSpvcIsNullAndTANIsM1_ShouldSetFlagsAndSchemeForCar()
     {
@@ -79,7 +79,7 @@ public class VehicleServiceTests
         result.Summary.Co2Applicable.Should().BeFalse();
         result.Summary.VehicleScheme.Should().Be("van");
     }
-    
+
     [Test]
     public void ApplyFlagsAndApplicability_WhenSpvcIsNotNull_ShouldSetFlagsToFalse()
     {
@@ -96,8 +96,8 @@ public class VehicleServiceTests
         result.Summary.ZevApplicable.Should().BeFalse();
         result.Summary.Co2Applicable.Should().BeFalse();
     }
-    
-    
+
+
     //ApplyZev Tests
     [Test]
     public void ApplyZev_WhenEwltpIsZeroAndBerIsGreaterThanOrEqualTo100_ShouldSetZevToTrue()
@@ -149,19 +149,19 @@ public class VehicleServiceTests
         // Assert
         vehicle.Summary.Zev.Should().BeFalse();
     }
-    
+
     //ApplyMultistageVan Tests
     [Test]
     public void ApplyMultistageVan_ShouldSetMsvToFalse()
     {
         // Arrange
-        var vehicle = new Vehicle()
+        var vehicle = new Vehicle
         {
             MM = null,
             MRVL = null,
             Summary = new VehicleSummary("123")
         };
-        
+
         // Act
         _service.ApplyMultistageVan(vehicle);
 
@@ -174,7 +174,7 @@ public class VehicleServiceTests
     public void ApplyMultistageVan_ShouldSetMsvToTrue()
     {
         // Arrange
-        var vehicle = new Vehicle()
+        var vehicle = new Vehicle
         {
             MM = 1,
             MRVL = 2,

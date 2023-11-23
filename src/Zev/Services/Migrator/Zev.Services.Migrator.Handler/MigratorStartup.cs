@@ -21,14 +21,10 @@ public class MigratorStartup : FunctionsStartup
             .Build();
 
         var postgresSettings = services.ConfigurePostgresSettings(configuration);
-        
-        services.AddDbContext<AppDbContext>(opt =>
-        {
-            opt.UseNpgsql(postgresSettings.ConnectionString);
-        });
+
+        services.AddDbContext<AppDbContext>(opt => { opt.UseNpgsql(postgresSettings.ConnectionString); });
 
         services.AddSerilog(configuration);
         services.AddHttpContextAccessor();
-
     }
 }

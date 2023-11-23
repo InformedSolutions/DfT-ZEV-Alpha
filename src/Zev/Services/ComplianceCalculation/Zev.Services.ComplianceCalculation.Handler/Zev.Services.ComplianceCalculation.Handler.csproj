@@ -5,19 +5,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="12.0.1" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-        <PackageReference Include="CsvHelper" Version="30.0.1" />
+        <PackageReference Include="AutoMapper" Version="12.0.1"/>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
+        <PackageReference Include="CsvHelper" Version="30.0.1"/>
         <PackageReference Include="Google.Cloud.Functions.Hosting" Version="2.1.0"/>
         <None Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest"/>
         <None Update="appsettings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <PackageReference Include="Google.Cloud.Storage.V1" Version="4.7.0" />
+        <PackageReference Include="Google.Cloud.Storage.V1" Version="4.7.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Core\Zev.Core.Application\Zev.Core.Application.csproj" />
-      <ProjectReference Include="..\..\..\Core\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Core\Zev.Core.Application\Zev.Core.Application.csproj"/>
+        <ProjectReference Include="..\..\..\Core\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj"/>
     </ItemGroup>
 </Project>

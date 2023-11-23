@@ -8,15 +8,15 @@ namespace Zev.Core.Domain.Tests.Vehicles.Validation.Validators;
 [TestFixture]
 public class VinValidatorTests
 {
-    private Fixture _fixture;
-    private VinValidator<string> _validator;
-
     [SetUp]
     public void SetUp()
     {
         _fixture = new Fixture();
         _validator = new VinValidator<string>();
     }
+
+    private Fixture _fixture;
+    private VinValidator<string> _validator;
 
     [Test]
     [TestCase("1G4HR54K31U135335")]

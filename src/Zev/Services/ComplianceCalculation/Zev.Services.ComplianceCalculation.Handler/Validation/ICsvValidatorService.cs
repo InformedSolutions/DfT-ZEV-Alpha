@@ -5,5 +5,5 @@ namespace Zev.Services.ComplianceCalculation.Handler.Validation;
 
 public interface ICsvValidatorService
 {
-     Task<CsvValidationResponse> ValidateAsync(Stream stream);
+    Task<CsvValidationResponse> ValidateAsync(Stream stream);
 }

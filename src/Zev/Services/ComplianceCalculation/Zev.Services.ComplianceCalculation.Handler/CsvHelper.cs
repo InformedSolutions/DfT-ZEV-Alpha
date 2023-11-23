@@ -5,12 +5,14 @@ namespace Zev.Services.ComplianceCalculation.Handler;
 
 public class CsvHelper
 {
-    public static CsvConfiguration GetCsvConfig() =>
-        new(CultureInfo.InvariantCulture)
+    public static CsvConfiguration GetCsvConfig()
+    {
+        return new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = true,
             Delimiter = ",",
             IgnoreBlankLines = true,
-            TrimOptions = TrimOptions.Trim,
+            TrimOptions = TrimOptions.Trim
         };
+    }
 }
