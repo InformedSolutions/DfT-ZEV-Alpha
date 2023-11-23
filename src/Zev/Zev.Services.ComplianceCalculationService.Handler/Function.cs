@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Google.Cloud.Functions.Hosting;
 using Google.Cloud.Storage.V1;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Context;
 using Zev.Core.Domain.Processes.Values;
 using Zev.Core.Infrastructure.Configuration;
+using Zev.Core.Infrastructure.Persistence;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
 using Zev.Services.ComplianceCalculationService.Handler.Processing;
@@ -32,13 +34,14 @@ public class Function : IHttpFunction
     private readonly CsvValidatorService _csvValidatorService;
     private readonly BucketsConfiguration _bucketsConfiguration;
     private readonly IUnitOfWork _unitOfWork;
-
-    public Function(ILogger logger, IProcessingService processingService, IOptions<BucketsConfiguration> bucketsConfiguration, CsvValidatorService csvValidatorService, IUnitOfWork unitOfWork)
+    private readonly AppDbContext _context;
+    public Function(ILogger logger, IProcessingService processingService, IOptions<BucketsConfiguration> bucketsConfiguration, CsvValidatorService csvValidatorService, IUnitOfWork unitOfWork, AppDbContext context)
     {
         _logger = logger;
         _processingService = processingService;
         _csvValidatorService = csvValidatorService;
         _unitOfWork = unitOfWork;
+        _context = context;
         _bucketsConfiguration = bucketsConfiguration.Value;
     }
 
@@ -56,7 +59,7 @@ public class Function : IHttpFunction
         {
             await _unitOfWork.Processes.AddAsync(process);
             await _unitOfWork.SaveChangesAsync();
-
+            
             await Run(body, process).ConfigureAwait(false);
         }
 
@@ -70,13 +73,18 @@ public class Function : IHttpFunction
         context.Response.ContentType = "application/json";
         await context.Response.WriteAsync(resJson);
     }
-
+    
     private async Task Run(CalculateComplianceRequestDto body, Core.Domain.Processes.Models.Process process)
     {
         _logger.Information($"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
 
         var stopwatch = StartStopwatch();
+        
+        _logger.Information("Starting truncation of vehicle data");
+        await ClearVehiclesFromDatabase();
+        _logger.Information($"Vehicle data successfully truncated after {stopwatch.ElapsedMilliseconds}ms");
 
+        
         var stream = await DownloadFileFromStorage(body);
 
         var validationResult = await _csvValidatorService.ValidateAsync(stream);
@@ -92,7 +100,14 @@ public class Function : IHttpFunction
         stopwatch.Stop();
         await HandleProcessingResult(processingResult, process, stopwatch);
     }
-
+    
+    private async Task ClearVehiclesFromDatabase()
+    {
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE public.\"Vehicles\" CASCADE;");
+        await _context.SaveChangesAsync();
+        await _context.Database.ExecuteSqlRawAsync("VACUUM ANALYZE;");
+    }
+    
     private async Task HandleValidationErrors(CsvValidationResponse validationResult, Process process, Stopwatch stopwatch)
     {
         stopwatch.Stop();
