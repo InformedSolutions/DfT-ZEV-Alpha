@@ -5,9 +5,10 @@ using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Logging;
 using Zev.Core.Infrastructure.Persistence;
 using Zev.Core.Infrastructure.Repositories;
-using Zev.Services.ProcessMonitoringService.Host.Features;
+using Zev.Services.SchemeData.Api.Features;
+using Zev.Services.SchemeData.Api.Features.Processes;
 
-namespace Zev.Services.ProcessMonitoringService.Host;
+namespace Zev.Services.SchemeData.Api;
 
 public static class Setup
 {
@@ -31,7 +32,7 @@ public static class Setup
 
    public static WebApplication SetupWebApplication(this WebApplication app)
    {
-      app.MapEndpoints();
+      app.MapProcessesEndpoints();
       return app;
    }
 }

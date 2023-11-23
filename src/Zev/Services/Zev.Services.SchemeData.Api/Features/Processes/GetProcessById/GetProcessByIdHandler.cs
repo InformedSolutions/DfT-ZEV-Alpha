@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Zev.Core.Infrastructure.Repositories;
 
-namespace Zev.Services.ProcessMonitoringService.Host.Features.GetProcessById;
+namespace Zev.Services.SchemeData.Api.Features.Processes.GetProcessById;
 
 public class GetProcessByIdHandler 
 {

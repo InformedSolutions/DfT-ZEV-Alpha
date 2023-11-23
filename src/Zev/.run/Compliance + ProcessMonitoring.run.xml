@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Compliance + ProcessMonitoring" type="CompoundRunConfigurationType">
-    <toRun name="Zev.Services.ProcessMonitoringService.Host" type="LaunchSettings" />
-    <toRun name="ComplianceService" type="DotNetProject" />
-    <method v="2" />
-  </configuration>
-</component>
