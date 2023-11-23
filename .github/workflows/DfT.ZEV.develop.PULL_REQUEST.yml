@@ -7,6 +7,7 @@ on:
       - '!README.md'
       - '!**/README.MD'
       - '**/**.cs'
+      - '**/**.csproj'
       - '**/**.json'
 
 jobs:
@@ -27,3 +28,6 @@ jobs:
 
     - name: Build
       run: make build-test
+
+    - name: Test with coverage report
+      run: make test-coverage
