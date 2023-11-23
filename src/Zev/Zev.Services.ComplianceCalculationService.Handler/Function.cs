@@ -60,7 +60,7 @@ public class Function : IHttpFunction
             await _unitOfWork.Processes.AddAsync(process);
             await _unitOfWork.SaveChangesAsync();
             
-            await Run(body, process).ConfigureAwait(false);
+            Run(body, process).ConfigureAwait(false);
         }
 
         var res = new FunctionResponse()
