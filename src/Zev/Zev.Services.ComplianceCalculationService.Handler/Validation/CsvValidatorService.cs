@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
+using CsvHelper.TypeConversion;
 using FluentValidation;
 using Serilog;
 using Zev.Services.ComplianceCalculationService.Handler.DTO;
@@ -29,8 +31,8 @@ public class CsvValidatorService : ICsvValidatorService
     {
         using var reader = new StreamReader(stream);
         var errors = new List<ValidatorError>();
-        using var csv = new CsvReader(reader, CsvHelper.GetCsvConfig());
-        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
+        using var csv = new CsvReader(reader, CsvHelpers.GetCsvConfig());
+        CsvHelpers.ConfigureContext(csv.Context);
         while (await csv.ReadAsync())
         {
             RawVehicleDTO record = null;
@@ -46,6 +48,7 @@ public class CsvValidatorService : ICsvValidatorService
                     Index = index,
                     Messages = new[] { ex.Message },
                 });
+                throw;
             }
 
             if (record is not null)

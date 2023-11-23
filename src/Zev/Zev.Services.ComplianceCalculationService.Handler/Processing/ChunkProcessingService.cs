@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
 using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
 using Serilog;
 using Zev.Core.Domain.Vehicles;
 using Zev.Core.Domain.Vehicles.Models;
@@ -84,10 +85,10 @@ public class ChunkProcessingService : IProcessingService
 
     private async Task ReadFromCsvAndProcessBuffer(StreamReader reader, int chunkSize)
     {
-        using var csv = new CsvReader(reader, CsvHelper.GetCsvConfig());
-        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
-        
-        
+        using var csv = new CsvReader(reader, CsvHelpers.GetCsvConfig());
+        CsvHelpers.ConfigureContext(csv.Context);
+
+
         while (await csv.ReadAsync())
         {
             var record = csv.GetRecord<RawVehicleDTO>();
