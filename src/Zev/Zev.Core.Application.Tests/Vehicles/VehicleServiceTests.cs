@@ -17,6 +17,63 @@ public class VehicleServiceTests
         _fixture = new Fixture().Customize(new CompositeCustomization(new DateOnlyCustomization()));
     }
     
+    [Test]
+    public void ApplyRules_WhenCalledWithListOfVehicles_ShouldApplyRulesToEachVehicle()
+    {
+        // Arrange
+        var vehicles =_fixture.Build<Vehicle>()
+            .Without(x => x.Spvc) // Exclude auto-generation for this property
+            .With(x => x.Summary, new VehicleSummary())
+            .With(v => v.Ct, "M1")
+            .With(v => v.Ewltp, 0)
+            .With(v => v.Ber, 100)
+            .With(x => x.Summary, new VehicleSummary("123"))
+            .With(x => x.MM,1)
+            .With(x => x.MRVL,2)
+            .CreateMany(10).ToList();
+        // Act
+        _service.ApplyRules(vehicles);
+
+        // Assert
+        foreach (var vehicle in vehicles)
+        {
+            vehicle.Summary.ZevApplicable.Should().BeTrue();
+            vehicle.Summary.Co2Applicable.Should().BeTrue();
+            vehicle.Summary.VehicleScheme.Should().Be("car");
+            vehicle.Summary.Zev.Should().BeTrue();
+            vehicle.Summary.msv.Should().BeTrue(); 
+            vehicle.Summary.IncompleteMsv.Should().BeTrue();
+        }
+    }
+
+    [Test]
+    public void ApplyRules_WhenCalledWithSingleVehicle_ShouldApplyRulesToVehicle()
+    {
+        // Arrange
+        var vehicle =_fixture.Build<Vehicle>()
+            .Without(x => x.Spvc) // Exclude auto-generation for this property
+            .With(x => x.Summary, new VehicleSummary())
+            .With(v => v.Ct, "M1")
+            .With(v => v.Ewltp, 0)
+            .With(v => v.Ber, 100)
+            .With(x => x.Summary, new VehicleSummary("123"))
+            .With(x => x.MM,1)
+            .With(x => x.MRVL,2)
+            .Create();
+
+       
+        // Act
+        _service.ApplyRules(vehicle);
+
+        // Assert
+        vehicle.Summary.ZevApplicable.Should().BeTrue();
+        vehicle.Summary.Co2Applicable.Should().BeTrue();
+        vehicle.Summary.VehicleScheme.Should().Be("car");
+        vehicle.Summary.Zev.Should().BeTrue();
+        vehicle.Summary.msv.Should().BeTrue(); // Assuming ApplyMultistageVan sets msv to true
+        vehicle.Summary.IncompleteMsv.Should().BeTrue(); // Default
+    }
+    
     //ApplyFlags Tests
     
     [Test]
