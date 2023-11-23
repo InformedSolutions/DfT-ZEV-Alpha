@@ -207,6 +207,120 @@ public class VehicleServiceTests
     }
     
     [Test]
+    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsM1_ShouldSetZevApplicable_Co2Applicable_VehicleScheme_ForCar()
+    {
+        // Arrange
+        var vehicle = _fixture.Build<Vehicle>()
+            .Without(x => x.Spvc)
+            .With(v => v.Ct, "M1")
+            .With(x => x.Summary, new VehicleSummary("123"))
+            .Create();
+
+        // Act
+        var result = _service.ApplyFlagsAndApplicability(vehicle);
+
+        // Assert
+        result.Summary.ZevApplicable.Should().BeTrue();
+        result.Summary.Co2Applicable.Should().BeTrue();
+        result.Summary.VehicleScheme.Should().Be("car");
+    }
+
+    [Test]
+    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsN1_ShouldSetZevApplicable_Co2Applicable_VehicleScheme_ForVan()
+    {
+        // Arrange
+        var vehicle = _fixture.Build<Vehicle>()
+            .Without(x => x.Spvc)
+            .With(v => v.Ct, "N1")
+            .With(x => x.Summary, new VehicleSummary("123"))
+            .Create();
+
+        // Act
+        var result = _service.ApplyFlagsAndApplicability(vehicle);
+
+        // Assert
+        result.Summary.ZevApplicable.Should().BeTrue();
+        result.Summary.Co2Applicable.Should().BeTrue();
+        result.Summary.VehicleScheme.Should().Be("van");
+    }
+
+    [Test]
+    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsN2_ZevIsTrue_AndTPMLMIsLessThan4250_ShouldSetZevApplicable_VehicleScheme_ForVan()
+    {
+        // Arrange
+        var vehicle = _fixture.Build<Vehicle>()
+            .Without(x => x.Spvc)
+            .With(v => v.Ct, "N2")
+            .With(x => x.Summary, new VehicleSummary("123"){Zev = true})
+            .With(v => v.TPMLM, 4000)
+            .Create();
+
+        // Act
+        var result = _service.ApplyFlagsAndApplicability(vehicle);
+
+        // Assert
+        result.Summary.ZevApplicable.Should().BeTrue();
+        result.Summary.VehicleScheme.Should().Be("van");
+    }
+
+    [Test]
+    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsN2_ZevIsTrue_AndTPMLMIsGreaterThanOrEqualTo4250_ShouldSetZevApplicableToFalse()
+    {
+        // Arrange
+        var vehicle = _fixture.Build<Vehicle>()
+            .Without(x => x.Spvc)
+            .With(v => v.Ct, "N2")
+            .With(x => x.Summary, new VehicleSummary("123"){Zev = true})
+            .With(v => v.TPMLM, 4250)
+            .Create();
+
+        // Act
+        var result = _service.ApplyFlagsAndApplicability(vehicle);
+
+        // Assert
+        result.Summary.ZevApplicable.Should().BeFalse();
+        result.Summary.VehicleScheme.Should().BeNull();
+    }
+
+    [Test]
+    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsNotN2_ShouldSetCo2ApplicableToFalse_And_ZevApplicable_VehicleScheme_ToFalse()
+    {
+        // Arrange
+        var vehicle = _fixture.Build<Vehicle>()
+            .Without(x => x.Spvc)
+            .With(v => v.Ct, "Other")
+            .With(x => x.Summary, new VehicleSummary("123"))
+            .Create();
+
+        // Act
+        var result = _service.ApplyFlagsAndApplicability(vehicle);
+
+        // Assert
+        result.Summary.Co2Applicable.Should().BeFalse();
+        result.Summary.ZevApplicable.Should().BeFalse();
+        result.Summary.VehicleScheme.Should().BeNull();
+    }
+
+    [Test]
+    public void ApplyFlagsAndApplicability_WhenSpvcIsNotNull_ShouldSetCo2Applicable_ZevApplicable_VehicleScheme_ToFalse()
+    {
+        // Arrange
+        var vehicle = _fixture.Build<Vehicle>()
+            .With(x => x.Spvc, "e")
+            .With(x => x.Summary, new VehicleSummary("132"))
+            .Create();
+
+        // Act
+        var result = _service.ApplyFlagsAndApplicability(vehicle);
+
+        // Assert
+        result.Summary.Co2Applicable.Should().BeFalse();
+        result.Summary.ZevApplicable.Should().BeFalse();
+        result.Summary.VehicleScheme.Should().BeNull();
+    }
+
+        
+    [Test]
     public void ApplyFlagsAndApplicability_WhenSpvcIsNotNull_ShouldSetFlagsToFalse()
     {
         // Arrange
