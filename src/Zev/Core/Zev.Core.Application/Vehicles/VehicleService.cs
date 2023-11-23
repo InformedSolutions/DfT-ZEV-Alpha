@@ -70,7 +70,7 @@ public class VehicleService : IVehicleService
     /// <inheritdoc />
     public Vehicle ApplyFlagsAndApplicability(Vehicle vehicle)
     {
-        if (vehicle.Spvc is null)
+        if (string.IsNullOrWhiteSpace(vehicle.Spvc))
         {
             if (vehicle.Ct == VehicleTan.M1)
             {

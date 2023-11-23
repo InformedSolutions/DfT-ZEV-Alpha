@@ -14,6 +14,7 @@ using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculation.Handler.DTO;
 using Zev.Services.ComplianceCalculation.Handler.Maps;
 using Zev.Services.ComplianceCalculation.Handler.Validation;
+using Zev.Services.ComplianceCalculationService.Handler;
 
 namespace Zev.Services.ComplianceCalculation.Handler.Processing;
 
@@ -85,8 +86,8 @@ public class ChunkProcessingService : IProcessingService
 
     private async Task ReadFromCsvAndProcessBuffer(StreamReader reader, int chunkSize)
     {
-        using var csv = new CsvReader(reader, CsvHelper.GetCsvConfig());
-        csv.Context.RegisterClassMap<RawVehicleCsvMap>();
+        using var csv = new CsvReader(reader, CsvHelpers.GetCsvConfig());
+        CsvHelpers.ConfigureContext(csv.Context);
 
 
         while (await csv.ReadAsync())

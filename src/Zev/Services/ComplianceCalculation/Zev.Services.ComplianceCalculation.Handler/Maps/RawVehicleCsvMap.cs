@@ -1,3 +1,4 @@
+using CsvHelper;
 using CsvHelper.Configuration;
 using Zev.Services.ComplianceCalculation.Handler.DTO;
 
@@ -45,5 +46,17 @@ public sealed class RawVehicleCsvMap : ClassMap<RawVehicleDTO>
         Map(m => m.Fa).Name("fa");
         Map(m => m.Trrc).Name("trrc");
         Map(m => m.RegisteredInNation).Name("registered_in_nation");
+    }
+
+    public string? StringNullParser(IReaderRow row)
+    {
+        var rawValue = row.GetField(row.CurrentIndex+1);
+        
+        if (string.IsNullOrWhiteSpace(rawValue))
+        {
+            return null;
+        }
+
+        return rawValue;
     }
 }
