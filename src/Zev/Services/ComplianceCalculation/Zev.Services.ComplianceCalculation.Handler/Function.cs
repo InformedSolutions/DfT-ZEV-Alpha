@@ -57,14 +57,13 @@ public class Function : IHttpFunction
         var executionId = Guid.NewGuid();
         var body = await GetRequestBody(context);
         var process = new Process(executionId, ProcessTypeEnum.ComplianceDataImport);
-        process.Start(JsonSerializer.SerializeToDocument(body));
+        process.Start(body);
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
             await _unitOfWork.Processes.AddAsync(process);
             await _unitOfWork.SaveChangesAsync();
 
-            // ReSharper disable once UnusedVariable
-            var configuredTaskAwaitable = Run(body, process).ConfigureAwait(false);
+            await Run(body, process).ConfigureAwait(false);
         }
 
         var res = new FunctionResponse
@@ -117,7 +116,8 @@ public class Function : IHttpFunction
         Stopwatch stopwatch)
     {
         stopwatch.Stop();
-        process.Fail(JsonSerializer.SerializeToDocument(validationResult));
+        
+        process.Fail(validationResult);
         _unitOfWork.Processes.Update(process);
         await _unitOfWork.SaveChangesAsync();
     }
@@ -127,17 +127,19 @@ public class Function : IHttpFunction
         var response = new ComplianceServiceResult(processingResult, stopwatch.ElapsedMilliseconds);
         if (response.Success)
         {
-            process.Finish(JsonSerializer.SerializeToDocument(response));
+            process.Finish(response);
             _unitOfWork.Processes.Update(process);
             await _unitOfWork.SaveChangesAsync();
+            
             var resJson = JsonSerializer.Serialize(response);
             _logger.Information("Finished processing file: {resJson}", resJson);
         }
         else
         {
-            process.Fail(JsonSerializer.SerializeToDocument(response));
+            process.Fail(response);
             _unitOfWork.Processes.Update(process);
             await _unitOfWork.SaveChangesAsync();
+        
             var resJson = JsonSerializer.Serialize(response);
             _logger.Information("Failed processing file: {resJson}", resJson);
         }

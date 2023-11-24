@@ -32,42 +32,35 @@ public sealed class Process
     public DateTime? Started { get; set; }
     public DateTime? Finished { get; set; }
 
-    public void Start()
+
+
+    public void Start(object? metadata = default)
     {
         State = ProcessStateEnum.Running;
         Started = DateTime.UtcNow;
         LastUpdated = DateTime.UtcNow;
+        
+        if(metadata is not null)
+            Metadata = JsonSerializer.SerializeToDocument(metadata);
     }
-
-    public void Start(JsonDocument metadata)
-    {
-        Start();
-        Metadata = metadata;
-    }
-
-    public void Finish()
+    
+    public void Finish(object? result = default)
     {
         State = ProcessStateEnum.Finished;
         Finished = DateTime.UtcNow;
         LastUpdated = DateTime.UtcNow;
+        
+        if(result is not null)
+            Result = JsonSerializer.SerializeToDocument(result);
     }
-
-    public void Finish(JsonDocument result)
-    {
-        Finish();
-        Result = result;
-    }
-
-    public void Fail()
+    
+    public void Fail(object? result = default)
     {
         State = ProcessStateEnum.Failed;
         Finished = DateTime.UtcNow;
         LastUpdated = DateTime.UtcNow;
-    }
-
-    public void Fail(JsonDocument result)
-    {
-        Fail();
-        Result = result;
+        
+        if(result is not null)
+            Result = JsonSerializer.SerializeToDocument(result);
     }
 }
