@@ -1,11 +1,10 @@
+using System.Text.Json;
 using AutoFixture;
 using Moq;
-using Newtonsoft.Json;
 using Zev.Core.Application.Processes;
 using Zev.Core.Domain.Processes.Models;
 using Zev.Core.Domain.Processes.Values;
 using Zev.Core.Infrastructure.Repositories;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Zev.Core.Application.Tests.Processes;
 
@@ -22,6 +21,24 @@ public class ProcessServiceTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _processService = new ProcessService(_unitOfWorkMock.Object);
         _fixture = new Fixture();
+    }
+    
+    [Test]
+    public async Task CreateProcessAsync_WhenCalled_ShouldCreateProcess()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var processType = _fixture.Create<ProcessTypeEnum>();
+        var process = new Process(id, processType);
+        _unitOfWorkMock.Setup(u => u.Processes.AddAsync(process, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _processService.CreateProcessAsync(id, processType);
+
+        // Assert
+        result.Should().BeEquivalentTo(process);
+        _unitOfWorkMock.Verify(u => u.Processes.AddAsync(process, It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     
     [Test]
