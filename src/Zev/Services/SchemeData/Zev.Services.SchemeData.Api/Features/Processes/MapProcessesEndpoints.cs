@@ -8,9 +8,14 @@ public static class MapProcessesEndpointsExtensions
 {
     public static WebApplication MapProcessesEndpoints(this WebApplication app)
     {
-        app.MapGet("/{processId:guid}", GetProcessByIdHandler.HandleAsync);
-        app.MapGet("/", GetProcessesHandler.HandleAsync);
-        app.MapDelete("/{processId:guid}", DeleteProcessHandler.HandleAsync);
+        app.MapGet("/processes/{processId:guid}", GetProcessByIdHandler.HandleAsync)
+            .WithTags("Processes");
+        
+        app.MapGet("/processes", GetProcessesHandler.HandleAsync)
+            .WithTags("Processes");
+
+        app.MapDelete("/processes/{processId:guid}", DeleteProcessHandler.HandleAsync)
+            .WithTags("Processes");
 
         return app;
     }

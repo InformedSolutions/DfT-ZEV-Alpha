@@ -13,6 +13,9 @@ public static class Setup
 {
     public static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
@@ -29,6 +32,9 @@ public static class Setup
 
     public static WebApplication SetupWebApplication(this WebApplication app)
     {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
         app.MapProcessesEndpoints();
         return app;
     }
