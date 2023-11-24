@@ -22,25 +22,26 @@ public class ProcessServiceTests
         _processService = new ProcessService(_unitOfWorkMock.Object);
         _fixture = new Fixture();
     }
-    
+
     [Test]
     public async Task CreateProcessAsync_WhenCalled_ShouldCreateProcess()
     {
         // Arrange
         var id = Guid.NewGuid();
         var processType = _fixture.Create<ProcessTypeEnum>();
-        var process = new Process(id, processType);
-        _unitOfWorkMock.Setup(u => u.Processes.AddAsync(process, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         // Act
         var result = await _processService.CreateProcessAsync(id, processType);
 
         // Assert
-        result.Should().BeEquivalentTo(process);
-        _unitOfWorkMock.Verify(u => u.Processes.AddAsync(process, It.IsAny<CancellationToken>()), Times.Once);
+        result.Id.Should().Be(id);
+        result.Type.Should().Be(processType);
+        result.State.Should().Be(ProcessStateEnum.Waiting);
+        _unitOfWorkMock.Verify(u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType), It.IsAny<CancellationToken>()), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
-    
+
     [Test]
     public async Task StartProcessAsync_WhenCalled_ShouldSetMetadata()
     {
@@ -49,7 +50,7 @@ public class ProcessServiceTests
             .Without(x => x.Metadata)
             .Without(x => x.Result)
             .Create();
-        
+
         var id = process.Id;
         var metadata = new { Key = "TestKey", Value = "TestValue" };
         _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(process);
@@ -71,7 +72,7 @@ public class ProcessServiceTests
             .Without(x => x.Metadata)
             .Without(x => x.Result)
             .Create();
-        
+
         var id = process.Id;
         var resultData = new { Key = "TestKey", Value = "TestValue" };
         _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(process);
@@ -92,8 +93,8 @@ public class ProcessServiceTests
         var process = _fixture.Build<Process>()
             .Without(x => x.Metadata)
             .Without(x => x.Result)
-            .Create();            
-        
+            .Create();
+
         var id = process.Id;
         _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(process);
 
@@ -115,7 +116,7 @@ public class ProcessServiceTests
             .Without(x => x.Metadata)
             .Without(x => x.Result)
             .Create();
-        
+
         var id = process.Id;
         _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(process);
 
@@ -149,7 +150,7 @@ public class ProcessServiceTests
         _unitOfWorkMock.Verify(u => u.Processes.Update(process), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
-    
+
     [Test]
     public async Task StartProcessAsync_WhenProcessNotFound_ShouldThrowException()
     {
