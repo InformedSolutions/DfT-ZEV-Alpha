@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zev.Core.Architecture.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zev.Core.Domain.Tests", "Core\Zev.Core.Domain.Tests\Zev.Core.Domain.Tests.csproj", "{86BF0085-9012-4CA2-819E-454BB909E9D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zev.Core.Infrastructure.Tests", "Core\Zev.Core.Infrastructure.Tests\Zev.Core.Infrastructure.Tests.csproj", "{B920381F-7702-4551-A596-C3D74A05BEC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,7 @@ Global
 		{C94A0968-1B7B-4DE7-9C5A-C729158DCB0B} = {51EF4D9D-D514-40F1-9C77-205DB6C93A88}
 		{A8AEA1C5-E049-4CE1-9700-9FFE35A70EDD} = {51EF4D9D-D514-40F1-9C77-205DB6C93A88}
 		{86BF0085-9012-4CA2-819E-454BB909E9D9} = {51EF4D9D-D514-40F1-9C77-205DB6C93A88}
+		{B920381F-7702-4551-A596-C3D74A05BEC3} = {51EF4D9D-D514-40F1-9C77-205DB6C93A88}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D4CDD427-5A04-496F-80B4-BF1AF6158BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -87,5 +90,9 @@ Global
 		{86BF0085-9012-4CA2-819E-454BB909E9D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86BF0085-9012-4CA2-819E-454BB909E9D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86BF0085-9012-4CA2-819E-454BB909E9D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B920381F-7702-4551-A596-C3D74A05BEC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B920381F-7702-4551-A596-C3D74A05BEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B920381F-7702-4551-A596-C3D74A05BEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B920381F-7702-4551-A596-C3D74A05BEC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

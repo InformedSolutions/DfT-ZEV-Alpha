@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Zev.Core.Domain.Processes.Models;
 using Zev.Core.Domain.Vehicles.Models;
@@ -20,6 +21,10 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        if (Database.IsInMemory())
+        {
+            modelBuilder.Ignore<JsonDocument>();
+        }
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

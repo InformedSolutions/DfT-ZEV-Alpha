@@ -5,19 +5,6 @@ namespace Zev.Core.Domain.Processes.Models;
 
 public sealed class Process
 {
-    public Process()
-    {
-    }
-
-    public Process(Guid id, ProcessTypeEnum processType)
-    {
-        Id = id;
-        Created = DateTime.UtcNow;
-        State = ProcessStateEnum.Waiting;
-        LastUpdated = DateTime.UtcNow;
-        Type = processType;
-    }
-
     public Guid Id { get; set; }
 
     public ProcessTypeEnum Type { get; set; }
@@ -32,7 +19,18 @@ public sealed class Process
     public DateTime? Started { get; set; }
     public DateTime? Finished { get; set; }
 
+    public Process()
+    {
+    }
 
+    public Process(Guid id, ProcessTypeEnum processType)
+    {
+        Id = id;
+        Created = DateTime.UtcNow;
+        State = ProcessStateEnum.Waiting;
+        LastUpdated = DateTime.UtcNow;
+        Type = processType;
+    }
 
     public void Start(object? metadata = default)
     {
