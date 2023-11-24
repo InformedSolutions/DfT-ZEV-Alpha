@@ -12,8 +12,6 @@ using Zev.Core.Domain.Vehicles.Models;
 using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculation.Handler.DTO;
-using Zev.Services.ComplianceCalculation.Handler.Maps;
-using Zev.Services.ComplianceCalculation.Handler.Validation;
 
 namespace Zev.Services.ComplianceCalculation.Handler.Processing;
 
@@ -28,7 +26,6 @@ public class ChunkProcessingService : IProcessingService
     private readonly Stopwatch _stopwatch = new();
     private readonly IUnitOfWork _unitOfWork;
 
-    private readonly RawVehicleDTOValidator _validator = new();
     private readonly IVehicleService _vehicleService;
     private int _bufferCounter;
 

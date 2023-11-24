@@ -7,19 +7,16 @@ namespace Zev.Core.Application.Tests.Vehicles;
 [TestFixture]
 public class VehicleServiceTests
 {
+    private VehicleService _service = null!;
+    private IFixture _fixture = null!;
     [SetUp]
     public void SetUp()
     {
         _service = new VehicleService();
         _fixture = new Fixture().Customize(new CompositeCustomization(new DateOnlyCustomization()));
     }
-
-    private VehicleService _service;
-    private IFixture _fixture;
-
+    
     //ApplyFlags Tests
-
-
     [Test]
     public void ApplyRules_WhenCalledWithListOfVehicles_AndIncompleteMsv_ShouldSetMsvAndIncompleteMsvToFalse()
     {

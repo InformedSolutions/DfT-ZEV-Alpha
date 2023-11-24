@@ -4,9 +4,9 @@ using Zev.Services.ComplianceCalculation.Handler.DTO;
 
 namespace Zev.Services.ComplianceCalculation.Handler.Validation;
 
-public class RawVehicleDTOValidator : AbstractValidator<RawVehicleDTO>
+public class RawVehicleDtoValidator : AbstractValidator<RawVehicleDTO>
 {
-    public RawVehicleDTOValidator()
+    public RawVehicleDtoValidator()
     {
         RuleFor(x => x.Vin).SetAsyncValidator(new VinValidator<RawVehicleDTO>());
     }

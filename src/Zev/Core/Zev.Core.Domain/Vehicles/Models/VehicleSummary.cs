@@ -1,3 +1,4 @@
+// ReSharper disable InconsistentNaming
 namespace Zev.Core.Domain.Vehicles.Models;
 
 public class VehicleSummary
@@ -11,7 +12,7 @@ public class VehicleSummary
     {
     }
 
-    public string Vin { get; set; }
+    public string Vin { get; set; } = null!;
     public bool? msv { get; set; }
 
     public bool? Zev { get; set; }
@@ -24,5 +25,5 @@ public class VehicleSummary
     public string? VehicleScheme { get; set; }
     public bool? IncompleteMsv { get; set; }
 
-    public Vehicle Vehicle { get; set; }
+    public Vehicle Vehicle { get; set; } = null!;
 }

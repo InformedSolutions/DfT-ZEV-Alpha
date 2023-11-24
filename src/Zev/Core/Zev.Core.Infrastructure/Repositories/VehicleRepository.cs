@@ -1,5 +1,4 @@
 using EFCore.BulkExtensions;
-using Serilog;
 using Zev.Core.Domain.Vehicles.Models;
 using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Persistence;
@@ -7,10 +6,9 @@ using Zev.Core.Infrastructure.Persistence;
 namespace Zev.Core.Infrastructure.Repositories;
 
 /// <inheritdoc cref="IVehicleRepository" />
-public sealed class VehicleRepository : IVehicleRepository, IDisposable
+public sealed class VehicleRepository : IVehicleRepository
 {
     private readonly AppDbContext _context;
-    private readonly ILogger _logger;
 
     private bool _disposed;
 
@@ -18,11 +16,9 @@ public sealed class VehicleRepository : IVehicleRepository, IDisposable
     ///     This method initializes a new instance of the <see cref="VehicleRepository" /> class.
     /// </summary>
     /// <param name="context">AppDbContext</param>
-    /// <param name="logger">ILogger</param>
-    public VehicleRepository(AppDbContext context, ILogger logger)
+    public VehicleRepository(AppDbContext context)
     {
         _context = context;
-        _logger = logger;
     }
 
     /// <inheritdoc />
@@ -41,6 +37,7 @@ public sealed class VehicleRepository : IVehicleRepository, IDisposable
     public void Dispose()
     {
         Dispose(true);
+        // ReSharper disable once GCSuppressFinalizeForTypeWithoutDestructor
         GC.SuppressFinalize(this);
     }
 

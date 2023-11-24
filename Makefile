@@ -1,3 +1,7 @@
+# Define the root directory
+ROOT_DIR ?= $(shell pwd)
+export ROOT_DIR
+
 git-credential-config: create-credential-exclusions-file-if-not-exists bind-pre-commit
 
 bind-pre-commit:
@@ -29,7 +33,7 @@ test:
 	dotnet test src/Zev
 
 test-coverage:
-	dotnet test src/Zev /p:CollectCoverage=true /p:CoverletOutputFormat=\"cobertura,json\" /p:CoverletOutput=../CoverageResults/ /p:MergeWith="../CoverageResults/coverage.json" -m:1
+	dotnet test src/Zev /p:CollectCoverage=true /p:CoverletOutputFormat=\"cobertura,json\" /p:CoverletOutput=$(ROOT_DIR)/src/Zev/CoverageResults/ /p:MergeWith="$(ROOT_DIR)/src/Zev/CoverageResults/coverage.json" -m:1
 
 build-test: build test
 

@@ -19,7 +19,7 @@ public class CsvValidatorService : ICsvValidatorService
 
     public CsvValidatorService(ILogger logger)
     {
-        _validator = new RawVehicleDTOValidator();
+        _validator = new RawVehicleDtoValidator();
         _logger = logger;
     }
 

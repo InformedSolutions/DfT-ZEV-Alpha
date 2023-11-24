@@ -63,7 +63,8 @@ public class Function : IHttpFunction
             await _unitOfWork.Processes.AddAsync(process);
             await _unitOfWork.SaveChangesAsync();
 
-            Run(body, process).ConfigureAwait(false);
+            // ReSharper disable once UnusedVariable
+            var configuredTaskAwaitable = Run(body, process).ConfigureAwait(false);
         }
 
         var res = new FunctionResponse

@@ -1,4 +1,3 @@
-using AutoFixture;
 using FluentAssertions;
 using FluentValidation;
 using Zev.Core.Domain.Vehicles.Validation.Validators;
@@ -8,15 +7,12 @@ namespace Zev.Core.Domain.Tests.Vehicles.Validation.Validators;
 [TestFixture]
 public class VinValidatorTests
 {
+    private VinValidator<string> _validator = null!;
     [SetUp]
     public void SetUp()
     {
-        _fixture = new Fixture();
         _validator = new VinValidator<string>();
     }
-
-    private Fixture _fixture;
-    private VinValidator<string> _validator;
 
     [Test]
     [TestCase("1G4HR54K31U135335")]

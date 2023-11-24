@@ -1,10 +1,13 @@
+#nullable enable
 using System;
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Zev.Services.ComplianceCalculation.Handler.DTO;
 
 public sealed class RawVehicleDTO
 {
-    public string Vin { get; set; }
+    public string Vin { get; set; } = null!;
     public string? Vfn { get; set; }
     public string? Mh { get; set; }
     public string? Man { get; set; }

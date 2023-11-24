@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore.Storage;
-using Serilog;
 using Zev.Core.Domain.Processes.Services;
 using Zev.Core.Domain.Vehicles.Services;
 using Zev.Core.Infrastructure.Persistence;
@@ -10,17 +9,15 @@ namespace Zev.Core.Infrastructure.Repositories;
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly AppDbContext _context;
-    private readonly ILogger _logger;
     private bool _disposed;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="UnitOfWork" /> class.
     /// </summary>
-    public UnitOfWork(AppDbContext context, ILogger logger)
+    public UnitOfWork(AppDbContext context)
     {
         _context = context;
-        _logger = logger;
-        Vehicles = new VehicleRepository(_context, logger);
+        Vehicles = new VehicleRepository(_context);
         Processes = new ProcessRepository(_context);
     }
 

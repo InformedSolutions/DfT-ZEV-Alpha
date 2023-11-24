@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Zev.Services.Migrator.Handler;
 

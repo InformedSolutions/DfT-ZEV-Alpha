@@ -11,6 +11,6 @@ public static class AssemblyExtensions
 
     public static string[] GetNames(this Assembly[] assemblies)
     {
-        return assemblies.Select(x => x.GetName().Name).ToArray();
+        return assemblies.Select(x => x.GetName().Name).ToArray()!;
     }
 }

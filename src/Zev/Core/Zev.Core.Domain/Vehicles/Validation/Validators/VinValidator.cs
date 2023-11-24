@@ -8,10 +8,10 @@ public class VinValidator<T> : AsyncPropertyValidator<T, string>
     public override string Name
         => "VinValidator";
 
-    public override async Task<bool> IsValidAsync(ValidationContext<T> context, string vin, CancellationToken token)
+    public override Task<bool> IsValidAsync(ValidationContext<T> context, string vin, CancellationToken token)
     {
         if (vin.Length != 17)
-            return false;
+            return Task.FromResult(false);
         var index = 0;
         var checkDigit = 0;
         var checkSum = 0;
@@ -33,7 +33,7 @@ public class VinValidator<T> : AsyncPropertyValidator<T, string>
             checkSum += result * weight;
         }
 
-        return checkSum % 11 == checkDigit;
+        return Task.FromResult(checkSum % 11 == checkDigit);
     }
 
     protected override string GetDefaultMessageTemplate(string errorCode)

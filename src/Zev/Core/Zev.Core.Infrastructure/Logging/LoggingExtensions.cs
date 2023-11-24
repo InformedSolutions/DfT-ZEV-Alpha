@@ -30,7 +30,7 @@ public static class LoggingExtensions
             .ReadFrom.Configuration(configuration);
 
 
-        services.AddSingleton<ILogger>(x => serilogConfiguration.CreateLogger());
+        services.AddSingleton<ILogger>(serilogConfiguration.CreateLogger());
 
         return services;
     }

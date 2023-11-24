@@ -1,3 +1,4 @@
+#nullable enable
 using CsvHelper;
 using CsvHelper.Configuration;
 using Zev.Services.ComplianceCalculation.Handler.DTO;

@@ -1,4 +1,5 @@
 using Zev.Services.ComplianceCalculation.Handler.Processing;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Zev.Services.ComplianceCalculation.Handler.DTO;
 
