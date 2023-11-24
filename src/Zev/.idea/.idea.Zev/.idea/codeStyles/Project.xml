@@ -1,8 +1,0 @@
-<component name="ProjectCodeStyleConfiguration">
-  <code_scheme name="Project" version="173">
-    <stylecop>
-      <option name="ENABLED" value="true" />
-      <option name="CONFIG_SOURCE" value="RULESET" />
-    </stylecop>
-  </code_scheme>
-</component>

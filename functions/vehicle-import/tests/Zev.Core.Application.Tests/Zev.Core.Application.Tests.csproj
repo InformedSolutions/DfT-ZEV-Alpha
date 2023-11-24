@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Zev.Core.Infrastructure\Zev.Core.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\Zev.Core.Application\Zev.Core.Application.csproj" />
     </ItemGroup>
 
 </Project>
