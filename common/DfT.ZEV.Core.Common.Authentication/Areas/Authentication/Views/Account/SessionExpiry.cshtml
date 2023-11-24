@@ -1,0 +1,26 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Session expiry";
+}
+
+@{
+    var notificationTimeoutInSeconds = Configuration.GetValue<int>("SessionExpirationNotificationInSeconds") + 1;
+}
+
+<h1 class="govuk-heading-l">You will be signed out in 1 minute</h1>
+<p class="govuk-body">Due to lack of activity, we are signing you out, to keep your account secure.</p>
+<p class="govuk-body">If you would like to stay signed in, press continue.</p>
+
+@using (Html.BeginForm("ExtendSession", "Account", FormMethod.Post))
+{
+    <govuk-button type="submit">Continue</govuk-button>
+}
+
+<script nonce="owned-assets">
+    setTimeout(() => {
+        window.location.reload();
+    }, @notificationTimeoutInSeconds * 1000);
+</script>
+

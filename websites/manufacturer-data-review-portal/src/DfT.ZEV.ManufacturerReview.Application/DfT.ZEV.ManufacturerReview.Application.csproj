@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <CodeAnalysisRuleSet>..\..\..\..\stylecop.ruleset</CodeAnalysisRuleSet>
+    <RootNamespace>DfT.ZEV.ManufacturerReview.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\common\DfT.ZEV.Core.Common.Authentication\DfT.ZEV.Core.Common.Authentication.csproj" />
+    <ProjectReference Include="..\..\..\..\common\DfT.ZEV.Core.Common\DfT.ZEV.Core.Common.csproj" />
+    <ProjectReference Include="..\DfT.ZEV.ManufacturerReview.Domain\DfT.ZEV.ManufacturerReview.Domain.csproj" />
+    <ProjectReference Include="..\DfT.ZEV.ManufacturerReview.Infrastructure\DfT.ZEV.ManufacturerReview.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
