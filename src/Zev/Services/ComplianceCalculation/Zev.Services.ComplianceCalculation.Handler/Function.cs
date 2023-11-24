@@ -12,10 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Context;
+using Zev.Core.Domain.Processes.Services;
 using Zev.Core.Domain.Processes.Values;
 using Zev.Core.Infrastructure.Configuration;
 using Zev.Core.Infrastructure.Persistence;
-using Zev.Core.Infrastructure.Repositories;
 using Zev.Services.ComplianceCalculation.Handler.DTO;
 using Zev.Services.ComplianceCalculation.Handler.Processing;
 using Zev.Services.ComplianceCalculation.Handler.Validation;
@@ -34,17 +34,16 @@ public class Function : IHttpFunction
     private readonly CsvValidatorService _csvValidatorService;
     private readonly ILogger _logger;
     private readonly IProcessingService _processingService;
-    private readonly IUnitOfWork _unitOfWork;
-
+    private readonly IProcessService _processService;
     public Function(ILogger logger, IProcessingService processingService,
         IOptions<BucketsConfiguration> bucketsConfiguration, CsvValidatorService csvValidatorService,
-        IUnitOfWork unitOfWork, AppDbContext context)
+        AppDbContext context, IProcessService processService)
     {
         _logger = logger;
         _processingService = processingService;
         _csvValidatorService = csvValidatorService;
-        _unitOfWork = unitOfWork;
         _context = context;
+        _processService = processService;
         _bucketsConfiguration = bucketsConfiguration.Value;
     }
 
@@ -56,13 +55,10 @@ public class Function : IHttpFunction
     {
         var executionId = Guid.NewGuid();
         var body = await GetRequestBody(context);
-        var process = new Process(executionId, ProcessTypeEnum.ComplianceDataImport);
-        process.Start(body);
+        
+        var process = await _processService.CreateProcessAsync(executionId, ProcessTypeEnum.ComplianceDataImport);
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
-            await _unitOfWork.Processes.AddAsync(process);
-            await _unitOfWork.SaveChangesAsync();
-
             await Run(body, process).ConfigureAwait(false);
         }
 
@@ -79,16 +75,19 @@ public class Function : IHttpFunction
 
     private async Task Run(CalculateComplianceRequestDto body, Process process)
     {
+        await Task.Delay(5 * 1000);
+        await _processService.StartProcessAsync(process.Id, body);
+        await Task.Delay(5 * 1000);
+
         _logger.Information(
             $"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
 
         var stopwatch = StartStopwatch();
 
-        _logger.Information("Starting truncation of vehicle data");
-        await ClearVehiclesFromDatabase();
-        _logger.Information($"Vehicle data successfully truncated after {stopwatch.ElapsedMilliseconds}ms");
-
-
+        //_logger.Information("Starting truncation of vehicle data");
+        //await ClearVehiclesFromDatabase();
+        //_logger.Information($"Vehicle data successfully truncated after {stopwatch.ElapsedMilliseconds}ms");
+        
         var stream = await DownloadFileFromStorage(body);
 
         var validationResult = await _csvValidatorService.ValidateAsync(stream);
@@ -116,10 +115,7 @@ public class Function : IHttpFunction
         Stopwatch stopwatch)
     {
         stopwatch.Stop();
-        
-        process.Fail(validationResult);
-        _unitOfWork.Processes.Update(process);
-        await _unitOfWork.SaveChangesAsync();
+        await _processService.FailProcessAsync(process.Id, validationResult);
     }
 
     private async Task HandleProcessingResult(ProcessingResult processingResult, Process process, Stopwatch stopwatch)
@@ -127,19 +123,13 @@ public class Function : IHttpFunction
         var response = new ComplianceServiceResult(processingResult, stopwatch.ElapsedMilliseconds);
         if (response.Success)
         {
-            process.Finish(response);
-            _unitOfWork.Processes.Update(process);
-            await _unitOfWork.SaveChangesAsync();
-            
+            await _processService.FinishProcessAsync(process.Id,response);
             var resJson = JsonSerializer.Serialize(response);
             _logger.Information("Finished processing file: {resJson}", resJson);
         }
         else
         {
-            process.Fail(response);
-            _unitOfWork.Processes.Update(process);
-            await _unitOfWork.SaveChangesAsync();
-        
+            await _processService.FailProcessAsync(process.Id, response);
             var resJson = JsonSerializer.Serialize(response);
             _logger.Information("Failed processing file: {resJson}", resJson);
         }

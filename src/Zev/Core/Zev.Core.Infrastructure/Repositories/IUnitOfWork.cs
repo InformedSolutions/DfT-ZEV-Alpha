@@ -32,7 +32,7 @@ public interface IUnitOfWork
     ///     A task that represents the asynchronous save operation. The task result contains the number of state entries
     ///     written to the database.
     /// </returns>
-    Task<int> SaveChangesAsync();
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Begins a new database transaction.
