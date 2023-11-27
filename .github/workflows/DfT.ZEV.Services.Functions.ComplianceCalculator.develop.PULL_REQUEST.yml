@@ -1,14 +1,18 @@
-name: DfT.ZEV (Pull request)
+name: DfT.ZEV.Services.Functions.ComplianceCalculator (Pull request)
 
 on:
   pull_request:
     branches: [ develop ]
     paths:
+      - 'src/services/functions/compliance-calculation/**'
+      - 'src/common/**'
+      - 'src/core/**'
       - '!README.md'
       - '!**/README.MD'
-      - '**/**.cs'
-      - '**/**.csproj'
-      - '**/**.json'
+
+defaults:
+  run:
+    working-directory: ./src/services/functions/compliance-calculation
 
 jobs:
 
@@ -27,7 +31,7 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Build
-      run: make build-test
+      run: make build
 
     - name: Test with coverage
       run: make test-coverage
@@ -35,14 +39,14 @@ jobs:
     - name: Generate coverage HTML report
       uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
       with:
-        reports: './src/Zev/CoverageResults/coverage.cobertura.xml'
-        targetdir: './src/Zev/CoverageResults/coveragereport'
+        reports: './CoverageResults/coverage.cobertura.xml'
+        targetdir: './CoverageResults/coveragereport'
         reporttypes: 'HtmlInline'
-        title: 'ZEV coverage report'
+        title: 'ZEV compliance calculation function coverage report'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
 
     - name: Upload coverage report artifact
       uses: actions/upload-artifact@v3
       with:
         name: 'ZEV_CoverageReport_${{ github.run_id }}'
-        path: './src/Zev/CoverageResults/coveragereport'
+        path: './coveragereport'
