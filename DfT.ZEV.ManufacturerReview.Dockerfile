@@ -12,16 +12,16 @@ RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/c
 
 
 WORKDIR /src
-COPY ["websites/manufacturer-data-review-portal/src/DfT.ZEV.ManufacturerReview.Web/DfT.ZEV.ManufacturerReview.Web.csproj", "DfT.ZEV.ManufacturerReview.Web/"]
-COPY ["websites/manufacturer-data-review-portal/src/DfT.ZEV.ManufacturerReview.Domain/DfT.ZEV.ManufacturerReview.Domain.csproj", "DfT.ZEV.ManufacturerReview.Domain/"]
-COPY ["websites/manufacturer-data-review-portal/src/DfT.ZEV.ManufacturerReview.Application/DfT.ZEV.ManufacturerReview.Application.csproj", "DfT.ZEV.ManufacturerReview.Application/"]
-COPY ["websites/manufacturer-data-review-portal/src/DfT.ZEV.ManufacturerReview.Infrastructure/DfT.ZEV.ManufacturerReview.Infrastructure.csproj", "DfT.ZEV.ManufacturerReview.Infrastructure/"]
-COPY ["common/DfT.ZEV.Core.Common/DfT.ZEV.Core.Common.csproj", "../../common/DfT.ZEV.Core.Common/"]
-COPY ["common/DfT.ZEV.Core.Common.Authentication/DfT.ZEV.Core.Common.Authentication.csproj", "../../common/DfT.ZEV.Core.Common.Authentication/"]
+COPY ["src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Web/DfT.ZEV.ManufacturerReview.Web.csproj", "DfT.ZEV.ManufacturerReview.Web/"]
+COPY ["src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Domain/DfT.ZEV.ManufacturerReview.Domain.csproj", "DfT.ZEV.ManufacturerReview.Domain/"]
+COPY ["src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Application/DfT.ZEV.ManufacturerReview.Application.csproj", "DfT.ZEV.ManufacturerReview.Application/"]
+COPY ["src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Infrastructure/DfT.ZEV.ManufacturerReview.Infrastructure.csproj", "DfT.ZEV.ManufacturerReview.Infrastructure/"]
+COPY ["src/common/DfT.ZEV.Common/DfT.ZEV.Common.csproj", "../../common/DfT.ZEV.Common/"]
+COPY ["src/common/DfT.ZEV.Common.MVC.Authentication/DfT.ZEV.Common.MVC.Authentication.csproj", "../../common/DfT.ZEV.Common.MVC.Authentication/"]
 RUN dotnet restore "DfT.ZEV.ManufacturerReview.Web/DfT.ZEV.ManufacturerReview.Web.csproj"  -r alpine-x64 /p:PublishReadyToRun=true
 
-COPY ["websites/manufacturer-data-review-portal/src/", "."]
-COPY ["common/", "../../common/"]
+COPY ["src/services/websites/manufacturer-data-review-portal/", "."]
+COPY ["src/common/", "../../../../common/"]
 COPY stylecop.ruleset stylecop.ruleset
 
 WORKDIR "/src/DfT.ZEV.ManufacturerReview.Web/frontend"

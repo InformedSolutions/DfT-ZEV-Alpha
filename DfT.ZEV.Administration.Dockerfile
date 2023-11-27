@@ -12,16 +12,16 @@ RUN apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/c
 
 
 WORKDIR /src
-COPY ["websites/zev-administration-portal/src/DfT.ZEV.Administration.Web/DfT.ZEV.Administration.Web.csproj", "DfT.ZEV.Administration.Web/"]
-COPY ["websites/zev-administration-portal/src/DfT.ZEV.Administration.Domain/DfT.ZEV.Administration.Domain.csproj", "DfT.ZEV.Administration.Domain/"]
-COPY ["websites/zev-administration-portal/src/DfT.ZEV.Administration.Application/DfT.ZEV.Administration.Application.csproj", "DfT.ZEV.Administration.Application/"]
-COPY ["websites/zev-administration-portal/src/DfT.ZEV.Administration.Infrastructure/DfT.ZEV.Administration.Infrastructure.csproj", "DfT.ZEV.Administration.Infrastructure/"]
-COPY ["common/DfT.ZEV.Core.Common/DfT.ZEV.Core.Common.csproj", "../../common/DfT.ZEV.Core.Common/"]
-COPY ["common/DfT.ZEV.Core.Common.Authentication/DfT.ZEV.Core.Common.Authentication.csproj", "../../common/DfT.ZEV.Core.Common.Authentication/"]
+COPY ["src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Web/DfT.ZEV.Administration.Web.csproj", "DfT.ZEV.Administration.Web/"]
+COPY ["src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Domain/DfT.ZEV.Administration.Domain.csproj", "DfT.ZEV.Administration.Domain/"]
+COPY ["src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Application/DfT.ZEV.Administration.Application.csproj", "DfT.ZEV.Administration.Application/"]
+COPY ["src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Infrastructure/DfT.ZEV.Administration.Infrastructure.csproj", "DfT.ZEV.Administration.Infrastructure/"]
+COPY ["src/common/DfT.ZEV.Common/DfT.ZEV.Common.csproj", "../../common/DfT.ZEV.Common/"]
+COPY ["src/common/DfT.ZEV.Common.MVC.Authentication/DfT.ZEV.Common.MVC.Authentication.csproj", "../../common/DfT.ZEV.Common.MVC.Authentication/"]
 RUN dotnet restore "DfT.ZEV.Administration.Web/DfT.ZEV.Administration.Web.csproj"  -r alpine-x64 /p:PublishReadyToRun=true
 
-COPY ["websites/zev-administration-portal/src/", "."]
-COPY ["common/", "../../common/"]
+COPY ["src/services/websites/zev-administration-portal/", "."]
+COPY ["src/common/", "../../../../common/"]
 COPY stylecop.ruleset stylecop.ruleset
 
 WORKDIR "/src/DfT.ZEV.Administration.Web/frontend"
