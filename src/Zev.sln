@@ -67,9 +67,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Core.Infrastructure
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.ComplianceCalculation.Handler", "services\functions\compliance-calculation\DfT.ZEV.Services.ComplianceCalculation.Handler\DfT.ZEV.Services.ComplianceCalculation.Handler.csproj", "{38D70DDA-1E81-46E9-9052-175653C1AE6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zev.Services.Migrator.Handler", "services\functions\migrator\DfT.ZEV.Services.Migrator.Handler\Zev.Services.Migrator.Handler.csproj", "{57FC31FF-2120-4C1F-B2E5-B62A199E670B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.SchemeData.Api", "services\apis\scheme-data\DfT.ZEV.Services.SchemeData.Api\DfT.ZEV.Services.SchemeData.Api.csproj", "{CF9AEDB7-DF34-4510-A274-925AD6F31E87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.Migrator.Handler", "services\functions\migrator\DfT.ZEV.Services.Migrator.Handler\DfT.ZEV.Services.Migrator.Handler.csproj", "{E57EEC45-5042-4124-8BEB-0AA53B4265A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,14 +157,14 @@ Global
 		{38D70DDA-1E81-46E9-9052-175653C1AE6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38D70DDA-1E81-46E9-9052-175653C1AE6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38D70DDA-1E81-46E9-9052-175653C1AE6F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57FC31FF-2120-4C1F-B2E5-B62A199E670B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57FC31FF-2120-4C1F-B2E5-B62A199E670B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57FC31FF-2120-4C1F-B2E5-B62A199E670B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57FC31FF-2120-4C1F-B2E5-B62A199E670B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF9AEDB7-DF34-4510-A274-925AD6F31E87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF9AEDB7-DF34-4510-A274-925AD6F31E87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF9AEDB7-DF34-4510-A274-925AD6F31E87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF9AEDB7-DF34-4510-A274-925AD6F31E87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E57EEC45-5042-4124-8BEB-0AA53B4265A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E57EEC45-5042-4124-8BEB-0AA53B4265A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E57EEC45-5042-4124-8BEB-0AA53B4265A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E57EEC45-5042-4124-8BEB-0AA53B4265A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -199,7 +199,7 @@ Global
 		{70E4AF90-C8FA-4DA8-9BDE-912C0D23FDFA} = {51EF4D9D-D514-40F1-9C77-205DB6C93A88}
 		{14E49B84-B727-4953-804C-BF1E0DC39947} = {51EF4D9D-D514-40F1-9C77-205DB6C93A88}
 		{38D70DDA-1E81-46E9-9052-175653C1AE6F} = {16C7E4D5-23D0-453D-87BC-B42A7D151FA4}
-		{57FC31FF-2120-4C1F-B2E5-B62A199E670B} = {EB9EFD3C-88A0-4C62-A4F1-22C580DEC879}
 		{CF9AEDB7-DF34-4510-A274-925AD6F31E87} = {4D459E78-223E-4034-85F9-2C7D4DF702D1}
+		{E57EEC45-5042-4124-8BEB-0AA53B4265A4} = {EB9EFD3C-88A0-4C62-A4F1-22C580DEC879}
 	EndGlobalSection
 EndGlobal
