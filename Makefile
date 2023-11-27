@@ -20,13 +20,3 @@ credential-scan-git-verified-no-update-no-log:
 
 credential-scan-git-unverified-no-update-no-log:
 	docker run --rm -it -v $(PWD):/opt trufflesecurity/trufflehog:latest git file:///opt --no-update --fail > /dev/null
-
-# Infrastructure and deployment
-init:
-	cd infrastructure/terraform && make init
-
-plan:
-	cd infrastructure/terraform && make plan
-
-deploy:
-	cd infrastructure/terraform && make apply-auto-approve
