@@ -28,6 +28,7 @@ public static class Setup
         
         //to-do: add serilog from commons
         //builder.Services.AddSerilog(builder.Configuration);
+        builder.Services.AddLogging();
         
         builder.Services.AddRepositories();
         return builder;
