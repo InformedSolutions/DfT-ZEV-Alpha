@@ -1,6 +1,7 @@
 using System.Reflection;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Models;
+using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Application.Vehicles;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Infrastructure.Persistence;
@@ -11,7 +12,7 @@ public abstract class BaseTest
 {
     //Core
     protected static readonly Assembly DomainAssembly = typeof(Vehicle).Assembly;
-    protected static readonly Assembly ApplicationAssembly = typeof(VehicleService).Assembly;
+    protected static readonly Assembly ApplicationAssembly = typeof(DependencyInjection).Assembly;
     protected static readonly Assembly InfrastructureAssembly = typeof(AppDbContext).Assembly;
     
     //Commons

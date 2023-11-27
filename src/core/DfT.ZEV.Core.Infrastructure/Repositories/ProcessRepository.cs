@@ -5,7 +5,7 @@ using DfT.ZEV.Core.Infrastructure.Persistence;
 
 namespace DfT.ZEV.Core.Infrastructure.Repositories;
 
-public sealed class ProcessRepository : IProcessRepository
+internal sealed class ProcessRepository : IProcessRepository
 {
     private readonly AppDbContext _context;
 

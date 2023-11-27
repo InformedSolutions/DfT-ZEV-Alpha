@@ -6,7 +6,7 @@ using DfT.ZEV.Core.Infrastructure.Persistence;
 namespace DfT.ZEV.Core.Infrastructure.Repositories;
 
 /// <inheritdoc cref="IVehicleRepository" />
-public sealed class VehicleRepository : IVehicleRepository
+internal sealed class VehicleRepository : IVehicleRepository
 {
     private readonly AppDbContext _context;
 

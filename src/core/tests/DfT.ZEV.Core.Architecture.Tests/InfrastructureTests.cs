@@ -4,18 +4,17 @@ using NetArchTest.Rules;
 namespace DfT.ZEV.Core.Architecture.Tests;
 
 [TestFixture]
-public class ApplicationTests : BaseTest
+public class InfrastructureTests : BaseTest
 {
-
     [Test]
-    public void Services_ShouldBeInternalAndSealed()
+    public void Repositories_ShouldBeInternalAndSealed()
     {
         var result = Types
-            .InAssembly(ApplicationAssembly)
+            .InAssembly(InfrastructureAssembly)
             .That()
             .AreClasses()
             .And()
-            .HaveNameEndingWith("Service")
+            .HaveNameEndingWith("Repository")
             .Should()
             .BeSealed()
             .And()
