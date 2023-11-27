@@ -31,23 +31,4 @@ jobs:
       run: make build
 
     - name: Test with coverage
-<<<<<<< HEAD
       run: make test-coverage
-=======
-      run: make test-coverage
-
-    - name: Generate coverage HTML report
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
-      with:
-        reports: 'CoverageResults/coverage.cobertura.xml'
-        targetdir: 'CoverageResults/coveragereport'
-        reporttypes: 'HtmlInline'
-        title: 'ZEV manufacturer data review website coverage report'
-        tag: '${{ github.run_number }}_${{ github.run_id }}'
-
-    - name: Upload coverage report artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: 'ZEV_CoverageReport_${{ github.run_id }}'
-        path: 'coveragereport'
->>>>>>> bd3063fc544fc99f73dc5fd486deaf9fa20ebb39
