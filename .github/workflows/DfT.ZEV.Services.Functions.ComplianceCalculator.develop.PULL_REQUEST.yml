@@ -36,18 +36,3 @@ jobs:
 
     - name: Test with coverage
       run: make test-coverage
-
-    - name: Generate coverage HTML report
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
-      with:
-        reports: './src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler/CoverageResults/coverage.cobertura.xml'
-        targetdir: './src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler/CoverageResults/coveragereport'
-        reporttypes: 'HtmlInline'
-        title: 'ZEV compliance calculation function coverage report'
-        tag: '${{ github.run_number }}_${{ github.run_id }}'
-
-    - name: Upload coverage report artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: 'ZEV_CoverageReport_${{ github.run_id }}'
-        path: 'coveragereport'
