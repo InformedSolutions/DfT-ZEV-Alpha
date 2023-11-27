@@ -44,4 +44,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: 'ZEV_CoverageReport_${{ github.run_id }}'
-        path: 'coveragereport'
+        path: './src/core/CoverageResults/coveragereport'
