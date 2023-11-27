@@ -20,8 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DfT.ZEV.Core.Domain\DfT.ZEV.Core.Domain.csproj" />
-      <ProjectReference Include="..\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
