@@ -1,0 +1,47 @@
+name: DfT.ZEV.Core (Pull request)
+
+on:
+  pull_request:
+    branches: [ develop ]
+    paths:
+      - 'src/core/**'
+      - '!README.md'
+      - '!**/README.MD'
+
+defaults:
+  run:
+    working-directory: ./src/core
+
+jobs:
+
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build
+      run: make build
+
+    - name: Test with coverage
+      run: make test-coverage
+
+    - name: Generate coverage HTML report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
+      with:
+        reports: './src/core/CoverageResults/coverage.cobertura.xml'
+        targetdir: './src/core/CoverageResults/coveragereport'
+        reporttypes: 'HtmlInline'
+        title: 'ZEV Core coverage report'
+        tag: '${{ github.run_number }}_${{ github.run_id }}'
+
+    - name: Upload coverage report artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: 'ZEV_CoverageReport_${{ github.run_id }}'
+        path: './src/core/CoverageResults/coveragereport'

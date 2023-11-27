@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Http.Extensions;
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+
+@{
+    var showCookiesBanner = !Context.Request.Cookies.ContainsKey("AdditionalCookiesConsent");
+}
+
+@if (showCookiesBanner)
+{
+    <div class="govuk-cookie-banner" data-nosnippet="" role="region" aria-label="Cookies on Forms" data-test="cookies-banner">
+        <div class="govuk-cookie-banner__message govuk-width-container">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-cookie-banner__heading govuk-heading-m govuk-!-margin-top-4" data-test="cookies-banner_service">Cookies on @Configuration.GetSection("ServiceName").Value</h2>
+
+                    <div class="govuk-cookie-banner__content">
+                        <p class="govuk-body">We use some essential cookies to make this service work.</p>
+                        <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-controller="Cookies" asp-action="SetConsent" method="post">
+                <div class="govuk-button-group">
+                    @Html.Hidden("redirectPath", Context.Request.GetEncodedPathAndQuery())
+                    <govuk-button type="submit" value="accept" name="UserConsentAnalytics" data-test="cookies-banner_accept">Accept analytics cookies</govuk-button>
+                    <govuk-button type="submit" value="reject" name="UserConsentAnalytics" data-test="cookies-banner_reject">Reject analytics cookies</govuk-button>
+                    <a class="govuk-link govuk-body govuk-!-display-inline-block govuk-!-margin-top-1" href="/cookies" data-test="cookies-banner_view">View cookies</a>
+                </div>
+            </form>
+        </div>
+    </div>
+}

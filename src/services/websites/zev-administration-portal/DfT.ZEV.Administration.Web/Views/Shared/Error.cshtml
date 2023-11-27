@@ -1,0 +1,24 @@
+﻿@using Microsoft.Extensions.Configuration
+@model DfT.ZEV.Administration.Web.Models.ErrorViewModel
+
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Service unavailable";
+
+    var showCorrelationId = Configuration.GetValue<bool>("ShowCorrelationIdInErrorPages");
+}
+
+<h1 class="govuk-heading-l">Sorry, the service is unavailable</h1>
+<p class="govuk-body">
+    You will be able to use the service later.
+</p>
+@if (showCorrelationId && Context.Request.Headers.TryGetValue("X-Correlation-Id", out var correlationId))
+{
+    <h2 class="govuk-heading-s">
+        Support identifier
+    </h2>
+    <p class="govuk-body">
+        @correlationId
+    </p>
+}

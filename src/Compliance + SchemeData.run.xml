@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Compliance + SchemeData" type="CompoundRunConfigurationType">
+    <toRun name="DfT.ZEV.Services.SchemeData.Api" type="LaunchSettings" />
+    <toRun name="DfT.ZEV.Services.ComplianceCalculation.Handler" type="DotNetProject" />
+    <method v="2" />
+  </configuration>
+</component>

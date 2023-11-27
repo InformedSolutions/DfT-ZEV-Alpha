@@ -1,0 +1,68 @@
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model DfT.ZEV.Common.MVC.Authentication.ViewModels.SignInViewModel
+@{
+    var pageTitle = Configuration.GetValue<string>("Labels:SignInTitle", "Sign in");
+    var isUserPasswordManagementEnabled = Configuration.GetValue<bool>("UserPasswordManagementEnabled");
+
+    ViewData["Title"] = $"Sign In";
+    ViewData["ActivePage"] = "SignIn";
+}
+
+<partial name="_ErrorSummary" />
+
+@if (ViewData["message"] as string == "LogoutDueToSecurity")
+{
+    <vc:notification-banner
+        banner-type="Information"
+        body="We have signed you out of your account to keep it secure.">
+    </vc:notification-banner>
+}
+
+@if (ViewData["message"] as string == "VerificationSuccess")
+{
+    <vc:notification-banner
+        banner-type="Success"
+        body="Your email address has been verified and your account has been activated. Enter your email address and password to sign in.">
+    </vc:notification-banner>
+}
+
+@if (ViewData["message"] as string == "PasswordChangedSuccess")
+{
+    <vc:notification-banner
+        banner-type="Success"
+        body="Your password has been changed. Enter your email address and password to sign in.">
+    </vc:notification-banner>
+}
+
+@if (ViewData["message"] as string == "EmailChangedSuccess")
+{
+    <vc:notification-banner
+        banner-type="Success"
+        body="Your email has been changed. Enter your new email address and password to sign in.">
+    </vc:notification-banner>
+}
+
+<h1 class="govuk-heading-l">@pageTitle</h1>
+
+@using (Html.BeginForm())
+{
+    <govuk-input asp-for="@Model.Email" inputmode="email" autocomplete="true" data-test="signin-email">
+        <govuk-input-label>Email address</govuk-input-label>
+    </govuk-input>
+
+    <govuk-input asp-for="@Model.Password" type="password" autocomplete="true" data-test="signin-password">
+        <govuk-input-label>Password</govuk-input-label>
+    </govuk-input>
+
+    @Html.HiddenFor(m => m.UserId)
+
+    @if (isUserPasswordManagementEnabled)
+    {
+        <p class="govuk-body">
+            <a class="govuk-link govuk-link--no-visited-state" asp-action="ForgottenPassword">Forgotten your password?</a>
+        </p>
+    }
+
+    <govuk-button type="submit" data-test="signin-continue">Continue</govuk-button>
+}
