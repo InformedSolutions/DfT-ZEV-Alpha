@@ -73,7 +73,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.Migrator.H
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Organization", "Organization", "{92E3D69A-16D9-4459-9186-9AB62B34340D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.Organization.Api", "services\apis\organization\DfT.ZEV.Services.Organization.Api\DfT.ZEV.Services.Organization.Api.csproj", "{2F914210-B909-4DB8-9646-AC4CD8AD75CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.Organisation.Api", "services\apis\organization\DfT.ZEV.Services.Organisation.Api\DfT.ZEV.Services.Organisation.Api.csproj", "{2F914210-B909-4DB8-9646-AC4CD8AD75CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
