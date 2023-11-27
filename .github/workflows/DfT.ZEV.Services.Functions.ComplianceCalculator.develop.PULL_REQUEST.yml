@@ -12,7 +12,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./src/services/functions/compliance-calculation
+    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
 
 jobs:
 

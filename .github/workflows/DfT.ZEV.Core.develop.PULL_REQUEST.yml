@@ -34,8 +34,8 @@ jobs:
     - name: Generate coverage HTML report
       uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
       with:
-        reports: 'CoverageResults/coverage.cobertura.xml'
-        targetdir: 'CoverageResults/coveragereport'
+        reports: './src/core/CoverageResults/coverage.cobertura.xml'
+        targetdir: './src/core/CoverageResults/coveragereport'
         reporttypes: 'HtmlInline'
         title: 'ZEV Core coverage report'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
