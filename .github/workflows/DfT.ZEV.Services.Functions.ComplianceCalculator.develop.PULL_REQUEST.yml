@@ -23,6 +23,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Setup Postgres Database
+      working-directory: .
       run: docker compose -f infrastructure/docker/docker-compose.yml up -d
 
     - name: Setup .NET
@@ -39,8 +40,8 @@ jobs:
     - name: Generate coverage HTML report
       uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
       with:
-        reports: './CoverageResults/coverage.cobertura.xml'
-        targetdir: './CoverageResults/coveragereport'
+        reports: './src/services/functions/compliance-calculation/CoverageResults/coverage.cobertura.xml'
+        targetdir: './src/services/functions/compliance-calculation/CoverageResults/coveragereport'
         reporttypes: 'HtmlInline'
         title: 'ZEV compliance calculation function coverage report'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
@@ -49,4 +50,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: 'ZEV_CoverageReport_${{ github.run_id }}'
-        path: './coveragereport'
+        path: 'coveragereport'
