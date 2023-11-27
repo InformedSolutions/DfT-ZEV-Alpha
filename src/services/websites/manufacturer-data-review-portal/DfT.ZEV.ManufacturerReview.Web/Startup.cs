@@ -16,7 +16,7 @@ using System.Web;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Common.Security;
-using DfT.ZEV.Core.Common.Authentication.ServiceCollectionExtensions;
+using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 
 namespace DfT.ZEV.ManufacturerReview.Web;
 
