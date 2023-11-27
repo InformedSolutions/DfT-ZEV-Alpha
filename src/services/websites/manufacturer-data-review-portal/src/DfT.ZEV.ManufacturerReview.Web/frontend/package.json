@@ -1,0 +1,24 @@
+{
+  "name": "informed.insight.template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "build": "webpack",
+    "better-audit": "better-npm-audit audit --exclude GHSA-4943-9vgg-gr5r"
+  },
+  "dependencies": {
+    "jquery": "^3.5.1"
+  },
+  "devDependencies": {
+    "better-npm-audit": "^3.7.3",
+    "css-loader": "^6.8.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  }
+}

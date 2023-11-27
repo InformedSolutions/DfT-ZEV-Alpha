@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Compliance + SchemeData" type="CompoundRunConfigurationType">
+    <toRun name="ComplianceService.Function" type="DotNetProject" />
+    <toRun name="Zev.Services.SchemeData.Api" type="DotNetProject" />
+    <method v="2" />
+  </configuration>
+</component>
