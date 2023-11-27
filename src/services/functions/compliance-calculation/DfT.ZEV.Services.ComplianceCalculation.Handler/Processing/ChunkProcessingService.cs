@@ -7,11 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
-using Serilog;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using DfT.ZEV.Core.Infrastructure.Repositories;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.DTO;
+using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Services.ComplianceCalculation.Handler.Processing;
 
@@ -21,7 +21,7 @@ namespace DfT.ZEV.Services.ComplianceCalculation.Handler.Processing;
 public class ChunkProcessingService : IProcessingService
 {
     private readonly ConcurrentStack<RawVehicleDTO> _bufferStack = new();
-    private readonly ILogger _logger;
+    private readonly ILogger<ChunkProcessingService> _logger;
     private readonly IMapper _mapper;
     private readonly Stopwatch _stopwatch = new();
     private readonly IUnitOfWork _unitOfWork;
@@ -31,7 +31,7 @@ public class ChunkProcessingService : IProcessingService
 
     private int _recordCounter;
 
-    public ChunkProcessingService(ILogger logger, IUnitOfWork unitOfWork, IMapper mapper,
+    public ChunkProcessingService(ILogger<ChunkProcessingService> logger, IUnitOfWork unitOfWork, IMapper mapper,
         IVehicleService vehicleService)
     {
         _logger = logger;
@@ -43,14 +43,14 @@ public class ChunkProcessingService : IProcessingService
     /// <inheritdoc />
     public async Task<ProcessingResult> ProcessAsync(Stream stream, int chunkSize)
     {
-        _logger.Information("Processing started.");
+        _logger.LogInformation("Processing started.");
         _stopwatch.Start();
 
 
         using var reader = new StreamReader(stream);
         await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
-        _logger.Information("Beginning transaction: {TransactionId}", transaction.TransactionId);
+        _logger.LogInformation("Beginning transaction: {TransactionId}", transaction.TransactionId);
 
         try
         {
@@ -59,22 +59,22 @@ public class ChunkProcessingService : IProcessingService
             // Process the remaining records
             if (!_bufferStack.IsEmpty)
             {
-                _logger.Information("Processing remaining records in buffer.");
+                _logger.LogInformation("Processing remaining records in buffer.");
                 await ProcessBuffer();
             }
 
-            _logger.Information("Committing transaction: {TransactionId}.", transaction.TransactionId);
+            _logger.LogInformation("Committing transaction: {TransactionId}.", transaction.TransactionId);
             await transaction.CommitAsync();
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Error processing file. Rolling back transaction: {TransactionId}.",
+            _logger.LogError(ex, "Error processing file. Rolling back transaction: {TransactionId}.",
                 transaction.TransactionId);
             await transaction.RollbackAsync();
             return ProcessingResult.Fail(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
         }
 
-        _logger.Information(
+        _logger.LogInformation(
             "Processing completed. Processed {RecordCounter} records in {ElapsedMilliseconds} milliseconds.",
             _recordCounter, _stopwatch.ElapsedMilliseconds);
         return ProcessingResult.Successful(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
@@ -100,18 +100,18 @@ public class ChunkProcessingService : IProcessingService
         var stopwatch = Stopwatch.StartNew();
 
         var stackCount = _bufferStack.Count;
-        _logger.Information("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
+        _logger.LogInformation("Processing buffer {BufferCounter} with {StackCount} records", _bufferCounter, stackCount);
 
         var mappedVehicles = _mapper.Map<IEnumerable<Vehicle>>(_bufferStack).ToList();
-        _logger.Information("Mapping took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
+        _logger.LogInformation("Mapping took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
 
         stopwatch.Restart();
         Parallel.ForEach(mappedVehicles, vehicle => _vehicleService.ApplyRules(vehicle));
-        _logger.Information("Applying rules took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
+        _logger.LogInformation("Applying rules took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
 
         stopwatch.Restart();
         await _unitOfWork.Vehicles.BulkInsertAsync(mappedVehicles);
-        _logger.Information("Inserting records took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
+        _logger.LogInformation("Inserting records took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
 
 
         _recordCounter += stackCount;

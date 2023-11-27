@@ -56,6 +56,7 @@ public class ServiceStartup : FunctionsStartup
         
         //TO-DO: Add Serilog from commons
         //services.AddSerilog(configuration);
+        services.AddLogging();
         services.AddTransient<GlobalErrorHandler>();
         services.AddTransient<IProcessingService, ChunkProcessingService>();
         services.AddTransient<CsvValidatorService>();

@@ -11,7 +11,6 @@ using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Serilog;
 using Serilog.Context;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Processes.Values;
@@ -19,6 +18,7 @@ using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.DTO;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.Processing;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.Validation;
+using Microsoft.Extensions.Logging;
 using Process = DfT.ZEV.Core.Domain.Processes.Models.Process;
 
 namespace DfT.ZEV.Services.ComplianceCalculation.Handler;
@@ -32,10 +32,10 @@ public class Function : IHttpFunction
     private readonly BucketsConfiguration _bucketsConfiguration;
     private readonly AppDbContext _context;
     private readonly CsvValidatorService _csvValidatorService;
-    private readonly ILogger _logger;
+    private readonly ILogger<Function> _logger;
     private readonly IProcessingService _processingService;
     private readonly IProcessService _processService;
-    public Function(ILogger logger, IProcessingService processingService,
+    public Function(ILogger<Function> logger, IProcessingService processingService,
         IOptions<BucketsConfiguration> bucketsConfiguration, CsvValidatorService csvValidatorService,
         AppDbContext context, IProcessService processService)
     {
@@ -79,14 +79,14 @@ public class Function : IHttpFunction
         await _processService.StartProcessAsync(process.Id, body);
         await Task.Delay(5 * 1000);
 
-        _logger.Information(
+        _logger.LogInformation(
             $"Requested processing file: {body.FileName} from bucket: {_bucketsConfiguration.ManufacturerImport}");
 
         var stopwatch = StartStopwatch();
 
-        //_logger.Information("Starting truncation of vehicle data");
-        //await ClearVehiclesFromDatabase();
-        //_logger.Information($"Vehicle data successfully truncated after {stopwatch.ElapsedMilliseconds}ms");
+        _logger.LogInformation("Starting truncation of vehicle data");
+        await ClearVehiclesFromDatabase();
+        _logger.LogInformation($"Vehicle data successfully truncated after {stopwatch.ElapsedMilliseconds}ms");
         
         var stream = await DownloadFileFromStorage(body);
 
@@ -125,13 +125,13 @@ public class Function : IHttpFunction
         {
             await _processService.FinishProcessAsync(process.Id,response);
             var resJson = JsonSerializer.Serialize(response);
-            _logger.Information("Finished processing file: {resJson}", resJson);
+            _logger.LogInformation("Finished processing file: {resJson}", resJson);
         }
         else
         {
             await _processService.FailProcessAsync(process.Id, response);
             var resJson = JsonSerializer.Serialize(response);
-            _logger.Information("Failed processing file: {resJson}", resJson);
+            _logger.LogInformation("Failed processing file: {resJson}", resJson);
         }
     }
 

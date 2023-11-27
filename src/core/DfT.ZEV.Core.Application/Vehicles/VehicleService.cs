@@ -5,7 +5,7 @@ using DfT.ZEV.Core.Domain.Vehicles.Values;
 namespace DfT.ZEV.Core.Application.Vehicles;
 
 /// <inheritdoc />
-public class VehicleService : IVehicleService
+internal sealed class VehicleService : IVehicleService
 {
     /// <inheritdoc />
     public void ApplyRules(IList<Vehicle> vehicles)

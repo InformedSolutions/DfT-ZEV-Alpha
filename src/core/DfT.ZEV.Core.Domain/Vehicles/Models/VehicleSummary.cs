@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 namespace DfT.ZEV.Core.Domain.Vehicles.Models;
 
-public class VehicleSummary
+public sealed class VehicleSummary
 {
     public VehicleSummary(string vin)
     {

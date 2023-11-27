@@ -5,19 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using CsvHelper;
 using FluentValidation;
-using Serilog;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.DTO;
+using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Services.ComplianceCalculation.Handler.Validation;
 
 public class CsvValidatorService : ICsvValidatorService
 {
     private const int ErrorCap = 50;
-    private readonly ILogger _logger;
+    private readonly ILogger<CsvValidatorService> _logger;
     private readonly IValidator<RawVehicleDTO> _validator;
     private int index;
 
-    public CsvValidatorService(ILogger logger)
+    public CsvValidatorService(ILogger<CsvValidatorService> logger)
     {
         _validator = new RawVehicleDtoValidator();
         _logger = logger;
@@ -70,7 +70,7 @@ public class CsvValidatorService : ICsvValidatorService
                 Messages = result.Errors.Select(x => x.ErrorMessage).ToArray()
             });
 
-            _logger.Error("Validation failed for record {RecordNumber}. Errors: {Errors}", index, result.Errors);
+            _logger.LogError("Validation failed for record {RecordNumber}. Errors: {Errors}", index, result.Errors);
         }
     }
 }

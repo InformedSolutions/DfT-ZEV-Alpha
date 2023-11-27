@@ -3,7 +3,7 @@ using FluentValidation.Validators;
 
 namespace DfT.ZEV.Core.Domain.Vehicles.Validation.Validators;
 
-public class VinValidator<T> : AsyncPropertyValidator<T, string>
+public sealed class VinValidator<T> : AsyncPropertyValidator<T, string>
 {
     public override string Name
         => "VinValidator";

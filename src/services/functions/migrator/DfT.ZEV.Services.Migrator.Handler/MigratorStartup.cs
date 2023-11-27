@@ -26,6 +26,7 @@ public class MigratorStartup : FunctionsStartup
         
         //TO-DO: Add Serilog from commons
         //services.AddSerilog(configuration);
+        services.AddLogging();
         services.AddHttpContextAccessor();
     }
 }

@@ -5,7 +5,7 @@ using DfT.ZEV.Core.Infrastructure.Repositories;
 
 namespace DfT.ZEV.Core.Application.Processes;
 
-public class ProcessService : IProcessService
+internal sealed class ProcessService : IProcessService
 {
     private readonly IUnitOfWork _unitOfWork;
 

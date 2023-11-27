@@ -13,9 +13,9 @@ namespace Zev.Services.Migrator.Handler;
 public class Function : IHttpFunction
 {
     private readonly AppDbContext _context;
-    private readonly ILogger _logger;
+    private readonly ILogger<Function> _logger;
 
-    public Function(AppDbContext context, ILogger logger)
+    public Function(AppDbContext context, ILogger<Function> logger)
     {
         _context = context;
         _logger = logger;

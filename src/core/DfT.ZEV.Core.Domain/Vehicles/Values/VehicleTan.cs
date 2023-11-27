@@ -1,6 +1,6 @@
 namespace DfT.ZEV.Core.Domain.Vehicles.Values;
 
-public class VehicleTan
+public static class VehicleTan
 {
     public const string M1 = "M1";
     public const string N1 = "N1";
