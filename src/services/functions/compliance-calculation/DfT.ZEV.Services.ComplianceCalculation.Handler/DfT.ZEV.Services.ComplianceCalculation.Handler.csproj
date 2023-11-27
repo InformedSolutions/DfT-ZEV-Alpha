@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Core\DfT.ZEV.Core.Application\DfT.ZEV.Core.Application.csproj"/>
-        <ProjectReference Include="..\..\..\Core\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\..\..\core\DfT.ZEV.Core.Application\DfT.ZEV.Core.Application.csproj"/>
+        <ProjectReference Include="..\..\..\..\core\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj"/>
     </ItemGroup>
 </Project>

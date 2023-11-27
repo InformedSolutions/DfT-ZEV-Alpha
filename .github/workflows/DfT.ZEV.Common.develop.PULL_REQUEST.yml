@@ -28,4 +28,5 @@ jobs:
     - name: Build
       run: |
         cd DfT.ZEV.Common && make build
+        cd ..
         cd DfT.ZEV.Common.MVC.Authentication && make build

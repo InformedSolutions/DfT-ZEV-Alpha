@@ -13,6 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Core\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\..\..\Core\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj"/>
     </ItemGroup>
 </Project>
