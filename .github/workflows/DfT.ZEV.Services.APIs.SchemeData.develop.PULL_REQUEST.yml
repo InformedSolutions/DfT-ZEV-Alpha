@@ -1,10 +1,10 @@
-name: DfT.ZEV.Services.Functions.ComplianceCalculator (Pull request)
+name: DfT.ZEV.Services.APIs.SchemeData (Pull request)
 
 on:
   pull_request:
     branches: [ develop ]
     paths:
-      - 'src/services/functions/compliance-calculation/**'
+      - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
       - 'src/common/**'
       - 'src/core/**'
       - '!README.md'
@@ -12,7 +12,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
+    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
 
 jobs:
 

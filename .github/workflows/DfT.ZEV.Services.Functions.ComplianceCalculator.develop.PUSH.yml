@@ -7,10 +7,11 @@ on:
       - develop
       - hotfix/**
     paths:
+      - 'src/services/functions/compliance-calculation/**'
+      - 'src/common/**'
+      - 'src/core/**'
       - '!README.md'
       - '!**/README.MD'
-      - '**/**.cs'
-      - '**/**.json'
       - 'infrastructure/terraform/**'
 
 env:
