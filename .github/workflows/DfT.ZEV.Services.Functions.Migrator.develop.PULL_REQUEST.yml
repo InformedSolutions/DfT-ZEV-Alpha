@@ -1,0 +1,29 @@
+name: DfT.ZEV.Services.Functions.Migrator (Pull request)
+
+on:
+  pull_request:
+    branches: [ develop ]
+    paths:
+      - 'src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler/**'
+      - '!README.md'
+      - '!**/README.MD'
+
+defaults:
+  run:
+    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
+
+jobs:
+
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build
+      run: make build
