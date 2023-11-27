@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Json;
-using Microsoft.EntityFrameworkCore;
-using DfT.ZEV.Core.Infrastructure.Configuration;
-using DfT.ZEV.Core.Infrastructure.Logging;
+using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Http.Json;
+
 using DfT.ZEV.Services.SchemeData.Api.Features.Processes;
+using Microsoft.EntityFrameworkCore;
 
 namespace DfT.ZEV.Services.SchemeData.Api;
 
@@ -25,7 +25,10 @@ public static class Setup
             opt.UseNpgsql(postgresSettings.ConnectionString,
                 conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
         });
-        builder.Services.AddSerilog(builder.Configuration);
+        
+        //to-do: add serilog from commons
+        //builder.Services.AddSerilog(builder.Configuration);
+        
         builder.Services.AddRepositories();
         return builder;
     }

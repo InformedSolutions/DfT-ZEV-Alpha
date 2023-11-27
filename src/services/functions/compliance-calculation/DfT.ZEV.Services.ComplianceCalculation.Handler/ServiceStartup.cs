@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Core.Application;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using DfT.ZEV.Core.Application;
-using DfT.ZEV.Core.Infrastructure.Configuration;
-using DfT.ZEV.Core.Infrastructure.Logging;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.Maps;
@@ -54,7 +53,9 @@ public class ServiceStartup : FunctionsStartup
         services.ConfigureBucketSettings(configuration);
         services.AddRepositories();
         services.AddDomainServices();
-        services.AddSerilog(configuration);
+        
+        //TO-DO: Add Serilog from commons
+        //services.AddSerilog(configuration);
         services.AddTransient<GlobalErrorHandler>();
         services.AddTransient<IProcessingService, ChunkProcessingService>();
         services.AddTransient<CsvValidatorService>();

@@ -4,8 +4,8 @@ using Google.Cloud.Functions.Framework;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using DfT.ZEV.Core.Infrastructure.Persistence;
+using Microsoft.Extensions.Logging;
 
 namespace Zev.Services.Migrator.Handler;
 
@@ -38,7 +38,7 @@ public class Function : IHttpFunction
         }
         catch (Exception ex)
         {
-            _logger.Fatal(ex, "Fatal error during migration.");
+            _logger.LogCritical(ex, "Fatal error during migration.");
 
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsync("Migration failed.");
