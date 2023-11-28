@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentAssertions;
 using MediatR;
 using NetArchTest.Rules;
@@ -56,6 +57,22 @@ public class ApplicationTests : BaseTest
             .HaveNameEndingWith("Command")
             .GetResult();
 
+        result.IsSuccessful.Should().BeTrue();
+    }
+
+    [Test]
+    public void MapperProfiles_ShouldHaveProperName()
+    {
+        var result = Types
+            .InAssembly(ApplicationAssembly)
+            .That()
+            .AreClasses()
+            .And()
+            .Inherit(typeof(Profile))
+            .Should()
+            .HaveNameEndingWith("Profile")
+            .GetResult();
+        
         result.IsSuccessful.Should().BeTrue();
     }
 }
