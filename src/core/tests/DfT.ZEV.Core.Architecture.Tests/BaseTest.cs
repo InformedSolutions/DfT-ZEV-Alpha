@@ -11,7 +11,7 @@ public abstract class BaseTest
 {
     //Core
     protected static readonly Assembly DomainAssembly = typeof(Vehicle).Assembly;
-    protected static readonly Assembly ApplicationAssembly = typeof(DependencyInjection).Assembly;
+    protected static readonly Assembly ApplicationAssembly = typeof(ApplicationDependencyInjection).Assembly;
     protected static readonly Assembly InfrastructureAssembly = typeof(AppDbContext).Assembly;
 
     //Commons

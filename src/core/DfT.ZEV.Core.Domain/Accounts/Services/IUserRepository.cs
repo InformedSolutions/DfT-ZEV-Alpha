@@ -10,6 +10,4 @@ public interface IUserRepository
     Task InsertAsync (User user, CancellationToken cancellationToken = default);
     void Update (User user);
     void Delete (User user);
-    
-    ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

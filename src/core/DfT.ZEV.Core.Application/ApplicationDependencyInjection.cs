@@ -6,7 +6,7 @@ using DfT.ZEV.Core.Domain.Vehicles.Services;
 
 namespace DfT.ZEV.Core.Application;
 
-public static class DependencyInjection
+public static class ApplicationDependencyInjection
 {
     /// <summary>
     ///     This method adds the domain services to the service collection.
