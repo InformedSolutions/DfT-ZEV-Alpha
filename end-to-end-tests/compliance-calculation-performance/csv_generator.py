@@ -15,6 +15,7 @@ percent_registered_category = 2
 percent_zev = 25
 percent_msv = 5
 percent_spvc = 5
+percent_eco_innovations = 5
 
 sample_details = [
     ['Golf', 'Volkswagen', 'Volkswagen Group', 'Porsche SE'],
@@ -76,6 +77,11 @@ with open(output_filename, 'w', newline='') as file:
         else:
             special_purpose_vehicle_category = random.choice(spvcs)
 
+        if randint > percent_eco_innovations:
+            eco_innovations = None
+        else:
+            eco_innovations = fake.text(max_nb_chars=30)
+
 
         wr.writerow([
             fake.vin(),                                     # vin
@@ -104,11 +110,11 @@ with open(output_filename, 'w', newline='') as file:
             fake.lexify(text='?'),                          # fuel_mix
             fake.random_number(digits=4,fix_len=False),     # engine_capacity
             fake.random_number(digits=2,fix_len=False),     # electric_energy_consuption
-            fake.text(max_nb_chars=200),                    # eco_innovations
+            eco_innovations,                                # eco_innovations
             fake.random_number(digits=2,fix_len=False),     # eco_emissions_reduction
             battery_electric_range,                         # battery_electric_range
             fake.date(),                                    # date_of_first_registration
-            random.choice(country)                          # registration_location
+            random.choice(country),                         # registration_location
             fake.postcode(),                                # postcode
             special_purpose_vehicle_category,               # special_purpose_vehicle_category
             fake.random_number(digits=2,fix_len=False),     # road_load_coefficient_f0
