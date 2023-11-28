@@ -7,7 +7,7 @@ from faker_vehicle import VehicleProvider
 fake = Faker(['en-GB'])
 fake.add_provider(VehicleProvider)
 
-output_filename = 'argv[1]'
+output_filename = argv[1]
 number_of_records = int(argv[2])
 
 percent_registered_category = 2
