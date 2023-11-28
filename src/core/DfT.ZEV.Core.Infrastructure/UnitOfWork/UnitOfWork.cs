@@ -1,3 +1,4 @@
+using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Services;
 using Microsoft.EntityFrameworkCore.Storage;
 using DfT.ZEV.Core.Domain.Processes.Services;
@@ -7,62 +8,49 @@ using DfT.ZEV.Core.Infrastructure.Repositories;
 
 namespace DfT.ZEV.Core.Infrastructure.UnitOfWork;
 
-/// <inheritdoc cref="IUnitOfWork" />
-internal sealed class UnitOfWork : IUnitOfWork, IDisposable
+internal sealed class UnitOfWork : IUnitOfWork
 {
-    private readonly AppDbContext _context;
-    private bool _disposed;
+    public IVehicleRepository Vehicles => _vehicles ??= new VehicleRepository(_dbContext);
+    public IProcessRepository Processes => _processes ??= new ProcessRepository(_dbContext);
+    public IUserRepository Users => _users ??= new UserRepository(_dbContext);
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="UnitOfWork" /> class.
-    /// </summary>
-    public UnitOfWork(AppDbContext context)
+    private readonly AppDbContext _dbContext;
+    private IVehicleRepository _vehicles;
+    private IProcessRepository _processes;
+    private IUserRepository _users;
+    private IDbContextTransaction _transaction;
+    public UnitOfWork(AppDbContext dbContext)
     {
-        _context = context;
-        Vehicles = new VehicleRepository(_context);
-        Processes = new ProcessRepository(_context);
-        Users = new UserRepository(_context);
+        _dbContext = dbContext;
     }
 
-    public void Dispose()
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        => await _dbContext.SaveChangesAsync(cancellationToken);
+
+    public async Task<Guid> BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        if (_transaction is not null)
+            throw new Exception("Transaction already started.");
+        
+        _transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        return _transaction.TransactionId;
     }
 
-    public IVehicleRepository Vehicles { get; }
-    public IProcessRepository Processes { get; }
-    public IUserRepository Users { get; }
-
-    /// <inheritdoc />
-    public int SaveChanges()
+    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
-        return _context.SaveChanges();
-    }
+        if(_transaction is null)
+            throw new Exception("Transaction not started.");
+        
+        await _transaction.CommitAsync(cancellationToken);
+        await _transaction.DisposeAsync();
+        _transaction = null;
+    }   
 
-    /// <inheritdoc />
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.SaveChangesAsync(cancellationToken);
-    }
-
-    /// <inheritdoc />
-    public IDbContextTransaction BeginTransaction()
-    {
-        return _context.Database.BeginTransaction();
-    }
-
-    /// <inheritdoc />
-    public async Task<IDbContextTransaction> BeginTransactionAsync()
-    {
-        return await _context.Database.BeginTransactionAsync();
-    }
-
-    protected void Dispose(bool disposing)
-    {
-        if (!_disposed)
-            if (disposing)
-                _context.Dispose();
-        _disposed = true;
+        if(_transaction is null)
+            throw new Exception("Transaction not started.");
+        
+        await _transaction.RollbackAsync(cancellationToken);
     }
 }

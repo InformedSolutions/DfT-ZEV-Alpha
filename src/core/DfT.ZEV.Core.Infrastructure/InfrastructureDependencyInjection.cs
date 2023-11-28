@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DfT.ZEV.Core.Domain.Processes.Services;
