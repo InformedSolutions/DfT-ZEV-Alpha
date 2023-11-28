@@ -1,6 +1,9 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using DfT.ZEV.Services.Organisation.Api;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+builder.SetupServices();
+
+var app = builder.Build();
+app.SetupWebApplication();
 
 app.Run();
