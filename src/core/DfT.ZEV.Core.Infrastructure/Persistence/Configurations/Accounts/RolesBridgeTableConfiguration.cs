@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DfT.ZEV.Core.Infrastructure.Persistence.Configurations.Accounts;
 
-internal sealed class RolesBridgeTableConfiguration : IEntityTypeConfiguration<RolesBridgeTable>
+internal sealed class RolesBridgeTableConfiguration : IEntityTypeConfiguration<RolesBridge>
 {
-    public void Configure(EntityTypeBuilder<RolesBridgeTable> builder)
+    public void Configure(EntityTypeBuilder<RolesBridge> builder)
     {
         builder.HasNoKey();
 

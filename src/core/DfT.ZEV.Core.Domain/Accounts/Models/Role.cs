@@ -5,7 +5,7 @@ public sealed class Role
     public Guid Id { get; }
     public string RoleName { get; private set; }
     
-    public ICollection<RolesBridgeTable> RolesBridgeTable { get; private set; } = new List<RolesBridgeTable>();
+    public ICollection<RolesBridge> RolesBridgeTable { get; private set; } = new List<RolesBridge>();
 
     public Role() { }
 
