@@ -3,6 +3,7 @@ import csv
 import random
 from faker import Faker
 from faker_vehicle import VehicleProvider
+import time
 
 fake = Faker(['en-GB'])
 fake.add_provider(VehicleProvider)
@@ -12,7 +13,7 @@ number_of_records = int(argv[2])
 
 percent_registered_category = 2
 percent_zev = 25
-percent_msv = 2
+percent_msv = 5
 percent_spvc = 5
 
 sample_details = [
@@ -32,6 +33,7 @@ sample_details = [
 type_approvals = ['M1', 'N1', 'N2']
 country = ['GB', 'NI']
 fuels = ['PETROL', 'DIESEL', 'ELECTRICITY', 'HYBRID ELECTRIC',  'ELECTRIC DIESEL', 'GAS', 'GAS/PETROL', 'FUEL CELLS', 'STEAM', 'OTHER']
+spvcs = ['SA', 'SB', 'SC', 'SD', 'SH', 'SG', 'SM']
 
 with open(output_filename, 'w', newline='') as file:
     wr = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -50,10 +52,30 @@ with open(output_filename, 'w', newline='') as file:
 
         randint = random.randint(0,100)
 
+        if randint > percent_msv:
+            monitoring_mass = None
+            mass_representitive_of_vehicle_load = None
+        else:
+            monitoring_mass = fake.random_number(digits=4,fix_len=False)
+            mass_representitive_of_vehicle_load = fake.random_number(digits=4,fix_len=False)
+
         if randint > percent_registered_category:
             registered_category = None
         else:
             registered_category = random.choice(type_approvals)
+
+        if randint > percent_zev:
+            wltp_c02_emissions = 0
+            battery_electric_range = random.randint(20,350)
+        else:
+            wltp_c02_emissions = fake.random_number(digits=3,fix_len=False)
+            battery_electric_range = None
+
+        if randint > percent_spvc:
+            special_purpose_vehicle_category = None
+        else:
+            special_purpose_vehicle_category = random.choice(spvcs)
+
 
         wr.writerow([
             fake.vin(),                                     # vin
@@ -63,36 +85,35 @@ with open(output_filename, 'w', newline='') as file:
             sample_details[vehicle_base][1],                # oem_manufacturer_name
             fake.bothify(text='?##*####/####*####*##'),     # type_approval_number
             fake.vehicle_category(),                        # type
-            fake.bothify(text='???????????'),               # variant
-            fake.bothify(text='???????????'),               # version
+            fake.bothify(text='???'),                       # variant
+            fake.bothify(text='???'),                       # version
             sample_details[vehicle_base][1],                # make
             sample_details[vehicle_base][0],                # model
             random.choice(type_approvals),                  # type_approval_category
             registered_category,                            # registered_category
             fake.random_number(digits=4,fix_len=True),      # mass_in_running_order
             fake.random_number(digits=4,fix_len=True),      # wltp_test_mass
-            fake.numerify(text='#%%'),                      # mass_representitive_of_vehicle_load
-            fake.numerify(text='#%%'),                      # monitoring_mass
-            fake.numerify(text='#%%'),                      # wltp_c02_emissions
+            mass_representitive_of_vehicle_load,            # mass_representitive_of_vehicle_load
+            monitoring_mass,                                # monitoring_mass
+            wltp_c02_emissions,                             # wltp_c02_emissions
             fake.random_number(digits=4,fix_len=True),      # technically_permissible_maximum_laden_mass
             fake.random_number(digits=4,fix_len=True),      # wheelbase
             fake.random_number(digits=3,fix_len=True),      # axle_track_1
             fake.random_number(digits=3,fix_len=True),      # axle_track_2
             random.choice(fuels),                           # fuel_type
             fake.lexify(text='?'),                          # fuel_mix
-            fake.random_number(digits=4,fix_len=True),      # engine_capacity
+            fake.random_number(digits=4,fix_len=False),     # engine_capacity
             fake.random_number(digits=2,fix_len=False),     # electric_energy_consuption
             fake.text(max_nb_chars=200),                    # eco_innovations
             fake.random_number(digits=2,fix_len=False),     # eco_emissions_reduction
-            fake.numerify(text='#%%'),                      # battery_electric_range
+            battery_electric_range,                         # battery_electric_range
             fake.date(),                                    # date_of_first_registration
-            2023,                                           # scheme_year
+            random.choice(country)                          # registration_location
             fake.postcode(),                                # postcode
-            fake.bothify(text='???????????'),               # special_purpose_vehicle_category
+            special_purpose_vehicle_category,               # special_purpose_vehicle_category
             fake.random_number(digits=2,fix_len=False),     # road_load_coefficient_f0
             fake.random_number(digits=2,fix_len=False),     # road_load_coefficient_f1
             fake.random_number(digits=2,fix_len=False),     # road_load_coefficient_f2
             fake.numerify(text='#%%'),                      # frontal_area
             fake.lexify(text='?'),                          # tyre_rolling_resistance_class
-            random.choice(country),                         # registration_location
         ])
