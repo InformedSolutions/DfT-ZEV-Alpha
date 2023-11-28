@@ -1,9 +1,7 @@
 using AutoFixture;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using DfT.ZEV.Core.Domain.Processes.Models;
 using DfT.ZEV.Core.Domain.Processes.Values;
-using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
 
 namespace DfT.ZEV.Core.Infrastructure.Tests.Repositories;
@@ -11,8 +9,6 @@ namespace DfT.ZEV.Core.Infrastructure.Tests.Repositories;
 [TestFixture]
 internal class ProcessRepositoryTests : BaseRepositoryTest<ProcessRepository>
 {
-    
-    
     [Test]
     public async Task GetByIdAsync_WhenCalled_ShouldReturnProcess()
     {

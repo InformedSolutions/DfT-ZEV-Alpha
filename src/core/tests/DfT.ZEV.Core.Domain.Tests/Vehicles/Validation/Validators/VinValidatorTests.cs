@@ -1,18 +1,19 @@
+using DfT.ZEV.Core.Domain.Vehicles.Validation.Validators;
 using FluentAssertions;
 using FluentValidation;
-using DfT.ZEV.Core.Domain.Vehicles.Validation.Validators;
 
 namespace DfT.ZEV.Core.Domain.Tests.Vehicles.Validation.Validators;
 
 [TestFixture]
 public class VinValidatorTests
 {
-    private VinValidator<string> _validator = null!;
     [SetUp]
     public void SetUp()
     {
         _validator = new VinValidator<string>();
     }
+
+    private VinValidator<string> _validator = null!;
 
     [Test]
     [TestCase("1G4HR54K31U135335")]

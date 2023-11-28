@@ -1,6 +1,5 @@
 using AutoFixture;
 using DfT.ZEV.Core.Domain.Accounts.Models;
-using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
 using FluentAssertions;
 
