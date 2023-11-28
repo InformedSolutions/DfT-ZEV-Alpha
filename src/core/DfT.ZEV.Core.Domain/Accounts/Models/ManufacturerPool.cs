@@ -3,12 +3,12 @@ namespace DfT.ZEV.Core.Domain.Accounts.Models;
 public sealed class ManufacturerPool
 {
     public Guid Id { get; private set; }
-    public string Name { get; private set; }
-    
+    public string Name { get; private set; } = null!;
+
     public Guid? PrimaryContactId { get; private set; }
     public User? PrimaryContact { get; private set; }
 
-    public ManufacturerPool() { }
+    protected ManufacturerPool() { }
 
     public ManufacturerPool(string name)
     {

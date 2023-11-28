@@ -6,7 +6,6 @@ namespace DfT.ZEV.Core.Architecture.Tests;
 [TestFixture]
 public class ApplicationTests : BaseTest
 {
-
     [Test]
     public void Services_ShouldBeInternalAndSealed()
     {
@@ -21,7 +20,7 @@ public class ApplicationTests : BaseTest
             .And()
             .NotBePublic()
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
 }

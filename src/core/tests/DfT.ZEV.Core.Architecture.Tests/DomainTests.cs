@@ -9,7 +9,6 @@ public class DomainTests : BaseTest
     [Test]
     public void DomainClasses_ShouldBeSealed()
     {
-        
         var result = Types
             .InAssembly(DomainAssembly)
             .That()
@@ -17,7 +16,7 @@ public class DomainTests : BaseTest
             .Should()
             .BeSealed()
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
 }

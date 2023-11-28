@@ -1,8 +1,8 @@
 using AutoFixture;
-using FluentAssertions;
 using DfT.ZEV.Core.Domain.Processes.Models;
 using DfT.ZEV.Core.Domain.Processes.Values;
 using DfT.ZEV.Core.Infrastructure.Repositories;
+using FluentAssertions;
 
 namespace DfT.ZEV.Core.Infrastructure.Tests.Repositories;
 
@@ -17,7 +17,7 @@ internal class ProcessRepositoryTests : BaseRepositoryTest<ProcessRepository>
             .Without(x => x.Metadata)
             .Without(x => x.Result)
             .Create();
-        
+
         _context.Processes.Add(process);
         await _context.SaveChangesAsync();
 
@@ -36,7 +36,7 @@ internal class ProcessRepositoryTests : BaseRepositoryTest<ProcessRepository>
             .Without(x => x.Metadata)
             .Without(x => x.Result)
             .CreateMany(100).ToList();
-        
+
         _context.Processes.AddRange(processes);
         await _context.SaveChangesAsync();
 
@@ -72,7 +72,7 @@ internal class ProcessRepositoryTests : BaseRepositoryTest<ProcessRepository>
             .Without(x => x.Metadata)
             .Without(x => x.Result)
             .Create();
-        
+
         _context.Processes.Add(process);
         await _context.SaveChangesAsync();
         process.State = ProcessStateEnum.Failed;

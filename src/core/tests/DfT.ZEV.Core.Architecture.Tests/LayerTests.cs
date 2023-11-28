@@ -23,7 +23,7 @@ public class LayerTests : BaseTest
     [Test]
     public void Infrastructure_ShouldOnlyDependOnDomain()
     {
-        var forbiddenRefs = GetAssembliesWithout(DomainAssembly,InfrastructureAssembly).GetNames();
+        var forbiddenRefs = GetAssembliesWithout(DomainAssembly, InfrastructureAssembly).GetNames();
         var res = Types
             .InCurrentDomain()
             .That()
@@ -34,11 +34,13 @@ public class LayerTests : BaseTest
 
         res.IsSuccessful.Should().BeTrue();
     }
-    
+
     [Test]
     public void Application_ShouldOnlyDependOnDomainAndInfrastructureAndCommons()
     {
-        var forbiddenRefs = GetAssembliesWithout(ApplicationAssembly,DomainAssembly, InfrastructureAssembly, CommonAssembly).GetNames();
+        var forbiddenRefs =
+            GetAssembliesWithout(ApplicationAssembly, DomainAssembly, InfrastructureAssembly, CommonAssembly)
+                .GetNames();
         var res = Types
             .InCurrentDomain()
             .That()

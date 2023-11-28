@@ -12,12 +12,12 @@ public sealed class ManufacturerTradingActivity
     public Guid? AcceptingManufacturerId { get; private set; }
     public Manufacturer? AcceptingManufacturer { get; private set; }
     
-    public string ApplicableScheme { get; private set; }
-    public string TradeType { get; private set; }
+    public string ApplicableScheme { get; private set; } = null!;
+    public string TradeType { get; private set; } = null!;
     public float TradeAmount { get; private set; }
     public float TradeValue { get; private set; }
 
-    public ManufacturerTradingActivity() { }
+    protected ManufacturerTradingActivity() { }
 
     public ManufacturerTradingActivity(char status, string applicableScheme, string tradeType, float tradeAmount, float tradeValue)
     {

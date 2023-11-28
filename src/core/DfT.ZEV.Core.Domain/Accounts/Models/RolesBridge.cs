@@ -7,11 +7,11 @@ public sealed class RolesBridge
     public Guid ManufacturerId { get; private set; }
     public Guid RoleId { get; private set; }
 
-    public User Account { get; private set; }
-    public Manufacturer Manufacturer { get; private set; }
-    public Role Role { get; private set; }
-    
-    public RolesBridge() { }
+    public User Account { get; private set; } = null!;
+    public Manufacturer Manufacturer { get; private set; } = null!;
+    public Role Role { get; private set; } = null!;
+
+    protected RolesBridge() { }
 
     public RolesBridge(User account, Manufacturer manufacturer, Role role)
     {

@@ -64,8 +64,6 @@ internal class UserRepositoryTests : BaseRepositoryTest<UserRepository>
 
         // Assert
         result.Should().BeEquivalentTo(users.OrderByDescending(x => x.CreatedAt).Skip(5).Take(5));
-        
-        
     }
 
     [Test]
@@ -98,7 +96,7 @@ internal class UserRepositoryTests : BaseRepositoryTest<UserRepository>
         var deletedUser = _context.Users.FirstOrDefault(x => x.Id == user.Id);
         deletedUser.Should().BeNull();
     }
-    
+
     [Test]
     public async Task SaveChangesAsync_ShouldReturnNumberOfChanges()
     {
@@ -112,10 +110,10 @@ internal class UserRepositoryTests : BaseRepositoryTest<UserRepository>
         // Assert
         result.Should().Be(1);
     }
-    
+
     /* This test will fail on InMemory database
        TO-DO: Add support for local db tests
-       
+
     [Test]
     public async Task Update_ShouldUpdateUser()
     {
@@ -139,5 +137,4 @@ internal class UserRepositoryTests : BaseRepositoryTest<UserRepository>
         updatedUser.Should().NotBeNull();
         updatedUser.RolesBridges.Any().Should().BeTrue();
     }*/
-
 }

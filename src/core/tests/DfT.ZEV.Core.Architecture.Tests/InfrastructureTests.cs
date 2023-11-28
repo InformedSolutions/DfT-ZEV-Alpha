@@ -21,7 +21,7 @@ public class InfrastructureTests : BaseTest
             .And()
             .NotBePublic()
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
 
@@ -39,7 +39,7 @@ public class InfrastructureTests : BaseTest
             .And()
             .BeSealed()
             .GetResult();
-        
+
         result.IsSuccessful.Should().BeTrue();
     }
 }
