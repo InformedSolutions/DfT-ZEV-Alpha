@@ -6,7 +6,6 @@ using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
-using DfT.ZEV.Core.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfT.ZEV.Core.Infrastructure;

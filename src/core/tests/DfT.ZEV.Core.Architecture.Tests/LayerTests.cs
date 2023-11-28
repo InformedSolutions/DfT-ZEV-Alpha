@@ -21,9 +21,9 @@ public class LayerTests : BaseTest
     }
 
     [Test]
-    public void Infrastructure_ShouldOnlyDependOnDomain()
+    public void Infrastructure_ShouldOnlyDependOnDomainAndCommons()
     {
-        var forbiddenRefs = GetAssembliesWithout(DomainAssembly, InfrastructureAssembly).GetNames();
+        var forbiddenRefs = GetAssembliesWithout(DomainAssembly, InfrastructureAssembly,CommonAssembly).GetNames();
         var res = Types
             .InCurrentDomain()
             .That()
