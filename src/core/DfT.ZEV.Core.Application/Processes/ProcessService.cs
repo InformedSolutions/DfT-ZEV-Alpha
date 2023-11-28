@@ -1,3 +1,4 @@
+using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Processes.Models;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Processes.Values;
