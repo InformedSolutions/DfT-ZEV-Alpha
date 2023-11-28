@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Core.Application;
+using DfT.ZEV.Core.Infrastructure;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DfT.ZEV.Core.Infrastructure.Persistence;
-using DfT.ZEV.Core.Infrastructure.Repositories;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.Maps;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.Middleware;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.Processing;
@@ -41,11 +41,7 @@ public class ServiceStartup : FunctionsStartup
     {
         var postgresSettings = services.ConfigurePostgresSettings(configuration);
 
-        services.AddDbContext<AppDbContext>(opt =>
-        {
-            opt.UseNpgsql(postgresSettings.ConnectionString,
-                conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
-        });
+       services.AddDbContext(postgresSettings);
     }
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)

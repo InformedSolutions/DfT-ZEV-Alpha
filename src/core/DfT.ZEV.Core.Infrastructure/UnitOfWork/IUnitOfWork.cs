@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 
-namespace DfT.ZEV.Core.Infrastructure.Repositories;
+namespace DfT.ZEV.Core.Infrastructure.UnitOfWork;
 
 /// <summary>
 ///     Represents a unit of work for managing database operations.

@@ -9,7 +9,7 @@ using AutoMapper;
 using CsvHelper;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
-using DfT.ZEV.Core.Infrastructure.Repositories;
+using DfT.ZEV.Core.Infrastructure.UnitOfWork;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.DTO;
 using Microsoft.Extensions.Logging;
 
