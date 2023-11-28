@@ -3,7 +3,6 @@ import csv
 import random
 from faker import Faker
 from faker_vehicle import VehicleProvider
-import time
 
 fake = Faker(['en-GB'])
 fake.add_provider(VehicleProvider)
