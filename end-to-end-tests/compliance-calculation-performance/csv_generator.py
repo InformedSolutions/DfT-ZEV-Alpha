@@ -96,15 +96,15 @@ with open(output_filename, 'w', newline='') as file:
             sample_details[vehicle_base][0],                # model
             random.choice(type_approvals),                  # type_approval_category
             registered_category,                            # registered_category
-            fake.random_number(digits=4,fix_len=True),      # mass_in_running_order
-            fake.random_number(digits=4,fix_len=True),      # wltp_test_mass
+            fake.random_number(digits=4,fix_len=False),     # mass_in_running_order
+            fake.random_number(digits=4,fix_len=False),     # wltp_test_mass
             mass_representitive_of_vehicle_load,            # mass_representitive_of_vehicle_load
             monitoring_mass,                                # monitoring_mass
             wltp_c02_emissions,                             # wltp_c02_emissions
-            fake.random_number(digits=4,fix_len=True),      # technically_permissible_maximum_laden_mass
-            fake.random_number(digits=4,fix_len=True),      # wheelbase
-            fake.random_number(digits=3,fix_len=True),      # axle_track_1
-            fake.random_number(digits=3,fix_len=True),      # axle_track_2
+            fake.random_number(digits=4,fix_len=False),     # technically_permissible_maximum_laden_mass
+            fake.random_number(digits=4,fix_len=False),     # wheelbase
+            fake.random_number(digits=3,fix_len=False),     # axle_track_1
+            fake.random_number(digits=3,fix_len=False),     # axle_track_2
             random.choice(fuels),                           # fuel_type
             fake.lexify(text='?'),                          # fuel_mix
             fake.random_number(digits=4,fix_len=False),     # engine_capacity
