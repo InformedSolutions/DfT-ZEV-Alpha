@@ -1,3 +1,4 @@
+using DfT.ZEV.Core.Domain.Accounts.Services;
 using Microsoft.EntityFrameworkCore.Storage;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
@@ -19,6 +20,7 @@ public interface IUnitOfWork
     /// </summary>
     IProcessRepository Processes { get; }
 
+    IUserRepository Users { get; }
     /// <summary>
     ///     Saves all changes made in the unit of work to the underlying database.
     /// </summary>

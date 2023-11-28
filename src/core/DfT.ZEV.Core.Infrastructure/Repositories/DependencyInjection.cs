@@ -1,3 +1,4 @@
+using DfT.ZEV.Core.Domain.Accounts.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
@@ -14,6 +15,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IVehicleRepository, VehicleRepository>();
         services.AddScoped<IProcessRepository, ProcessRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
