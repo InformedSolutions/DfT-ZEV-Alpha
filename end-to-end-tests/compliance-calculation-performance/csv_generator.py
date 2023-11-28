@@ -49,29 +49,27 @@ with open(output_filename, 'w', newline='') as file:
     # generate faked vehicle data
     for i in range(number_of_records):
         vehicle_base = random.randint(0, 10)
-
-        randint = random.randint(0,100)
-
-        if randint > percent_msv:
+        
+        if random.randint(0,100) > percent_msv:
             monitoring_mass = None
             mass_representitive_of_vehicle_load = None
         else:
             monitoring_mass = fake.random_number(digits=4,fix_len=False)
             mass_representitive_of_vehicle_load = fake.random_number(digits=4,fix_len=False)
 
-        if randint > percent_registered_category:
+        if random.randint(0,100) > percent_registered_category:
             registered_category = None
         else:
             registered_category = random.choice(type_approvals)
 
-        if randint > percent_zev:
+        if random.randint(0,100) > percent_zev:
             wltp_c02_emissions = 0
             battery_electric_range = random.randint(20,350)
         else:
             wltp_c02_emissions = fake.random_number(digits=3,fix_len=False)
             battery_electric_range = None
 
-        if randint > percent_spvc:
+        if random.randint(0,100) > percent_spvc:
             special_purpose_vehicle_category = None
         else:
             special_purpose_vehicle_category = random.choice(spvcs)
