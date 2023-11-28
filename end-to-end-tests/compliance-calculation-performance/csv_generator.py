@@ -10,6 +10,25 @@ fake.add_provider(VehicleProvider)
 output_filename = argv[1]
 number_of_records = int(argv[2])
 
+percent_registered_category = 2
+percent_zev = 25
+percent_msv = 2
+percent_spvc = 5
+
+sample_details = [
+    ['Golf', 'Volkswagen', 'Volkswagen Group', 'Porsche SE'],
+    ['A3', 'Audi', 'Volkswagen Group', 'Porsche SE'],
+    ['Kamiq', 'Škoda Auto', 'Volkswagen Group', 'Porsche SE'],
+    ['Puma', 'Ford', 'Ford of Britain', 'Ford Motor Company'],
+    ['Qashqai', 'Nissan UK', 'Nissan Motor Co., Ltd.', 'Groupe Renault'],
+    ['Corsa', 'Vauxhall', 'Vauxhall Motors Limited', 'Stellantis'],
+    ['Sportage', 'Kia Europe', 'Kia Corporation', '	Hyundai Motor Company'],
+    ['Model Y', 'Tesla', 'Tesla, Inc.', ''],
+    ['Tucson', ' Hyundai', '', ''],
+    ['Juke', 'Nissan UK', 'Nissan Motor Co., Ltd.', 'Groupe Renault'],
+    ['Mini Hatch', 'BMW', 'Bayerische Motoren Werke AG', '']
+]
+
 type_approvals = ['M1', 'N1', 'N2']
 country = ['GB', 'NI']
 fuels = ['PETROL', 'DIESEL', 'ELECTRICITY', 'HYBRID ELECTRIC',  'ELECTRIC DIESEL', 'GAS', 'GAS/PETROL', 'FUEL CELLS', 'STEAM', 'OTHER']
@@ -24,23 +43,32 @@ with open(output_filename, 'w', newline='') as file:
                  "engine_capacity", "electric_energy_consuption", "eco_innovations", "eco_emissions_reduction", "battery_electric_range", "date_of_first_registration",
                  "scheme_year", "postcode", "special_purpose_vehicle_category", "road_load_coefficient_f0", "road_load_coefficient_f1", 
                  "road_load_coefficient_f2", "frontal_area", "tyre_rolling_resistance_class", "registration_location"])
-
+    
     # generate faked vehicle data
     for i in range(number_of_records):
+        vehicle_base = random.randint(0, 10)
+
+        randint = random.randint(0,100)
+
+        if randint > percent_registered_category:
+            registered_category = None
+        else:
+            registered_category = random.choice(type_approvals)
+
         wr.writerow([
             fake.vin(),                                     # vin
             fake.random_number(digits=25,fix_len=True),     # vfn
-            fake.company(),                                 # eu_manufacturer_name
-            fake.company(),                                 # uk_registry_manufacturer_name
-            fake.numerify(text='#%%'),                      # oem_manufacturer_name
+            sample_details[vehicle_base][3],                # eu_manufacturer_name
+            sample_details[vehicle_base][2],                # uk_registry_manufacturer_name
+            sample_details[vehicle_base][1],                # oem_manufacturer_name
             fake.bothify(text='?##*####/####*####*##'),     # type_approval_number
             fake.vehicle_category(),                        # type
             fake.bothify(text='???????????'),               # variant
             fake.bothify(text='???????????'),               # version
-            fake.vehicle_model(),                           # make
-            fake.company(),                                 # model
+            sample_details[vehicle_base][1],                # make
+            sample_details[vehicle_base][0],                # model
             random.choice(type_approvals),                  # type_approval_category
-            fake.bothify(text='???????????'),               # registered_category
+            registered_category,                            # registered_category
             fake.random_number(digits=4,fix_len=True),      # mass_in_running_order
             fake.random_number(digits=4,fix_len=True),      # wltp_test_mass
             fake.numerify(text='#%%'),                      # mass_representitive_of_vehicle_load
