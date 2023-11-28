@@ -4,7 +4,7 @@ using DfT.ZEV.Core.Domain.Vehicles.Models;
 
 namespace DfT.ZEV.Core.Infrastructure.Persistence.Configurations.Vehicles;
 
-public class VehicleSummaryConfiguration : IEntityTypeConfiguration<VehicleSummary>
+internal sealed class VehicleSummaryConfiguration : IEntityTypeConfiguration<VehicleSummary>
 {
     public void Configure(EntityTypeBuilder<VehicleSummary> builder)
     {
