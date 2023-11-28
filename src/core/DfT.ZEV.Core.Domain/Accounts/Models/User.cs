@@ -9,7 +9,7 @@ public sealed class User : IAggregateRoot
     
     public ICollection<RolesBridge> RolesBridges { get; private set; } = new List<RolesBridge>();
     public ICollection<ManufacturerPool> ManufacturerPools { get; private set; } = new List<ManufacturerPool>();
-
+    public ICollection<Permission> Permissions { get; private set; } = new List<Permission>();
     public User() { }
     
     public User(Guid id)

@@ -27,7 +27,7 @@ public class AppDbContext : DbContext
     public virtual DbSet<ManufacturerTradingActivity> ManufacturerTradingActivities { get; set; } = null!;
     public virtual DbSet<Role> Roles { get; set; } = null!;
     public virtual DbSet<RolesBridge> RolesBridges { get; set; } = null!;
-
+    public virtual DbSet<Permission> Permissions { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

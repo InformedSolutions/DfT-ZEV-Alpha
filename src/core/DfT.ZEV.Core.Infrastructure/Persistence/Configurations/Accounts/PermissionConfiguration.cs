@@ -4,15 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DfT.ZEV.Core.Infrastructure.Persistence.Configurations.Accounts;
 
-internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
+internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<Permission> builder)
     {
         builder.HasKey(x => x.Id);
-        
-        builder.Property(x => x.CreatedAt)
-            .IsRequired(); 
-        
-        
+
+        builder.HasMany(x => x.Users)
+            .WithMany(x => x.Permissions);
     }
 }
