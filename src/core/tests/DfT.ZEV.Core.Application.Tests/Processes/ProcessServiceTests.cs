@@ -1,9 +1,11 @@
 using System.Text.Json;
 using AutoFixture;
 using DfT.ZEV.Core.Application.Processes;
+using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Processes.Models;
 using DfT.ZEV.Core.Domain.Processes.Values;
 using DfT.ZEV.Core.Infrastructure.Repositories;
+using DfT.ZEV.Core.Infrastructure.UnitOfWork;
 using Moq;
 
 namespace DfT.ZEV.Core.Application.Tests.Processes;

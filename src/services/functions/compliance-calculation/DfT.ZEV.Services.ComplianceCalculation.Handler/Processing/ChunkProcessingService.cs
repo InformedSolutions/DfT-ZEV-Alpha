@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CsvHelper;
+using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
-using DfT.ZEV.Core.Infrastructure.Repositories;
 using DfT.ZEV.Services.ComplianceCalculation.Handler.DTO;
 using Microsoft.Extensions.Logging;
 
@@ -48,9 +48,9 @@ public class ChunkProcessingService : IProcessingService
 
 
         using var reader = new StreamReader(stream);
-        await using var transaction = await _unitOfWork.BeginTransactionAsync();
+        var transactionId = await _unitOfWork.BeginTransactionAsync();
 
-        _logger.LogInformation("Beginning transaction: {TransactionId}", transaction.TransactionId);
+        _logger.LogInformation("Beginning transaction: {TransactionId}", transactionId);
 
         try
         {
@@ -63,14 +63,14 @@ public class ChunkProcessingService : IProcessingService
                 await ProcessBuffer();
             }
 
-            _logger.LogInformation("Committing transaction: {TransactionId}.", transaction.TransactionId);
-            await transaction.CommitAsync();
+            _logger.LogInformation("Committing transaction: {TransactionId}.", transactionId);
+            await _unitOfWork.CommitTransactionAsync();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing file. Rolling back transaction: {TransactionId}.",
-                transaction.TransactionId);
-            await transaction.RollbackAsync();
+                transactionId);
+            await _unitOfWork.RollbackTransactionAsync();
             return ProcessingResult.Fail(_recordCounter, _stopwatch.ElapsedMilliseconds, _bufferCounter);
         }
 

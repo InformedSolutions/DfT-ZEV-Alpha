@@ -96,21 +96,7 @@ internal class UserRepositoryTests : BaseRepositoryTest<UserRepository>
         var deletedUser = _context.Users.FirstOrDefault(x => x.Id == user.Id);
         deletedUser.Should().BeNull();
     }
-
-    [Test]
-    public async Task SaveChangesAsync_ShouldReturnNumberOfChanges()
-    {
-        // Arrange
-        var user = _fixture.Build<User>().Create();
-        _context.Users.Add(user);
-
-        // Act
-        var result = await _repository.SaveChangesAsync();
-
-        // Assert
-        result.Should().Be(1);
-    }
-
+    
     /* This test will fail on InMemory database
        TO-DO: Add support for local db tests
 

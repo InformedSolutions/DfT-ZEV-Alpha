@@ -29,7 +29,4 @@ internal sealed class UserRepository : IUserRepository
 
     public void Delete(User user)
         =>  _dbContext.Remove(user);
-
-    public async ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        => await _dbContext.SaveChangesAsync(cancellationToken);
 }

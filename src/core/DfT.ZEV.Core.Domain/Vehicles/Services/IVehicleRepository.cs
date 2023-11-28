@@ -14,11 +14,4 @@ public interface IVehicleRepository : IDisposable
     /// <param name="ct">The cancellation token (optional).</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task BulkInsertAsync(IList<Vehicle> vehicles, CancellationToken ct = default);
-
-
-    /// <summary>
-    ///     Saves changes made to the repository.
-    /// </summary>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public Task Save();
 }
