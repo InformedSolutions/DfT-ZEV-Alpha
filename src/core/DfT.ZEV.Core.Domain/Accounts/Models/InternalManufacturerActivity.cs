@@ -4,9 +4,9 @@ public sealed class InternalManufacturerActivity
 {
     public Guid Id { get; private set; }
     public Guid ManufacturerId { get; private set; }
-    public string Status { get; private set; }
-    public string ActivityType { get; private set; }
+    public string Status { get; private set; } = null!;
+    public string ActivityType { get; private set; } = null!;
     public DateTimeOffset ActionInitiated { get; private set; }
 
-    public InternalManufacturerActivity() { }
+    protected InternalManufacturerActivity() { }
 }
