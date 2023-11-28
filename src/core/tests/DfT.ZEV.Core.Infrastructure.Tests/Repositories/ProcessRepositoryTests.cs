@@ -9,23 +9,8 @@ using DfT.ZEV.Core.Infrastructure.Repositories;
 namespace DfT.ZEV.Core.Infrastructure.Tests.Repositories;
 
 [TestFixture]
-public class ProcessRepositoryTests
+internal class ProcessRepositoryTests : BaseRepositoryTest<ProcessRepository>
 {
-    private AppDbContext _context = null!;
-    private ProcessRepository _processRepository = null!;
-    private IFixture _fixture = null!;
-
-    [SetUp]
-    public void SetUp()
-    {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options;
-        _context = new AppDbContext(options);
-        _processRepository = new ProcessRepository(_context);
-        _fixture = new Fixture();
-    }
-
     [Test]
     public async Task GetByIdAsync_WhenCalled_ShouldReturnProcess()
     {
@@ -39,7 +24,7 @@ public class ProcessRepositoryTests
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _processRepository.GetByIdAsync(process.Id);
+        var result = await _repository.GetByIdAsync(process.Id);
 
         // Assert
         result.Should().BeEquivalentTo(process);
@@ -58,7 +43,7 @@ public class ProcessRepositoryTests
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _processRepository.GetPagedAsync(1, 10);
+        var result = await _repository.GetPagedAsync(1, 10);
 
         // Assert
         result.Should().BeEquivalentTo(processes.OrderByDescending(x => x.LastUpdated).Skip(10).Take(10));
@@ -74,7 +59,7 @@ public class ProcessRepositoryTests
             .Create();
 
         // Act
-        await _processRepository.AddAsync(process);
+        await _repository.AddAsync(process);
         await _context.SaveChangesAsync();
 
         // Assert
@@ -95,7 +80,7 @@ public class ProcessRepositoryTests
         process.State = ProcessStateEnum.Failed;
 
         // Act
-        _processRepository.Update(process);
+        _repository.Update(process);
         await _context.SaveChangesAsync();
 
         // Assert
@@ -114,7 +99,7 @@ public class ProcessRepositoryTests
         await _context.SaveChangesAsync();
 
         // Act
-        _processRepository.Delete(process);
+        _repository.Delete(process);
         await _context.SaveChangesAsync();
 
         // Assert
