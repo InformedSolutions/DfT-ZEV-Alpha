@@ -7,7 +7,7 @@ public sealed class User : IAggregateRoot
     public Guid Id { get;  }
     public DateTimeOffset CreatedAt { get; }
     
-    public ICollection<RolesBridge> RolesBridgeTable { get; private set; } = new List<RolesBridge>();
+    public ICollection<RolesBridge> RolesBridges { get; private set; } = new List<RolesBridge>();
     public ICollection<ManufacturerPool> ManufacturerPools { get; private set; } = new List<ManufacturerPool>();
 
     public User() { }

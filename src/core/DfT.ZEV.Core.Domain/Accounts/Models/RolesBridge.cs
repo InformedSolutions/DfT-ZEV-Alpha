@@ -2,6 +2,7 @@ namespace DfT.ZEV.Core.Domain.Accounts.Models;
 
 public sealed class RolesBridge
 {
+    public Guid Id { get; private set; }
     public Guid AccountId { get; private set; }
     public Guid ManufacturerId { get; private set; }
     public Guid RoleId { get; private set; }
@@ -14,6 +15,7 @@ public sealed class RolesBridge
 
     public RolesBridge(User account, Manufacturer manufacturer, Role role)
     {
+        Id = Guid.NewGuid();
         AccountId = account.Id;
         ManufacturerId = manufacturer.Id;
         RoleId = role.Id;

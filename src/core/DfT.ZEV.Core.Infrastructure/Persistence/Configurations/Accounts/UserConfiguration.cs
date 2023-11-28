@@ -13,7 +13,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.CreatedAt)
             .IsRequired(); 
         
-        builder.Navigation(x => x.RolesBridgeTable)
+        builder.Navigation(x => x.RolesBridges)
             .AutoInclude();
         
         builder.Navigation(x => x.ManufacturerPools)
