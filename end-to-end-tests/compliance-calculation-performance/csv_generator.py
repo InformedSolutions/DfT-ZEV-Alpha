@@ -10,10 +10,9 @@ fake.add_provider(VehicleProvider)
 output_filename = argv[1]
 number_of_records = int(argv[2])
 
-type_approvals = ['N1', 'N2', 'M1', 'M2']
-rlce = ['f0','f1','f2']
+type_approvals = ['M1', 'N1', 'N2']
 country = ['GB', 'NI']
-fuels = ['Petrol', 'Diesel', 'LPG', 'Electric', 'Petrol-Hybrid']
+fuels = ['PETROL', 'DIESEL', 'ELECTRICITY', 'HYBRID ELECTRIC',  'ELECTRIC DIESEL', 'GAS', 'GAS/PETROL', 'FUEL CELLS', 'STEAM', 'OTHER']
 
 with open(output_filename, 'w', newline='') as file:
     wr = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -62,7 +61,9 @@ with open(output_filename, 'w', newline='') as file:
             2023,                                           # scheme_year
             fake.postcode(),                                # postcode
             fake.bothify(text='???????????'),               # special_purpose_vehicle_category
-            random.choice(rlce),                            # rlce
+            fake.random_number(digits=2,fix_len=False),     # road_load_coefficient_f0
+            fake.random_number(digits=2,fix_len=False),     # road_load_coefficient_f1
+            fake.random_number(digits=2,fix_len=False),     # road_load_coefficient_f2
             fake.numerify(text='#%%'),                      # frontal_area
             fake.lexify(text='?'),                          # tyre_rolling_resistance_class
             random.choice(country),                         # registration_location
