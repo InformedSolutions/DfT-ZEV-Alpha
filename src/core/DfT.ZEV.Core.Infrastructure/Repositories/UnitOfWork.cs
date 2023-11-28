@@ -1,3 +1,4 @@
+using DfT.ZEV.Core.Domain.Accounts.Services;
 using Microsoft.EntityFrameworkCore.Storage;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
@@ -19,6 +20,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         _context = context;
         Vehicles = new VehicleRepository(_context);
         Processes = new ProcessRepository(_context);
+        Users = new UserRepository(_context);
     }
 
     public void Dispose()
@@ -29,6 +31,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 
     public IVehicleRepository Vehicles { get; }
     public IProcessRepository Processes { get; }
+    public IUserRepository Users { get; }
 
     /// <inheritdoc />
     public int SaveChanges()

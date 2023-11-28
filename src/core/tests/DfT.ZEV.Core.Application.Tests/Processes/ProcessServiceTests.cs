@@ -1,20 +1,16 @@
 using System.Text.Json;
 using AutoFixture;
-using Moq;
 using DfT.ZEV.Core.Application.Processes;
 using DfT.ZEV.Core.Domain.Processes.Models;
 using DfT.ZEV.Core.Domain.Processes.Values;
 using DfT.ZEV.Core.Infrastructure.Repositories;
+using Moq;
 
 namespace DfT.ZEV.Core.Application.Tests.Processes;
 
 [TestFixture]
 public class ProcessServiceTests
 {
-    private Mock<IUnitOfWork> _unitOfWorkMock = null!;
-    private ProcessService _processService = null!;
-    private IFixture _fixture = null!;
-
     [SetUp]
     public void SetUp()
     {
@@ -23,13 +19,19 @@ public class ProcessServiceTests
         _fixture = new Fixture();
     }
 
+    private Mock<IUnitOfWork> _unitOfWorkMock = null!;
+    private ProcessService _processService = null!;
+    private IFixture _fixture = null!;
+
     [Test]
     public async Task CreateProcessAsync_WhenCalled_ShouldCreateProcess()
     {
         // Arrange
         var id = Guid.NewGuid();
         var processType = _fixture.Create<ProcessTypeEnum>();
-        _unitOfWorkMock.Setup(u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _unitOfWorkMock
+            .Setup(u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType),
+                It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         // Act
         var result = await _processService.CreateProcessAsync(id, processType);
@@ -38,7 +40,9 @@ public class ProcessServiceTests
         result.Id.Should().Be(id);
         result.Type.Should().Be(processType);
         result.State.Should().Be(ProcessStateEnum.Waiting);
-        _unitOfWorkMock.Verify(u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType), It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWorkMock.Verify(
+            u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType),
+                It.IsAny<CancellationToken>()), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -59,7 +63,7 @@ public class ProcessServiceTests
         var result = await _processService.StartProcessAsync(id, metadata);
 
         // Assert
-        metadata.Should().BeEquivalentTo(JsonSerializer.Deserialize(result.Metadata, metadata.GetType()));
+        metadata.Should().BeEquivalentTo(result.Metadata.Deserialize(metadata.GetType()));
         _unitOfWorkMock.Verify(u => u.Processes.Update(process), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -81,7 +85,7 @@ public class ProcessServiceTests
         var result = await _processService.FinishProcessAsync(id, resultData);
 
         // Assert
-        resultData.Should().BeEquivalentTo(JsonSerializer.Deserialize(result.Result, resultData.GetType()));
+        resultData.Should().BeEquivalentTo(result.Result.Deserialize(resultData.GetType()));
         _unitOfWorkMock.Verify(u => u.Processes.Update(process), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -156,7 +160,8 @@ public class ProcessServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Process)null);
+        _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Process)null);
 
         // Act & Assert
         Assert.ThrowsAsync<Exception>(async () => await _processService.StartProcessAsync(id));
@@ -167,7 +172,8 @@ public class ProcessServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Process)null);
+        _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Process)null);
 
         // Act & Assert
         Assert.ThrowsAsync<Exception>(async () => await _processService.FinishProcessAsync(id));
@@ -178,7 +184,8 @@ public class ProcessServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Process)null);
+        _unitOfWorkMock.Setup(u => u.Processes.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Process)null);
 
         // Act & Assert
         Assert.ThrowsAsync<Exception>(async () => await _processService.FailProcessAsync(id));

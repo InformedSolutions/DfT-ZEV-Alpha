@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DfT.ZEV.Core.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class VehicleMigration : Migration
+    public partial class VahicleProcessMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

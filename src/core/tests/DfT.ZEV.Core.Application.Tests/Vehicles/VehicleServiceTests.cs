@@ -7,15 +7,16 @@ namespace DfT.ZEV.Core.Application.Tests.Vehicles;
 [TestFixture]
 public class VehicleServiceTests
 {
-    private VehicleService _service = null!;
-    private IFixture _fixture = null!;
     [SetUp]
     public void SetUp()
     {
         _service = new VehicleService();
         _fixture = new Fixture().Customize(new CompositeCustomization(new DateOnlyCustomization()));
     }
-    
+
+    private VehicleService _service = null!;
+    private IFixture _fixture = null!;
+
     //ApplyFlags Tests
     [Test]
     public void ApplyRules_WhenCalledWithListOfVehicles_AndIncompleteMsv_ShouldSetMsvAndIncompleteMsvToFalse()
@@ -36,6 +37,7 @@ public class VehicleServiceTests
             vehicle.MM = null;
             vehicle.MRVL = null;
         }
+
         // Act
         _service.ApplyRules(vehicles);
 
@@ -107,7 +109,8 @@ public class VehicleServiceTests
 
     //ApplyFlags Tests
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNullAndTANIsN2_AndZevIsTrue_AndTPMLMIsLessThan4250_ShouldSetZevApplicableAndVehicleSchemeForVan()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNullAndTANIsN2_AndZevIsTrue_AndTPMLMIsLessThan4250_ShouldSetZevApplicableAndVehicleSchemeForVan()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -126,7 +129,8 @@ public class VehicleServiceTests
     }
 
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNullAndTANIsN2_AndZevIsTrue_AndTPMLMIsGreaterThanOrEqualTo4250_ShouldSetZevApplicableAndVehicleSchemeToFalse()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNullAndTANIsN2_AndZevIsTrue_AndTPMLMIsGreaterThanOrEqualTo4250_ShouldSetZevApplicableAndVehicleSchemeToFalse()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -207,7 +211,8 @@ public class VehicleServiceTests
     }
 
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsM1_ShouldSetZevApplicable_Co2Applicable_VehicleScheme_ForCar()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsM1_ShouldSetZevApplicable_Co2Applicable_VehicleScheme_ForCar()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -226,7 +231,8 @@ public class VehicleServiceTests
     }
 
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsN1_ShouldSetZevApplicable_Co2Applicable_VehicleScheme_ForVan()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsN1_ShouldSetZevApplicable_Co2Applicable_VehicleScheme_ForVan()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -245,7 +251,8 @@ public class VehicleServiceTests
     }
 
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsN2_ZevIsTrue_AndTPMLMIsLessThan4250_ShouldSetZevApplicable_VehicleScheme_ForVan()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsN2_ZevIsTrue_AndTPMLMIsLessThan4250_ShouldSetZevApplicable_VehicleScheme_ForVan()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -264,7 +271,8 @@ public class VehicleServiceTests
     }
 
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsN2_ZevIsTrue_AndTPMLMIsGreaterThanOrEqualTo4250_ShouldSetZevApplicableToFalse()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsN2_ZevIsTrue_AndTPMLMIsGreaterThanOrEqualTo4250_ShouldSetZevApplicableToFalse()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -283,7 +291,8 @@ public class VehicleServiceTests
     }
 
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsNotN2_ShouldSetCo2ApplicableToFalse_And_ZevApplicable_VehicleScheme_ToFalse()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNull_AndTANIsNotM1OrN1_AndCtIsNotN2_ShouldSetCo2ApplicableToFalse_And_ZevApplicable_VehicleScheme_ToFalse()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -302,7 +311,8 @@ public class VehicleServiceTests
     }
 
     [Test]
-    public void ApplyFlagsAndApplicability_WhenSpvcIsNotNull_ShouldSetCo2Applicable_ZevApplicable_VehicleScheme_ToFalse()
+    public void
+        ApplyFlagsAndApplicability_WhenSpvcIsNotNull_ShouldSetCo2Applicable_ZevApplicable_VehicleScheme_ToFalse()
     {
         // Arrange
         var vehicle = _fixture.Build<Vehicle>()
@@ -336,7 +346,6 @@ public class VehicleServiceTests
         result.Summary.ZevApplicable.Should().BeFalse();
         result.Summary.Co2Applicable.Should().BeFalse();
     }
-
 
 
     [Test]
@@ -521,7 +530,7 @@ public class VehicleServiceTests
     public void ApplyMultistageVan_WhenMMAndMRVLAreNull_ShouldSetMsvAndIncompleteMsvToFalse()
     {
         // Arrange
-        var vehicle = new Vehicle()
+        var vehicle = new Vehicle
         {
             MM = null,
             MRVL = null,
@@ -540,7 +549,7 @@ public class VehicleServiceTests
     public void ApplyMultistageVan_WhenMMAndMRVLAreNotNull_ShouldSetMsvAndIncompleteMsvToTrue()
     {
         // Arrange
-        var vehicle = new Vehicle()
+        var vehicle = new Vehicle
         {
             MM = 1,
             MRVL = 2,
@@ -587,5 +596,4 @@ public class VehicleServiceTests
         // Act & Assert
         Assert.Throws<NotImplementedException>(() => _service.DetermineBonusCredits(vehicle));
     }
-
 }
