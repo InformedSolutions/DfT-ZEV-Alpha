@@ -7,7 +7,7 @@ public sealed class Role
     
     public ICollection<RolesBridge> RolesBridgeTable { get; private set; } = new List<RolesBridge>();
 
-    public Role() { }
+    protected Role() { }
 
     public Role(string roleName)
     {

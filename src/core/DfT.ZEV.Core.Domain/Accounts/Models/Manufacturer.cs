@@ -10,7 +10,7 @@ public sealed class Manufacturer
     
     public ICollection<RolesBridge> RolesBridgeTable { get; private set; } = new List<RolesBridge>();
     
-    public Manufacturer() { }
+    protected Manufacturer() { }
 
     public Manufacturer(string name)
     {

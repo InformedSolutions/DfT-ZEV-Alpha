@@ -11,6 +11,8 @@ namespace DfT.ZEV.Core.Infrastructure.Tests.Repositories;
 [TestFixture]
 internal class ProcessRepositoryTests : BaseRepositoryTest<ProcessRepository>
 {
+    
+    
     [Test]
     public async Task GetByIdAsync_WhenCalled_ShouldReturnProcess()
     {

@@ -17,7 +17,10 @@ public sealed class RolesBridge
     {
         Id = Guid.NewGuid();
         AccountId = account.Id;
+        Account = account;
         ManufacturerId = manufacturer.Id;
+        Manufacturer = manufacturer;
         RoleId = role.Id;
+        Role = role;
     }
 }

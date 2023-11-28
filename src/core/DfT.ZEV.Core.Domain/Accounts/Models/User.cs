@@ -17,4 +17,10 @@ public sealed class User : IAggregateRoot
         Id = id;
         CreatedAt = DateTimeOffset.UtcNow;
     }
+    
+    public void AddRole(Role role, Manufacturer manufacturer)
+    {
+        var rolesBridge = new RolesBridge(this, manufacturer, role);
+        RolesBridges.Add(rolesBridge);
+    }
 }

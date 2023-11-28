@@ -12,7 +12,8 @@ internal sealed class UserRepository : IUserRepository
     public UserRepository(AppDbContext dbContext) => _dbContext = dbContext;
 
     public async ValueTask<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        => await _dbContext.Users.Include(x => x.RolesBridges)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async ValueTask<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Users.ToListAsync(cancellationToken);

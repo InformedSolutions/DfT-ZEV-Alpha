@@ -1,7 +1,9 @@
+using System.Data.Common;
 using AutoFixture;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DfT.ZEV.Core.Infrastructure.Tests.Repositories;
 
@@ -15,6 +17,7 @@ public class BaseRepositoryTest<TRepository>
     [SetUp]
     public void SetUp()
     {
+
         var options = InMemoryOptions();
         _context = (AppDbContext)Activator.CreateInstance(typeof(AppDbContext), options)!;
         _repository = (TRepository)Activator.CreateInstance(typeof(TRepository), _context)!;
@@ -23,6 +26,8 @@ public class BaseRepositoryTest<TRepository>
     
     private DbContextOptions<AppDbContext> LocalPostgresOptions()
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql($"Host=localhost;Port=5432;Database=zev-dev;Username=root;Password=root;Maximum Pool Size=10;SSL Mode=Disable;Trust Server Certificate=true")
             .Options;

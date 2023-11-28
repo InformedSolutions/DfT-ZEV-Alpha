@@ -65,6 +65,8 @@ internal class UserRepositoryTests : BaseRepositoryTest<UserRepository>
 
         // Assert
         result.Should().BeEquivalentTo(users.OrderByDescending(x => x.CreatedAt).Skip(5).Take(5));
+        
+        
     }
 
     [Test]
@@ -111,4 +113,32 @@ internal class UserRepositoryTests : BaseRepositoryTest<UserRepository>
         // Assert
         result.Should().Be(1);
     }
+    
+    /* This test will fail on InMemory database
+       TO-DO: Add support for local db tests
+       
+    [Test]
+    public async Task Update_ShouldUpdateUser()
+    {
+        // Arrange
+        var user = _fixture.Build<User>().Create();
+        var role = _fixture.Build<Role>().Create();
+        var manufacturer = _fixture.Build<Manufacturer>().Create();
+        _context.Users.Add(user);
+        _context.Roles.Add(role);
+        _context.Manufacturers.Add(manufacturer);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var retrievedUser = await _repository.GetByIdAsync(user.Id); // Load the user from the context
+        retrievedUser.AddRole(role, manufacturer); // Modify the loaded user
+        _repository.Update(retrievedUser); // Update the loaded user
+        await _context.SaveChangesAsync();
+
+        // Assert
+        var updatedUser = await _repository.GetByIdAsync(user.Id);
+        updatedUser.Should().NotBeNull();
+        updatedUser.RolesBridges.Any().Should().BeTrue();
+    }*/
+
 }
