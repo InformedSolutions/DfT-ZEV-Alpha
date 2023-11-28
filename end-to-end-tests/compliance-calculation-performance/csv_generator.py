@@ -7,7 +7,7 @@ from faker_vehicle import VehicleProvider
 fake = Faker(['en-GB'])
 fake.add_provider(VehicleProvider)
 
-output_filename = argv[1]
+output_filename = 'argv[1]'
 number_of_records = int(argv[2])
 
 percent_registered_category = 2
@@ -74,7 +74,7 @@ with open(output_filename, 'w', newline='') as file:
         else:
             special_purpose_vehicle_category = random.choice(spvcs)
 
-        if randint > percent_eco_innovations:
+        if random.randint(0,100) > percent_eco_innovations:
             eco_innovations = None
         else:
             eco_innovations = fake.text(max_nb_chars=30)
