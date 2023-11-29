@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using DfT.ZEV.Core.Application.Common;
+using DfT.ZEV.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -32,10 +32,21 @@ public class RestExceptionHandlerMiddleware : IMiddleware
     private static BaseErrorResponse GetResponse(Exception ex)
         => ex switch
         {
+            EntityNotFoundException notFoundException => HandleNotFoundException(notFoundException),
             HandlerException handlerException => HandleHandlerException(handlerException),
             _ => HandleException(ex)
         };
     
+    private static BaseErrorResponse HandleNotFoundException(EntityNotFoundException exception)
+    {
+        var response = new BaseErrorResponse
+        {
+            StatusCode = (int)HttpStatusCode.NotFound,
+            Data = new { exception.Message}
+        };
+
+        return response;
+    }
     private static BaseErrorResponse HandleHandlerException(HandlerException exception)
     {
         var response = new BaseErrorResponse

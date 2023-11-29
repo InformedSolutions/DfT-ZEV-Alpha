@@ -1,4 +1,4 @@
-using DfT.ZEV.Core.Application.Common;
+using DfT.ZEV.Common.Exceptions;
 
 namespace DfT.ZEV.Core.Application.Accounts.Exceptions;
 

@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Application.Common;
+namespace DfT.ZEV.Common.Exceptions;
 
 public class HandlerException : Exception
 {
