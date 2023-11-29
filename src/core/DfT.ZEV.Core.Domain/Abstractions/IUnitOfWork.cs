@@ -9,6 +9,7 @@ public interface IUnitOfWork
     IVehicleRepository Vehicles { get; }
     IProcessRepository Processes { get; }
     IUserRepository Users { get; }
+    IManufacturerRepository Manufacturers { get; }
     
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 

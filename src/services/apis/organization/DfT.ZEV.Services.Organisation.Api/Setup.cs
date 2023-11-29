@@ -1,8 +1,10 @@
 using System.Text.Json.Serialization;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisation.Api.Features.Accounts;
+using DfT.ZEV.Services.Organisation.Api.Features.Manufacturers;
 using Microsoft.AspNetCore.Http.Json;
 
 namespace DfT.ZEV.Services.Organisation.Api;
@@ -13,6 +15,8 @@ public static class Setup
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddTransient<RestExceptionHandlerMiddleware>();
         
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddApplication();
@@ -32,8 +36,9 @@ public static class Setup
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-
+        app.UseMiddleware<RestExceptionHandlerMiddleware>();
         app.MapAccountsEndpoints();
+        app.MapManufacturerEndpoints();
         return app;
     }
 }

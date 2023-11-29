@@ -21,6 +21,7 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IVehicleRepository, VehicleRepository>();
         services.AddScoped<IProcessRepository, ProcessRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
     }
     

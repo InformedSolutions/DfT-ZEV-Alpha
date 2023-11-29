@@ -13,11 +13,13 @@ internal sealed class UnitOfWork : IUnitOfWork
     public IVehicleRepository Vehicles => _vehicles ??= new VehicleRepository(_dbContext);
     public IProcessRepository Processes => _processes ??= new ProcessRepository(_dbContext);
     public IUserRepository Users => _users ??= new UserRepository(_dbContext);
-
+    public IManufacturerRepository Manufacturers => _manufacturers ??= new ManufacturerRepository(_dbContext);
+    
     private readonly AppDbContext _dbContext;
     private IVehicleRepository _vehicles;
     private IProcessRepository _processes;
     private IUserRepository _users;
+    private IManufacturerRepository _manufacturers;
     private IDbContextTransaction _transaction;
     public UnitOfWork(AppDbContext dbContext)
     {
