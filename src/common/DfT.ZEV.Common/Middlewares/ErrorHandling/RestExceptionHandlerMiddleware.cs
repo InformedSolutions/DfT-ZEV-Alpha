@@ -51,7 +51,7 @@ public class RestExceptionHandlerMiddleware : IMiddleware
         var response = new BaseErrorResponse
         {
             StatusCode = (int)HttpStatusCode.InternalServerError,
-            Data = new { exception.Message }
+            Data = new { Message = "Unknown exception was thrown" }
         };
 
         return response;
