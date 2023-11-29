@@ -5,7 +5,7 @@ using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace DfT.ZEV.Core.Application.Tests.Accounts.Commands;
+namespace DfT.ZEV.Core.Application.Tests.Manufacturers.Commands;
 
 [TestFixture]
 public class CreateManufacturerCommandHandlerTests
