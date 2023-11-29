@@ -1,4 +1,5 @@
 using DfT.ZEV.Core.Domain.Common;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 
 namespace DfT.ZEV.Core.Domain.Accounts.Models;
 

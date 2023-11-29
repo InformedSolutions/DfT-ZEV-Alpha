@@ -1,11 +1,11 @@
 using DfT.ZEV.Common.Exceptions;
-using DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturer;
+using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 using DfT.ZEV.Core.Domain.Abstractions;
-using DfT.ZEV.Core.Domain.Accounts.Models;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace DfT.ZEV.Core.Application.Tests.Accounts;
+namespace DfT.ZEV.Core.Application.Tests.Accounts.Commands;
 
 [TestFixture]
 public class CreateManufacturerCommandHandlerTests

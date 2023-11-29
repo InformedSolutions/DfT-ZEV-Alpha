@@ -1,6 +1,6 @@
 using DfT.ZEV.Common.Exceptions;
 
-namespace DfT.ZEV.Core.Application.Accounts.Exceptions;
+namespace DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 
 public static class ManufacturerHandlerExceptions
 {

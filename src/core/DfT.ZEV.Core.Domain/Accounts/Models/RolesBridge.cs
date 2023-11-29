@@ -1,3 +1,5 @@
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
+
 namespace DfT.ZEV.Core.Domain.Accounts.Models;
 
 public sealed class RolesBridge

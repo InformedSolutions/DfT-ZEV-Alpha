@@ -13,34 +13,34 @@
 
 @if (ViewData["message"] as string == "LogoutDueToSecurity")
 {
-    <vc:notification-banner
+    <NotificationBannerViewComponent
         banner-type="Information"
         body="We have signed you out of your account to keep it secure.">
-    </vc:notification-banner>
+    </NotificationBannerViewComponent>
 }
 
 @if (ViewData["message"] as string == "VerificationSuccess")
 {
-    <vc:notification-banner
+    <NotificationBannerViewComponent
         banner-type="Success"
         body="Your email address has been verified and your account has been activated. Enter your email address and password to sign in.">
-    </vc:notification-banner>
+    </NotificationBannerViewComponent>
 }
 
 @if (ViewData["message"] as string == "PasswordChangedSuccess")
 {
-    <vc:notification-banner
+    <NotificationBannerViewComponent
         banner-type="Success"
         body="Your password has been changed. Enter your email address and password to sign in.">
-    </vc:notification-banner>
+    </NotificationBannerViewComponent>
 }
 
 @if (ViewData["message"] as string == "EmailChangedSuccess")
 {
-    <vc:notification-banner
+    <NotificationBannerViewComponent
         banner-type="Success"
         body="Your email has been changed. Enter your new email address and password to sign in.">
-    </vc:notification-banner>
+    </NotificationBannerViewComponent>
 }
 
 <h1 class="govuk-heading-l">@pageTitle</h1>

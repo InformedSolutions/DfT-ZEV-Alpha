@@ -27,5 +27,8 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Common\" />
+      <Folder Include="Manufacturers\Commands\" />
+      <Folder Include="Manufacturers\Maps\" />
+      <Folder Include="Manufacturers\Queries\" />
     </ItemGroup>
 </Project>

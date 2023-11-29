@@ -1,4 +1,6 @@
-namespace DfT.ZEV.Core.Domain.Accounts.Models;
+using DfT.ZEV.Core.Domain.Accounts.Models;
+
+namespace DfT.ZEV.Core.Domain.Manufacturers.Models;
 
 public sealed class ManufacturerPool
 {

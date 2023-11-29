@@ -1,10 +1,9 @@
 using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Common.MVC.Authentication;
 using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.Extensions.Logging;
 
-namespace Informed.Common.Auth.Areas.Auth.Services;
+namespace DfT.ZEV.Common.MVC.Authentication.Services.Implementations;
 
 public class SignInService : ISignInService
 {

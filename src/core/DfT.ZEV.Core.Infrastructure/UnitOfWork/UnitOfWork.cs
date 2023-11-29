@@ -1,5 +1,6 @@
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using Microsoft.EntityFrameworkCore.Storage;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;

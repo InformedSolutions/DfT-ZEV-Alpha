@@ -1,4 +1,5 @@
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 

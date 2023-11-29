@@ -1,6 +1,6 @@
-using DfT.ZEV.Core.Domain.Accounts.Models;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 
-namespace DfT.ZEV.Core.Domain.Accounts.Services;
+namespace DfT.ZEV.Core.Domain.Manufacturers.Services;
 
 public interface IManufacturerRepository
 {

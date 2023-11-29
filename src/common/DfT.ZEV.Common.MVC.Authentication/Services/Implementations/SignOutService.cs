@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
+﻿using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
-namespace Informed.Common.Auth.Areas.Auth.Services;
+namespace DfT.ZEV.Common.MVC.Authentication.Services.Implementations;
 
 public class SignOutService : ISignOutService
 {

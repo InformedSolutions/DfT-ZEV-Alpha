@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json;
 using DfT.ZEV.Core.Domain.Accounts.Models;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using Microsoft.EntityFrameworkCore;
 using DfT.ZEV.Core.Domain.Processes.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Models;

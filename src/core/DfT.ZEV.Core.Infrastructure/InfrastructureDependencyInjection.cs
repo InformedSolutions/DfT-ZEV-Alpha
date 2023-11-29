@@ -1,6 +1,7 @@
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;

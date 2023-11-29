@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturer;
+namespace DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 
 public class CreateManufacturerCommandResponse
 {

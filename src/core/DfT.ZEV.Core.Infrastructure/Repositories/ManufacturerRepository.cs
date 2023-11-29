@@ -1,5 +1,7 @@
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
+using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

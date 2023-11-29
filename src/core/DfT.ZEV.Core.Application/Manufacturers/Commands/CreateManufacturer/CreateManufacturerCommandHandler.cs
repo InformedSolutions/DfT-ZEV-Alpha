@@ -1,10 +1,10 @@
-using DfT.ZEV.Core.Application.Accounts.Exceptions;
+using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
-using DfT.ZEV.Core.Domain.Accounts.Models;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturer;
+namespace DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 
 public class CreateManufacturerCommandHandler : IRequestHandler<CreateManufacturerCommand,CreateManufacturerCommandResponse>
 {

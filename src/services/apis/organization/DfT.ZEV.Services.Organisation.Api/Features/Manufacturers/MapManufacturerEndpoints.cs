@@ -1,4 +1,4 @@
-using DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturer;
+using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
