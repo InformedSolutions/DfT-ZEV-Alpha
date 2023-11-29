@@ -7,4 +7,6 @@ public static class ManufacturerHandlerExceptions
     public static HandlerException ManufacturerAlreadyExists(string name) 
         => new($"Manufacturer with name {name} already exists");
     
+    public static EntityNotFoundException ManufacturerNotFound(Guid id) 
+        => new($"Manufacturer with id {id} not found");
 }

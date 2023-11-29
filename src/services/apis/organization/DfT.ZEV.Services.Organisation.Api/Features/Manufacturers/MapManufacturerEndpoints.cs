@@ -1,5 +1,6 @@
 using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetAllManufacturers;
+using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,15 +10,15 @@ public static class MapManufacturerEndpointsExtensions
 {
     public static void MapManufacturerEndpoints(this WebApplication app)
     {
+        app.MapGet("/manufacturers/{id}", GetManufacturerById)
+            .WithTags("Manufacturers");
+        
         app.MapGet("/manufacturers/", GetAllManufacturers)
             .WithTags("Manufacturers");
 
         app.MapPost("/manufacturers/", CreateManufacturer)
             .WithTags("Manufacturers");
-
-        // app.MapGet("/manufacturers/{id}", GetManufacturerByIdHandler.HandleAsync)
-        //     .WithTags("Manufacturers");
-        //
+        
         // app.MapPut("/manufacturers/{id}", UpdateManufacturerHandler.HandleAsync)
         //     .WithTags("Manufacturers");
         //
@@ -31,4 +32,7 @@ public static class MapManufacturerEndpointsExtensions
     
     private static async Task<IResult> GetAllManufacturers([FromServices] IMediator mediator, CancellationToken ct)
         => Results.Ok(await mediator.Send(new GetAllManufacturersQuery(), ct));
+    
+    private static async Task<IResult> GetManufacturerById([FromRoute] Guid id,[FromServices] IMediator mediator, CancellationToken ct)
+        => Results.Ok(await mediator.Send(new GetManufacturerByIdQuery(id), ct));
 }
