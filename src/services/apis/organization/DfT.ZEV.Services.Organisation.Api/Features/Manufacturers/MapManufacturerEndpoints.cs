@@ -1,5 +1,6 @@
 using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 using DfT.ZEV.Core.Application.Manufacturers.Commands.DeleteManufacturer;
+using DfT.ZEV.Core.Application.Manufacturers.Commands.UpdateManufacturer;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetAllManufacturers;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using MediatR;
@@ -20,9 +21,9 @@ public static class MapManufacturerEndpointsExtensions
         app.MapPost("/manufacturers/", CreateManufacturer)
             .WithTags("Manufacturers");
         
-        // app.MapPut("/manufacturers/{id}", UpdateManufacturerHandler.HandleAsync)
-        //     .WithTags("Manufacturers");
-        //
+        app.MapPut("/manufacturers/{id}", UpdateManufacturer)
+            .WithTags("Manufacturers");
+        
         app.MapDelete("/manufacturers/{id}", DeleteManufacturer)
              .WithTags("Manufacturers");
     }
@@ -39,4 +40,7 @@ public static class MapManufacturerEndpointsExtensions
     
     private static async Task<IResult> DeleteManufacturer([FromRoute] Guid id,[FromServices] IMediator mediator, CancellationToken ct)
         => Results.Ok(await mediator.Send(new DeleteManufacturerCommand(id), ct));
+    
+    private static async Task<IResult> UpdateManufacturer([FromRoute] Guid id,[FromBody] UpdateManufacturerData data,[FromServices] IMediator mediator, CancellationToken ct)
+        => Results.Ok(await mediator.Send(new UpdateManufacturerCommand(id,data), ct));
 }
