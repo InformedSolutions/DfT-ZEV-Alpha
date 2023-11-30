@@ -131,9 +131,9 @@ internal sealed class VehicleService : IVehicleService
         {
            await _unitOfWork.Manufacturers.InsertAsync(new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N'), CancellationToken.None);
            await _unitOfWork.SaveChangesAsync();
+           _manufacturerNames = (await _unitOfWork.Manufacturers.GetManufacturerNamesAsync()).ToList();
         }
 
-        _manufacturerNames = (await _unitOfWork.Manufacturers.GetManufacturerNamesAsync()).ToList();
         return vehicle;
     }
 }
