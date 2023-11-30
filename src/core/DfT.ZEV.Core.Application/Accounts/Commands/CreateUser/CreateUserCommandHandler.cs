@@ -6,6 +6,7 @@ using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using FirebaseAdmin.Auth;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
 
@@ -13,26 +14,29 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IIdentityPlatform _identityPlatform;
-    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform)
+    private readonly ILogger<CreateUserCommandHandler> _logger;
+    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform, ILogger<CreateUserCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _identityPlatform = identityPlatform;
+        _logger = logger;
     }
 
     public async Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Creating user with email {Email}", request.Email);
+        
         if (await _unitOfWork.Manufacturers.GetByIdAsync(request.ManufacturerId, cancellationToken) is null)
             throw ManufacturerHandlerExceptions.ManufacturerNotFound(request.ManufacturerId);
-
-       
+        
         var permissions = await _unitOfWork.Permissions.GetByIdsAsync(request.PermissionIds, cancellationToken);
         permissions = permissions.ToList();
         
         var nonExistentPermissionIds = request.PermissionIds.Except(permissions.Select(x => x.Id)).ToArray();
+        
         if (nonExistentPermissionIds.Any())
             throw UserHandlerExceptions.PermissionsNotFound(nonExistentPermissionIds);
-
-
+        
         var id = Guid.NewGuid();
         var args = new UserRecordArgs()
         {
@@ -43,13 +47,22 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
             Uid = id.ToString()
         };
 
-        var userRes = await _identityPlatform.CreateUser(args);
+        try
+        {
+            var userCreationResult = await _identityPlatform.CreateUser(args);
+        }catch(Exception e)
+        {
+            _logger.LogError("Failed to create user: {Message}", e.Message);
+            throw UserHandlerExceptions.CouldNotCreateUser(e.Message);
+        }
         
         var user = new User(id); 
         user.AddPermissions(permissions);
         
         await _unitOfWork.Users.InsertAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        _logger.LogInformation("Created user with email {Email}", request.Email);
         
         return new CreateUserCommandResponse
         {
