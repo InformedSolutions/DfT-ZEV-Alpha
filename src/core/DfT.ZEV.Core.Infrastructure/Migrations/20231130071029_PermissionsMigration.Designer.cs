@@ -4,6 +4,7 @@ using System.Text.Json;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DfT.ZEV.Core.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231130071029_PermissionsMigration")]
+    partial class PermissionsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,38 +39,6 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Permissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("635170b6-928e-4c0a-b18c-afad1b60b86a"),
-                            PermissionName = "Permission1"
-                        },
-                        new
-                        {
-                            Id = new Guid("f7de8f99-739d-4b19-b779-13cb1cf1204d"),
-                            PermissionName = "Permission2"
-                        },
-                        new
-                        {
-                            Id = new Guid("788bf4a9-c4b3-4f87-a82d-a29551fff15d"),
-                            PermissionName = "Permission3"
-                        },
-                        new
-                        {
-                            Id = new Guid("efdbd00d-88d8-47eb-920c-d7fd5258ebfa"),
-                            PermissionName = "Permission4"
-                        },
-                        new
-                        {
-                            Id = new Guid("00261482-1eb5-4ea5-b074-8424561650f5"),
-                            PermissionName = "Permission5"
-                        },
-                        new
-                        {
-                            Id = new Guid("a8b8b7ca-3458-4cfc-83bf-f178426f4d63"),
-                            PermissionName = "Permission6"
-                        });
                 });
 
             modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.Role", b =>

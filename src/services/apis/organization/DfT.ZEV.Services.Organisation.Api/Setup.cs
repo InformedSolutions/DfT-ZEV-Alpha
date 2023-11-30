@@ -5,6 +5,7 @@ using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisation.Api.Features.Accounts;
 using DfT.ZEV.Services.Organisation.Api.Features.Manufacturers;
+using DfT.ZEV.Services.Organisation.Api.Features.Permissions;
 using Microsoft.AspNetCore.Http.Json;
 
 namespace DfT.ZEV.Services.Organisation.Api;
@@ -39,6 +40,7 @@ public static class Setup
         app.UseMiddleware<RestExceptionHandlerMiddleware>();
         app.MapAccountsEndpoints();
         app.MapManufacturerEndpoints();
+        app.MapPermissionsEndpoints();
         return app;
     }
 }

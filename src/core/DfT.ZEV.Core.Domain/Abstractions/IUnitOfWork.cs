@@ -11,6 +11,7 @@ public interface IUnitOfWork
     IProcessRepository Processes { get; }
     IUserRepository Users { get; }
     IManufacturerRepository Manufacturers { get; }
+    IPermissionRepository Permissions { get; }
     
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 

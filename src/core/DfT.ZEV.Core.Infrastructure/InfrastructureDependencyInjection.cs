@@ -23,6 +23,7 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IProcessRepository, ProcessRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+        services.AddScoped<IPermissionRepository,PermissionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
     }
     

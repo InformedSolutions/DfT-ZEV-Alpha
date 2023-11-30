@@ -15,12 +15,14 @@ internal sealed class UnitOfWork : IUnitOfWork
     public IProcessRepository Processes => _processes ??= new ProcessRepository(_dbContext);
     public IUserRepository Users => _users ??= new UserRepository(_dbContext);
     public IManufacturerRepository Manufacturers => _manufacturers ??= new ManufacturerRepository(_dbContext);
+    public IPermissionRepository Permissions => _permissions ??= new PermissionRepository(_dbContext);
     
     private readonly AppDbContext _dbContext;
     private IVehicleRepository _vehicles;
     private IProcessRepository _processes;
     private IUserRepository _users;
     private IManufacturerRepository _manufacturers;
+    private IPermissionRepository _permissions;
     private IDbContextTransaction _transaction;
     public UnitOfWork(AppDbContext dbContext)
     {
