@@ -1,7 +1,10 @@
+using System.Security.Cryptography;
 using DfT.ZEV.Core.Application.Accounts.Exceptions;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Models;
+using DfT.ZEV.Core.Infrastructure.Identity;
+using FirebaseAdmin.Auth;
 using MediatR;
 
 namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
@@ -9,10 +12,11 @@ namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
-
-    public CreateUserCommandHandler(IUnitOfWork unitOfWork)
+    private readonly IIdentityPlatform _identityPlatform;
+    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform)
     {
         _unitOfWork = unitOfWork;
+        _identityPlatform = identityPlatform;
     }
 
     public async Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -27,11 +31,21 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         var nonExistentPermissionIds = request.PermissionIds.Except(permissions.Select(x => x.Id)).ToArray();
         if (nonExistentPermissionIds.Any())
             throw UserHandlerExceptions.PermissionsNotFound(nonExistentPermissionIds);
-        
 
-        var userId = Guid.NewGuid();
 
-        var user = new User(userId); 
+        var id = Guid.NewGuid();
+        var args = new UserRecordArgs()
+        {
+            Email = request.Email,
+            EmailVerified = false,
+            Password = CreateSecureRandomString(),
+            Disabled = false,
+            Uid = id.ToString()
+        };
+
+        var userRes = await _identityPlatform.CreateUser(args);
+
+        var user = new User(id); 
         user.AddPermissions(permissions);
         
         await _unitOfWork.Users.InsertAsync(user, cancellationToken);
@@ -39,7 +53,10 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         
         return new CreateUserCommandResponse
         {
-            Id = userId
+            Id = user.Id
         };
     }
+    
+    private static string CreateSecureRandomString(int count = 64) =>
+        Convert.ToBase64String(RandomNumberGenerator.GetBytes(count));
 }

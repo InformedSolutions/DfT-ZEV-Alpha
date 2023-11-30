@@ -16,6 +16,7 @@ public static class Setup
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.ConfigureGoogleCloudSettings(builder.Configuration);
         builder.Services.AddIdentityPlatform();
         builder.Services.AddTransient<RestExceptionHandlerMiddleware>();
         
