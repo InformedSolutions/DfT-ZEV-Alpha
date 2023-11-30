@@ -1,4 +1,4 @@
-﻿namespace DfT.ZEV.Administration.Application.ViewModels.Cookies;
+﻿namespace DfT.ZEV.Administration.Application.ViewModels;
 
 /// <summary>
 /// Cookies page view model.

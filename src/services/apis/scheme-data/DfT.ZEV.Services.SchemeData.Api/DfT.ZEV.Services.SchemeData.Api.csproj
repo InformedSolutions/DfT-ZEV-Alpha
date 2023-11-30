@@ -15,10 +15,4 @@
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="DfT.ZEV.Core.Infrastructure">
-        <HintPath>..\..\..\..\core\tests\DfT.ZEV.Core.Infrastructure.Tests\bin\Debug\net6.0\DfT.ZEV.Core.Infrastructure.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 </Project>

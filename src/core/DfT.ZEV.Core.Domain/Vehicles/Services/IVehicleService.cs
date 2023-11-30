@@ -11,13 +11,13 @@ public interface IVehicleService
     ///     Applies the rules to a list of vehicles.
     /// </summary>
     /// <param name="vehicles">The list of vehicles to apply the rules to.</param>
-    void ApplyRules(IList<Vehicle> vehicles);
+    Task ApplyRules(IList<Vehicle> vehicles);
 
     /// <summary>
     ///     Applies the rules to a single vehicle.
     /// </summary>
     /// <param name="vehicle">The vehicle to apply the rules to.</param>
-    void ApplyRules(Vehicle vehicle);
+    Task ApplyRules(Vehicle vehicle);
 
     /// <summary>
     ///     Applies the multistage van rules to a vehicle.
@@ -46,4 +46,6 @@ public interface IVehicleService
     /// <param name="vehicle">The vehicle to determine the bonus credits for.</param>
     /// <returns>The vehicle with the bonus credits determined.</returns>
     Vehicle DetermineBonusCredits(Vehicle vehicle);
+
+    Task<Vehicle> UpsertManufacturer(Vehicle vehicle);
 }

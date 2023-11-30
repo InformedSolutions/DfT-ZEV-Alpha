@@ -1,34 +1,48 @@
+using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
+using DfT.ZEV.Core.Domain.Abstractions;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Values;
+using MediatR;
 
 namespace DfT.ZEV.Core.Application.Vehicles;
 
 /// <inheritdoc />
 internal sealed class VehicleService : IVehicleService
 {
-    /// <inheritdoc />
-    public void ApplyRules(IList<Vehicle> vehicles)
-    {
-        foreach (var vehicle in vehicles)
-        {
-            ApplyMultistageVan(vehicle);
-            ApplyZev(vehicle);
-            ApplyFlagsAndApplicability(vehicle);
+    private readonly IUnitOfWork _unitOfWork;
 
-            //To be implemented later
-            //DetermineBonusCredits(vehicle);
-        }
+    private List<string> _manufacturerNames = new();
+    private List<Manufacturer> _temporaryManufacturers = new();
+    public VehicleService(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
     }
 
     /// <inheritdoc />
-    public void ApplyRules(Vehicle vehicle)
+    public async Task ApplyRules(IList<Vehicle> vehicles)
+    {
+        _manufacturerNames = (await _unitOfWork.Manufacturers.GetManufacturerNamesAsync(CancellationToken.None)).ToList();
+        foreach (var vehicle in vehicles)
+        {
+            await ApplyRules(vehicle);
+        }
+        
+        await SaveManufacturers();
+    }
+
+    /// <inheritdoc />
+    public async Task ApplyRules(Vehicle vehicle)
     {
         ApplyMultistageVan(vehicle);
         ApplyZev(vehicle);
         ApplyFlagsAndApplicability(vehicle);
+        await UpsertManufacturer(vehicle);
+        //To be implemented later
+        //DetermineBonusCredits(vehicle);
     }
-
+    
     /// <inheritdoc />
     public Vehicle ApplyMultistageVan(Vehicle vehicle)
     {
@@ -111,5 +125,23 @@ internal sealed class VehicleService : IVehicleService
     public Vehicle DetermineBonusCredits(Vehicle vehicle)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<Vehicle> UpsertManufacturer(Vehicle vehicle)
+    {
+        if (!_manufacturerNames.Contains(vehicle.Mh))
+        {
+            var manufacturer = new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N');
+            _temporaryManufacturers.Add(manufacturer);
+            _manufacturerNames.Add(vehicle.Mh);
+        }
+
+        return vehicle;
+    }
+
+    private async Task SaveManufacturers()
+    {
+        await _unitOfWork.Manufacturers.BulkInsertAsync(_temporaryManufacturers);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

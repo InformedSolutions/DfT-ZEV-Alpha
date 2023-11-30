@@ -1,10 +1,10 @@
 using DfT.ZEV.Common.MVC.Authentication.Services;
 using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
 using idunno.Authentication.Basic;
-using Informed.Common.Auth.Areas.Auth.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
+using DfT.ZEV.Common.MVC.Authentication.Services.Implementations;
 
 namespace DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 

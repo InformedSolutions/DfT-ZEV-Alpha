@@ -30,4 +30,8 @@
         <ProjectReference Include="..\..\DfT.ZEV.Core.Application\DfT.ZEV.Core.Application.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Accounts\" />
+    </ItemGroup>
+
 </Project>

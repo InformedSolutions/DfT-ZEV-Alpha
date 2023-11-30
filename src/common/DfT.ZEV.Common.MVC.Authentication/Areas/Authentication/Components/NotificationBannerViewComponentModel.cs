@@ -1,4 +1,4 @@
-﻿namespace DfT.ZEV.Common.MVC.Authentication.Components;
+﻿namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Components;
 
 public class NotificationBannerViewComponentModel
 {

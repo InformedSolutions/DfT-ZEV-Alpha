@@ -1,4 +1,4 @@
-﻿namespace DfT.ZEV.Common.MVC.Authentication.Services;
+﻿namespace DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
 
 /// <summary>
 /// Interface for a basic authentication service.

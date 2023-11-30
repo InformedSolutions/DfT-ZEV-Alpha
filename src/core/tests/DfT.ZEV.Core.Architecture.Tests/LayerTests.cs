@@ -39,7 +39,7 @@ public class LayerTests : BaseTest
     public void Application_ShouldOnlyDependOnDomainAndInfrastructureAndCommons()
     {
         var forbiddenRefs =
-            GetAssembliesWithout(ApplicationAssembly, DomainAssembly, InfrastructureAssembly, CommonAssembly)
+            GetAssembliesWithout(ApplicationAssembly, DomainAssembly, InfrastructureAssembly, CommonAssembly, CommonMvcAuthAssembly)
                 .GetNames();
         var res = Types
             .InCurrentDomain()

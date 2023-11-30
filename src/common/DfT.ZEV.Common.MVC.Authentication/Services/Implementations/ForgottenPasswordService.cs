@@ -3,7 +3,7 @@ using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Informed.Common.Auth.Areas.Auth.Services;
+namespace DfT.ZEV.Common.MVC.Authentication.Services.Implementations;
 
 public class ForgottenPasswordService : IForgottenPasswordService
 {

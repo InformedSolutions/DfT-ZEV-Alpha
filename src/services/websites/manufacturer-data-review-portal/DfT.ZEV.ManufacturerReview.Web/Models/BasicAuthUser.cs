@@ -1,4 +1,4 @@
-﻿namespace Informed.Common.Auth.Areas.BasicAuth.Models;
+﻿namespace DfT.ZEV.ManufacturerReview.Web.Models;
 
 /// <summary>
 /// A simple class for carrying credentials used for basic authentication.

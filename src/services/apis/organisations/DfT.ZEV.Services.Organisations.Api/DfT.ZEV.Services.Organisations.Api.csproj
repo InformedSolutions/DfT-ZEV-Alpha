@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>DfT.ZEV.Services.Organisations.Api</AssemblyName>
+        <RootNamespace>DfT.ZEV.Services.Organisations.Api</RootNamespace>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\common\DfT.ZEV.Common\DfT.ZEV.Common.csproj" />
+      <ProjectReference Include="..\..\..\..\core\DfT.ZEV.Core.Application\DfT.ZEV.Core.Application.csproj" />
+      <ProjectReference Include="..\..\..\..\core\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

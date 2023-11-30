@@ -1,10 +1,10 @@
-﻿using DfT.ZEV.ManufacturerReview.Application.ViewModels.Cookies;
-using DfT.ZEV.ManufacturerReview.Web.Extensions.TagHelpers;
+﻿using DfT.ZEV.ManufacturerReview.Web.Extensions.TagHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using DfT.ZEV.ManufacturerReview.Application.ViewModels;
 
 namespace DfT.ZEV.ManufacturerReview.Web.Controllers;
 

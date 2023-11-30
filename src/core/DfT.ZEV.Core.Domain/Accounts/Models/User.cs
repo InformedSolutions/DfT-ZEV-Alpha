@@ -1,4 +1,5 @@
 using DfT.ZEV.Core.Domain.Common;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 
 namespace DfT.ZEV.Core.Domain.Accounts.Models;
 
@@ -7,9 +8,9 @@ public sealed class User : IAggregateRoot
     public Guid Id { get;  }
     public DateTimeOffset CreatedAt { get; }
     
-    public ICollection<RolesBridge> RolesBridges { get; private set; } = new List<RolesBridge>();
     public ICollection<ManufacturerPool> ManufacturerPools { get; private set; } = new List<ManufacturerPool>();
-    public ICollection<Permission> Permissions { get; private set; } = new List<Permission>();
+    public ICollection<UserManufacturerBridge> ManufacturerBridges { get; private set; } = new List<UserManufacturerBridge>();
+    
     public User() { }
     
     public User(Guid id)
@@ -18,9 +19,16 @@ public sealed class User : IAggregateRoot
         CreatedAt = DateTimeOffset.UtcNow;
     }
     
-    public void AddRole(Role role, Manufacturer manufacturer)
+    public void UpdatePermissions(Manufacturer manufacturer, IEnumerable<Permission> permissions)
     {
-        var rolesBridge = new RolesBridge(this, manufacturer, role);
-        RolesBridges.Add(rolesBridge);
+        var bridge = ManufacturerBridges.FirstOrDefault(x => x.ManufacturerId == manufacturer.Id);
+
+        if (bridge == null)
+        {
+            bridge = new UserManufacturerBridge(this, manufacturer);
+            ManufacturerBridges.Add(bridge);
+        }
+
+        bridge.SetPermissions(permissions);
     }
 }

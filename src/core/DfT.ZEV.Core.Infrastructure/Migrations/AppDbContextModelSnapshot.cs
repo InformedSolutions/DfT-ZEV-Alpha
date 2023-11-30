@@ -23,7 +23,89 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.InternalManufacturerActivity", b =>
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PermissionName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("eb45c32f-5f2e-4a5f-bfbb-5d2e1d786b3a"),
+                            PermissionName = "Permission1"
+                        },
+                        new
+                        {
+                            Id = new Guid("8d663a11-6208-4929-8fcf-f54e1d5bcc14"),
+                            PermissionName = "Permission2"
+                        },
+                        new
+                        {
+                            Id = new Guid("c3097496-533b-4372-8086-c64e70b5c90e"),
+                            PermissionName = "Permission3"
+                        },
+                        new
+                        {
+                            Id = new Guid("d9485840-e3de-4313-9553-73c6d09c4721"),
+                            PermissionName = "Permission4"
+                        },
+                        new
+                        {
+                            Id = new Guid("5f3f4351-b93f-4fab-bd7f-9a9862c2668a"),
+                            PermissionName = "Permission5"
+                        },
+                        new
+                        {
+                            Id = new Guid("afbfd357-dca4-47b8-8b5c-c7b617bac30d"),
+                            PermissionName = "Permission6"
+                        });
+                });
+
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.UserManufacturerBridge", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ManufacturerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManufacturerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserManufacturerBridge");
+                });
+
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Manufacturers.Models.InternalManufacturerActivity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +130,7 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.ToTable("InternalManufacturerActivities");
                 });
 
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.Manufacturer", b =>
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Manufacturers.Models.Manufacturer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,7 +154,7 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.ToTable("Manufacturers");
                 });
 
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.ManufacturerPool", b =>
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Manufacturers.Models.ManufacturerPool", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,7 +174,7 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.ToTable("ManufacturerPools");
                 });
 
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.ManufacturerTradingActivity", b =>
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Manufacturers.Models.ManufacturerTradingActivity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,72 +210,6 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.HasIndex("InitiatingManufacturerId");
 
                     b.ToTable("ManufacturerTradingActivities");
-                });
-
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.Permission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("PermissionName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permission");
-                });
-
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.RolesBridge", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ManufacturerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ManufacturerId");
-
-                    b.ToTable("RolesBridges");
-                });
-
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DfT.ZEV.Core.Domain.Processes.Models.Process", b =>
@@ -430,22 +446,41 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.ToTable("VehicleSummary");
                 });
 
-            modelBuilder.Entity("PermissionUser", b =>
+            modelBuilder.Entity("PermissionUserManufacturerBridge", b =>
                 {
                     b.Property<Guid>("PermissionsId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UsersId")
+                    b.Property<Guid>("UserManufacturerBridgesId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("PermissionsId", "UsersId");
+                    b.HasKey("PermissionsId", "UserManufacturerBridgesId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("UserManufacturerBridgesId");
 
-                    b.ToTable("PermissionUser");
+                    b.ToTable("PermissionUserManufacturerBridge");
                 });
 
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.ManufacturerPool", b =>
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.UserManufacturerBridge", b =>
+                {
+                    b.HasOne("DfT.ZEV.Core.Domain.Manufacturers.Models.Manufacturer", "Manufacturer")
+                        .WithMany("UserBridges")
+                        .HasForeignKey("ManufacturerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.User", "User")
+                        .WithMany("ManufacturerBridges")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manufacturer");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Manufacturers.Models.ManufacturerPool", b =>
                 {
                     b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.User", "PrimaryContact")
                         .WithMany("ManufacturerPools")
@@ -455,46 +490,19 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.Navigation("PrimaryContact");
                 });
 
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.ManufacturerTradingActivity", b =>
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Manufacturers.Models.ManufacturerTradingActivity", b =>
                 {
-                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.Manufacturer", "AcceptingManufacturer")
+                    b.HasOne("DfT.ZEV.Core.Domain.Manufacturers.Models.Manufacturer", "AcceptingManufacturer")
                         .WithMany()
                         .HasForeignKey("AcceptingManufacturerId");
 
-                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.Manufacturer", "InitiatingManufacturer")
+                    b.HasOne("DfT.ZEV.Core.Domain.Manufacturers.Models.Manufacturer", "InitiatingManufacturer")
                         .WithMany()
                         .HasForeignKey("InitiatingManufacturerId");
 
                     b.Navigation("AcceptingManufacturer");
 
                     b.Navigation("InitiatingManufacturer");
-                });
-
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.RolesBridge", b =>
-                {
-                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.Manufacturer", "Manufacturer")
-                        .WithMany("RolesBridgeTable")
-                        .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.Role", "Role")
-                        .WithMany("RolesBridgeTable")
-                        .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.User", "Account")
-                        .WithMany("RolesBridges")
-                        .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Manufacturer");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("DfT.ZEV.Core.Domain.Vehicles.Models.VehicleSummary", b =>
@@ -508,7 +516,7 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("PermissionUser", b =>
+            modelBuilder.Entity("PermissionUserManufacturerBridge", b =>
                 {
                     b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.Permission", null)
                         .WithMany()
@@ -516,28 +524,23 @@ namespace DfT.ZEV.Core.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.User", null)
+                    b.HasOne("DfT.ZEV.Core.Domain.Accounts.Models.UserManufacturerBridge", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("UserManufacturerBridgesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.Manufacturer", b =>
-                {
-                    b.Navigation("RolesBridgeTable");
-                });
-
-            modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.Role", b =>
-                {
-                    b.Navigation("RolesBridgeTable");
-                });
-
             modelBuilder.Entity("DfT.ZEV.Core.Domain.Accounts.Models.User", b =>
                 {
-                    b.Navigation("ManufacturerPools");
+                    b.Navigation("ManufacturerBridges");
 
-                    b.Navigation("RolesBridges");
+                    b.Navigation("ManufacturerPools");
+                });
+
+            modelBuilder.Entity("DfT.ZEV.Core.Domain.Manufacturers.Models.Manufacturer", b =>
+                {
+                    b.Navigation("UserBridges");
                 });
 
             modelBuilder.Entity("DfT.ZEV.Core.Domain.Vehicles.Models.Vehicle", b =>
