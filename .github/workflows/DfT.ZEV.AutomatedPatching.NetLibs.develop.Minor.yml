@@ -1,0 +1,30 @@
+name: DfT.ZEV.AutomatedPatching.NetLibs.develop.Minor (Scheduled)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+  
+jobs:
+
+  patch-minor:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Update .NET dependencies
+      run: make update-dependencies-minor
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        branch: automation/minor-version-patching
+        delete-branch: true
+        branch-suffix: timestamp
+        title: Weekly patching (Minor version uplift)
+        body: Automated patching of minor versions for application dependencies
+        labels: automation,patching
+        commit-message: Patch application libraries with minor version uplift
