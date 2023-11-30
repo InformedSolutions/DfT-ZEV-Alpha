@@ -37,14 +37,14 @@ public class AppDbContext : DbContext
         }
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-       // modelBuilder.Entity<Permission>()
-       //     .HasData(
-       //         new Permission("Permission1"), 
-       //         new Permission("Permission2"), 
-       //         new Permission("Permission3"),
-       //         new Permission("Permission4"),
-       //         new Permission("Permission5"),
-       //         new Permission("Permission6")
-       //         );
+       modelBuilder.Entity<Permission>()
+           .HasData(
+               new Permission("Permission1"), 
+               new Permission("Permission2"), 
+               new Permission("Permission3"),
+               new Permission("Permission4"),
+               new Permission("Permission5"),
+               new Permission("Permission6")
+               );
     }
 }

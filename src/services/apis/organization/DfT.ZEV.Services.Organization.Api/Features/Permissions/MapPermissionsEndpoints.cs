@@ -1,9 +1,8 @@
 using DfT.ZEV.Core.Application.Accounts.Queries.GetAllPermissions;
-using DfT.ZEV.Core.Application.Accounts.Queries.GetAllUsers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DfT.ZEV.Services.Organisation.Api.Features.Permissions;
+namespace DfT.ZEV.Services.Organization.Api.Features.Permissions;
 
 public static class MapPermissionsEndpointsExtensions
 {

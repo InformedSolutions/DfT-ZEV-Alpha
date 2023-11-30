@@ -4,6 +4,8 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>DfT.ZEV.Services.Organization.Api</AssemblyName>
+        <RootNamespace>DfT.ZEV.Services.Organization.Api</RootNamespace>
     </PropertyGroup>
     
     <ItemGroup>

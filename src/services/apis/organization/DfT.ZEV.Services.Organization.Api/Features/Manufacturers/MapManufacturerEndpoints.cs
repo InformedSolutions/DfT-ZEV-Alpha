@@ -6,7 +6,7 @@ using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DfT.ZEV.Services.Organisation.Api.Features.Manufacturers;
+namespace DfT.ZEV.Services.Organization.Api.Features.Manufacturers;
 
 public static class MapManufacturerEndpointsExtensions
 {

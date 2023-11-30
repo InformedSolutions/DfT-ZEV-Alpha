@@ -19,9 +19,16 @@ public sealed class User : IAggregateRoot
         CreatedAt = DateTimeOffset.UtcNow;
     }
     
-    public void UpdatePermissions(Guid manufacturerId,IEnumerable<Permission> permissions)
+    public void UpdatePermissions(Manufacturer manufacturer, IEnumerable<Permission> permissions)
     {
-        var bridge = ManufacturerBridges.FirstOrDefault(x => x.ManufacturerId == manufacturerId);
-       
+        var bridge = ManufacturerBridges.FirstOrDefault(x => x.ManufacturerId == manufacturer.Id);
+
+        if (bridge == null)
+        {
+            bridge = new UserManufacturerBridge(this, manufacturer);
+            ManufacturerBridges.Add(bridge);
+        }
+
+        bridge.SetPermissions(permissions);
     }
 }

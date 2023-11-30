@@ -12,7 +12,7 @@ public sealed class UserManufacturerBridge
     public User User { get; private set; }
     public Manufacturer Manufacturer { get; private set; }
 
-    public ICollection<Permission> Permissions = new List<Permission>();
+    public ICollection<Permission> Permissions { get; private set; }
     
     protected UserManufacturerBridge() {}
     
@@ -25,6 +25,12 @@ public sealed class UserManufacturerBridge
         
         ManufacturerId = manufacturer.Id;
         Manufacturer = manufacturer;
+    }
+    
+    public UserManufacturerBridge SetPermissions(IEnumerable<Permission> permissions)
+    {
+        Permissions = permissions.ToList();
+        return this;
     }
    
 }
