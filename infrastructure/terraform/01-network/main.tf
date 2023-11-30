@@ -1,4 +1,5 @@
 locals {
+  name_prefix = "${var.environment}-zev"
   serverless_subnet_name = "serverless-subnet"
 }
 
@@ -41,14 +42,4 @@ resource "google_vpc_access_connector" "serverless_connector" {
   machine_type  = var.serverless_connector_config.machine_type
   min_instances = var.serverless_connector_config.min_instances
   max_instances = var.serverless_connector_config.max_instances
-}
-
-resource "google_compute_region_network_endpoint_group" "search_service_serverless_neg" {
-  name                  = "${google_cloudfunctions2_function.compliance_calculation_service.name}-serverless-neg"
-  network_endpoint_type = "SERVERLESS"
-  region                = var.region
-
-  cloud_function {
-    function = google_cloudfunctions2_function.compliance_calculation_service.name
-  }
 }

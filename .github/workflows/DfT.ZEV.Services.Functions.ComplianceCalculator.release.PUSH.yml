@@ -11,20 +11,16 @@ on:
       - 'src/core/**'
       - '!README.md'
       - '!**/README.MD'
-      - 'infrastructure/terraform/**'
+      - 'infrastructure/terraform/04-functions/04-02-import-and-compliance-function/**'
 
 env:
     DEPLOY_ENVIRONMENT: release
 
-defaults:
-  run:
-    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
-
 jobs:
 
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
+    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
     steps:
     - uses: actions/checkout@v4
 
@@ -40,6 +36,11 @@ jobs:
     - name: Build
       run: make build-test
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    working-directory: ./infrastructure/terraform/04-functions/04-02-import-and-compliance-function
+    steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
@@ -50,14 +51,8 @@ jobs:
       with:
         terraform_version: 1.6.3
 
-    # - name: Terraform init
-    #   run: make init
+    - name: Terraform init
+      run: make init
 
-    # - name: Deploy
-    #   run: make deploy
-
-    # - name: Run database migrations
-    #   run: |
-    #     curl -m 300 --fail-with-body \
-    #          -X POST "$(terraform -chdir=infrastructure/terraform output -raw database_migrations_runner_url)" \
-    #          -H "Authorization: bearer $(gcloud auth print-identity-token)"
+    - name: Deploy
+      run: make apply-auto-approve

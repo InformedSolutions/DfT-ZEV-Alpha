@@ -21,7 +21,7 @@ resource "google_secret_manager_secret" "postgres_client_certificate" {
 
   replication {
     user_managed {
-      # Single region for prototype configuration
+      # Single region for Alpha configuration
       replicas {
         location = var.region
       }
@@ -39,7 +39,7 @@ resource "google_secret_manager_secret" "postgres_client_key" {
 
   replication {
     user_managed {
-      # Single region for prototype configuration
+      # Single region for Alpha configuration
       replicas {
         location = var.region
       }

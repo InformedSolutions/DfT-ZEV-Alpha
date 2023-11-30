@@ -7,8 +7,4 @@ terraform {
       version = "~> 5.5.0"
     }
   }
-
-  backend "gcs" {
-    prefix = "terraform/state"
-  }
 }

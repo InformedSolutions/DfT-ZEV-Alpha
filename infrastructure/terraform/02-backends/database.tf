@@ -1,4 +1,5 @@
 locals {
+  name_prefix   = "${var.environment}-zev"
   database_name = "zev-database"
 }
 
@@ -34,11 +35,11 @@ module "postgres_db" {
   }
 
   ip_configuration = {
-    allocated_ip_range                            = module.cloudsql_private_service_access.google_compute_global_address_name
+    allocated_ip_range                            = data.terraform_remote_state.network.outputs.private_service_access_address_range
     authorized_networks                           = []
     enable_private_path_for_google_cloud_services = true
     ipv4_enabled                                  = false
-    private_network                               = module.network.network_self_link
+    private_network                               = data.terraform_remote_state.network.outputs.network.network_self_link
     require_ssl                                   = true
   }
 
@@ -63,8 +64,6 @@ module "postgres_db" {
     retained_backups               = var.database_backups_number_of_stored_backups
     retention_unit                 = "COUNT"
   }
-
-  module_depends_on = [module.cloudsql_private_service_access.peering_completed]
 }
 
 resource "google_sql_ssl_cert" "db_client_cert" {
