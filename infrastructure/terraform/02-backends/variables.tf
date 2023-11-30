@@ -1,3 +1,8 @@
+variable "tf_state_bucket" {
+  type        = string
+  description = "Bucket in which terraform state of other layers is held"
+}
+
 variable "region" {
   type        = string
   description = "GCP region to which resources will be deployed."
@@ -75,53 +80,4 @@ variable "database_username" {
   type        = string
   description = "Username for Postgres database"
   default     = "zev"
-}
-
-variable "serverless_connector_config" {
-  type = object({
-    machine_type  = string
-    min_instances = number
-    max_instances = number
-  })
-  description = "Configuration of Serverless VPC Access connector"
-  default = {
-    machine_type  = "e2-micro"
-    min_instances = 2
-    max_instances = 3
-  }
-
-  validation {
-    condition     = var.serverless_connector_config.min_instances > 1 && var.serverless_connector_config.max_instances > var.serverless_connector_config.min_instances
-    error_message = "At least 2 instances must be configured and max instances count must be greater than min instances count."
-  }
-}
-
-variable "serverless_connector_ip_range" {
-  type        = string
-  description = "IP range for Serverless VPC Access Connector"
-  default     = "10.64.0.0/28" # CIDR block with "/28" netmask is required
-}
-
-variable "compliance_calculation_svc_resource_quotas" {
-  type = object({
-    max_instance_count               = number,
-    max_instance_request_concurrency = number,
-    timeout_seconds                  = number,
-    available_memory                 = string,
-    available_cpu                    = number
-  })
-  description = "Resource quotas for Cloud Function  Compliance Calculation Service."
-  default = {
-    max_instance_count               = 1,
-    max_instance_request_concurrency = 1
-    timeout_seconds                  = 1800,
-    available_memory                 = "2Gi"
-    available_cpu                    = 1,
-  }
-}
-
-variable "compliance_calculation_svc_max_db_connections" {
-  type        = number
-  description = "Maximum size of DB connection pool for each instance of the service"
-  default     = 2
 }
