@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    prefix = "terraform/backends/state"
+    prefix = "terraform/backends"
   }
 }
 
@@ -10,6 +10,6 @@ data "terraform_remote_state" "network" {
 
   config = {
     bucket = var.tf_state_bucket
-    prefix = "terraform/network/state"
+    prefix = "terraform/network"
   }
 }
