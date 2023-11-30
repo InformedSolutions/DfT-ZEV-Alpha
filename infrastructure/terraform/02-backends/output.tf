@@ -1,4 +1,5 @@
 output "postgres_config" {
+  description = "The configuration of Postgres database to be used by the applications"
   value = {
     host     = module.postgres_db.private_ip_address
     db_name  = local.database_name
@@ -11,5 +12,13 @@ output "postgres_config" {
 }
 
 output "cloud_function_packages_bucket_name" {
-  value = google_storage_bucket.cloud_function_packages.name
+  description = "The name of the bucket used to store Cloud Function packages"
+  value       = google_storage_bucket.cloud_function_packages.name
+}
+
+output "app_data_buckets" {
+  description = "The names of the buckets used to store application data"
+  value = {
+    manufacturer_data_bucket_id = google_storage_bucket.manufacturer_data.id
+  }
 }
