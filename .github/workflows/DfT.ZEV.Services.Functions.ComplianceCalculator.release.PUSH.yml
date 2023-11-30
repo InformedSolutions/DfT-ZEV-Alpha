@@ -21,7 +21,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
-
     steps:
     - uses: actions/checkout@v4
 
@@ -38,9 +37,10 @@ jobs:
       run: make build-test
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     working-directory: ./infrastructure/terraform/04-functions/04-02-import-and-compliance-function
-
+    steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
