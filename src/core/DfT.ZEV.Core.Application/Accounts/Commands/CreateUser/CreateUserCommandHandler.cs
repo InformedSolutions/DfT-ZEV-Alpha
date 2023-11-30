@@ -1,9 +1,9 @@
 using System.Security.Cryptography;
+using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Core.Application.Accounts.Exceptions;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Models;
-using DfT.ZEV.Core.Infrastructure.Identity;
 using FirebaseAdmin.Auth;
 using MediatR;
 
@@ -44,7 +44,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         };
 
         var userRes = await _identityPlatform.CreateUser(args);
-
+        
         var user = new User(id); 
         user.AddPermissions(permissions);
         

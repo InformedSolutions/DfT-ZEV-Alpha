@@ -4,7 +4,7 @@ using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Options;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 
 internal sealed class IdentityPlatform : IIdentityPlatform
 {
@@ -25,5 +25,7 @@ internal sealed class IdentityPlatform : IIdentityPlatform
     }
 
     public async ValueTask<UserRecord> CreateUser(UserRecordArgs userRecordArgs)
-        => await FirebaseAuth.DefaultInstance.CreateUserAsync(userRecordArgs);
+        => await FirebaseAuth.DefaultInstance.TenantManager
+            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .CreateUserAsync(userRecordArgs);
 }

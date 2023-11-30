@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Middlewares.ErrorHandling;
+using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisation.Api.Features.Accounts;

@@ -1,6 +1,6 @@
 using FirebaseAdmin.Auth;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 
 public interface IIdentityPlatform
 {
