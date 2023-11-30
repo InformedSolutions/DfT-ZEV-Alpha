@@ -3,8 +3,6 @@ using DfT.ZEV.Core.Application.Processes;
 using DfT.ZEV.Core.Application.Vehicles;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
 using MediatR;
 
 namespace DfT.ZEV.Core.Application;
