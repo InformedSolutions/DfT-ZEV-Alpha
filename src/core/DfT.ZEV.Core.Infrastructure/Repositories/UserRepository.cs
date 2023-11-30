@@ -18,6 +18,9 @@ internal sealed class UserRepository : IUserRepository
     public async ValueTask<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Users
             .Include(x => x.ManufacturerBridges)
+                .ThenInclude(x => x.Manufacturer)
+            .Include(x => x.ManufacturerBridges)
+                .ThenInclude(x => x.Permissions)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync(cancellationToken);
 
