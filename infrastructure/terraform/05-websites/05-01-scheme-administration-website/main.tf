@@ -17,11 +17,16 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
     }
 
     containers {
-      image = "${data.terraform_remote_state.backends.outputs.image_repository_url}/zev-administration-portal:${var.image_tag}"
+      image = "${data.terraform_remote_state.backends.outputs.image_repository_url}/zev-administration-portal:${var.source_commit_hash}"
 
       env {
         name  = "DEPLOYED_AT"
         value = local.deployed_at
+      }
+
+      env {
+        name  = "BUILDID"
+        value = var.source_commit_hash
       }
     }
   }

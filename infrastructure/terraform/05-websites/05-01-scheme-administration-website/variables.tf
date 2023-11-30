@@ -27,8 +27,7 @@ variable "max_instance_count" {
   default     = 50
 }
 
-variable "image_tag" {
+variable "source_commit_hash" {
+  description = "The docker image to deploy"
   type        = string
-  description = "Tag of the docker image to be deployed."
-  default     = "latest"
 }

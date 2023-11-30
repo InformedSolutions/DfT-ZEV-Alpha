@@ -15,3 +15,8 @@ variable "environment" {
   description = "Name of the environment."
   nullable    = false
 }
+
+variable "source_commit_hash" {
+  description = "The docker image to deploy"
+  type        = string
+}
