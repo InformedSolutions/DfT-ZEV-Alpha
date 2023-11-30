@@ -5,6 +5,7 @@ using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
+using DfT.ZEV.Core.Infrastructure.Identity;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -34,5 +35,10 @@ public static class InfrastructureDependencyInjection
             opt.UseNpgsql(configuration.ConnectionString,
                 conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
         });
+    }
+
+    public static void AddIdentityPlatform(this IServiceCollection services)
+    {
+        services.AddTransient<IIdentityPlatform, IdentityPlatform>();
     }
 }

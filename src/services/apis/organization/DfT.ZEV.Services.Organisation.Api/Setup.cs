@@ -16,7 +16,7 @@ public static class Setup
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
+        builder.Services.AddIdentityPlatform();
         builder.Services.AddTransient<RestExceptionHandlerMiddleware>();
         
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
