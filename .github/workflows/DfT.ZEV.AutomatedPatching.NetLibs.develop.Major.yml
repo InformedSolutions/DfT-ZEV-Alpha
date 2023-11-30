@@ -1,0 +1,30 @@
+name: DfT.ZEV.AutomatedPatching.NetLibs.develop.Major (Scheduled)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 3 * *'
+  
+jobs:
+
+  patch-major:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Update dependencies
+      run: make update-dependencies-major
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        branch: automation/major-version-patching
+        delete-branch: true
+        branch-suffix: timestamp
+        title: Monthly patching (Major version uplift)
+        body: Automated patching of major versions for application dependencies
+        labels: automation,patching
+        commit-message: Patch application libraries with major version uplift

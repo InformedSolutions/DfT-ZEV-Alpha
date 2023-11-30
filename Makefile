@@ -1,3 +1,25 @@
+NET_DEPENDENCY_EXCLUDE := ""
+
+update-dependencies-minor:
+	@echo ""=============================";"; echo "Installing dotnet outdated..."; echo ""=============================";"
+	dotnet tool install --global dotnet-outdated-tool || true
+	@echo ""
+
+	@echo ""=============================";"; echo "Patching application libraries..."; echo ""=============================";"
+	dotnet outdated --version-lock minor --upgrade ${NET_DEPENDENCY_EXCLUDE} --recursive
+
+	@echo ""=============================";"; echo "Patching complete..."; echo ""=============================";"
+
+update-dependencies-major:
+	@echo ""=============================";"; echo "Installing dotnet outdated..."; echo ""=============================";"
+	dotnet tool install --global dotnet-outdated-tool || true
+	@echo ""
+
+	@echo ""=============================";"; echo "Patching application libraries..."; echo ""=============================";"
+	dotnet outdated --version-lock major --upgrade ${NET_DEPENDENCY_EXCLUDE} --recursive
+
+	@echo ""=============================";"; echo "Patching complete..."; echo ""=============================";"
+
 git-credential-config: create-credential-exclusions-file-if-not-exists bind-pre-commit
 
 bind-pre-commit:
@@ -20,3 +42,4 @@ credential-scan-git-verified-no-update-no-log:
 
 credential-scan-git-unverified-no-update-no-log:
 	docker run --rm -it -v $(PWD):/opt trufflesecurity/trufflehog:latest git file:///opt --no-update --fail > /dev/null
+
