@@ -25,6 +25,9 @@ internal sealed class ManufacturerRepository : IManufacturerRepository
     public async ValueTask<IEnumerable<Manufacturer>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
         => await _context.Manufacturers.Skip(page * pageSize).Take(pageSize).ToListAsync(cancellationToken);
 
+    public async ValueTask<IEnumerable<string>> GetManufacturerNamesAsync(CancellationToken cancellationToken = default)
+        => await _context.Manufacturers.Select(x => x.Name).ToListAsync(cancellationToken);
+
     public async Task InsertAsync(Manufacturer manufacturer, CancellationToken cancellationToken = default)
         => await _context.Manufacturers.AddAsync(manufacturer,cancellationToken);
 

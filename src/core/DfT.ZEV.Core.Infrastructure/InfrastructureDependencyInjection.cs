@@ -29,10 +29,12 @@ public static class InfrastructureDependencyInjection
     
     public static void AddDbContext(this IServiceCollection services, PostgresConfiguration configuration)
     {
-        services.AddDbContext<AppDbContext>(opt =>
+        services.AddDbContextPool<AppDbContext>(opt =>
         {
-            opt.UseNpgsql(configuration.ConnectionString,
-                conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
+            // This causes errors while working in multithreaded processing, need to deep dive this topic
+          //  opt.UseNpgsql(configuration.ConnectionString,
+          //     conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
+          opt.UseNpgsql(configuration.ConnectionString);
         });
     }
 }

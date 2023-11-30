@@ -25,12 +25,10 @@ public class ChunkProcessingService : IProcessingService
     private readonly IMapper _mapper;
     private readonly Stopwatch _stopwatch = new();
     private readonly IUnitOfWork _unitOfWork;
-
     private readonly IVehicleService _vehicleService;
+    
     private int _bufferCounter;
-
     private int _recordCounter;
-
     public ChunkProcessingService(ILogger<ChunkProcessingService> logger, IUnitOfWork unitOfWork, IMapper mapper,
         IVehicleService vehicleService)
     {
@@ -45,8 +43,7 @@ public class ChunkProcessingService : IProcessingService
     {
         _logger.LogInformation("Processing started.");
         _stopwatch.Start();
-
-
+        
         using var reader = new StreamReader(stream);
         var transactionId = await _unitOfWork.BeginTransactionAsync();
 
@@ -106,7 +103,8 @@ public class ChunkProcessingService : IProcessingService
         _logger.LogInformation("Mapping took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
 
         stopwatch.Restart();
-        Parallel.ForEach(mappedVehicles, vehicle => _vehicleService.ApplyRules(vehicle));
+        //await Parallel.ForEachAsync(mappedVehicles, async (vehicle,ct) => await _vehicleService.ApplyRules(vehicle));
+        await _vehicleService.ApplyRules(mappedVehicles);
         _logger.LogInformation("Applying rules took {ElapsedMilliseconds} milliseconds", stopwatch.ElapsedMilliseconds);
 
         stopwatch.Restart();

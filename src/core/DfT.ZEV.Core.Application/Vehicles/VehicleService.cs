@@ -1,34 +1,46 @@
+using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
+using DfT.ZEV.Core.Domain.Abstractions;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Values;
+using MediatR;
 
 namespace DfT.ZEV.Core.Application.Vehicles;
 
 /// <inheritdoc />
 internal sealed class VehicleService : IVehicleService
 {
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMediator _mediator;
+
+    private IReadOnlyList<string> _manufacturerNames = new List<string>();
+    public VehicleService(IUnitOfWork unitOfWork, IMediator mediator)
+    {
+        _unitOfWork = unitOfWork;
+        _mediator = mediator;
+    }
+
     /// <inheritdoc />
-    public void ApplyRules(IList<Vehicle> vehicles)
+    public async Task ApplyRules(IList<Vehicle> vehicles)
     {
         foreach (var vehicle in vehicles)
         {
-            ApplyMultistageVan(vehicle);
-            ApplyZev(vehicle);
-            ApplyFlagsAndApplicability(vehicle);
-
-            //To be implemented later
-            //DetermineBonusCredits(vehicle);
+            await ApplyRules(vehicle);
         }
     }
 
     /// <inheritdoc />
-    public void ApplyRules(Vehicle vehicle)
+    public async Task ApplyRules(Vehicle vehicle)
     {
         ApplyMultistageVan(vehicle);
         ApplyZev(vehicle);
         ApplyFlagsAndApplicability(vehicle);
+        await UpsertManufacturer(vehicle);
+        //To be implemented later
+        //DetermineBonusCredits(vehicle);
     }
-
+    
     /// <inheritdoc />
     public Vehicle ApplyMultistageVan(Vehicle vehicle)
     {
@@ -111,5 +123,17 @@ internal sealed class VehicleService : IVehicleService
     public Vehicle DetermineBonusCredits(Vehicle vehicle)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<Vehicle> UpsertManufacturer(Vehicle vehicle)
+    {
+        if (!_manufacturerNames.Contains(vehicle.Mh))
+        {
+           await _unitOfWork.Manufacturers.InsertAsync(new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N'), CancellationToken.None);
+           await _unitOfWork.SaveChangesAsync();
+        }
+
+        _manufacturerNames = (await _unitOfWork.Manufacturers.GetManufacturerNamesAsync()).ToList();
+        return vehicle;
     }
 }

@@ -1,21 +1,40 @@
+using System.Reflection;
 using AutoFixture;
 using DfT.ZEV.Core.Application.Vehicles;
+using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
+using MediatR;
+using Moq;
 
 namespace DfT.ZEV.Core.Application.Tests.Vehicles;
 
 [TestFixture]
 public class VehicleServiceTests
 {
+    private VehicleService _service = null!;
+    private IFixture _fixture = null!;
+    private Mock<IUnitOfWork> _mockUnitOfWork = null!;
+    private Mock<IMediator> _mockMediator = null!;
+
     [SetUp]
     public void SetUp()
     {
-        _service = new VehicleService();
+        // Initialize the service with mocked dependencies
+        _mockUnitOfWork = new Mock<IUnitOfWork>();
+        _mockMediator = new Mock<IMediator>();
+        _service = new VehicleService(_mockUnitOfWork.Object, _mockMediator.Object);
         _fixture = new Fixture().Customize(new CompositeCustomization(new DateOnlyCustomization()));
+
+        // Configure the mock to return a value for GetManufacturerNamesAsync
+        _mockUnitOfWork
+            .Setup(uow => uow.Manufacturers.GetManufacturerNamesAsync(default))
+            .ReturnsAsync(new List<string> { "Manufacturer1", "Manufacturer2" });
+
+        // Set the value of the private field using reflection
+        var manufacturerNamesField = typeof(VehicleService).GetField("_manufacturerNames", BindingFlags.Instance | BindingFlags.NonPublic);
+        manufacturerNamesField?.SetValue(_service, new List<string>());
     }
 
-    private VehicleService _service = null!;
-    private IFixture _fixture = null!;
 
     //ApplyFlags Tests
     [Test]

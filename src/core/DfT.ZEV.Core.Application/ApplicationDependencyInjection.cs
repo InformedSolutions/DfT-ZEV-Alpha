@@ -14,14 +14,6 @@ public static class ApplicationDependencyInjection
     
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-       // if(FirebaseApp.DefaultInstance == null)
-       // {
-       //     FirebaseApp.Create(new AppOptions()
-       //     {
-       //         Credential = GoogleCredential.FromJson(AuthConfig.GetGoogleCredentialObject(builder.Configuration).ToString())
-       //     });
-       // }
-       
         services.AddAutoMapper(typeof(ApplicationDependencyInjection).Assembly);
         services.AddMediatR(typeof(ApplicationDependencyInjection).Assembly);
         return services;
