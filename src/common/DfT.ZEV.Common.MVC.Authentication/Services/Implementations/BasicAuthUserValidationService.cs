@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using DfT.ZEV.Common.MVC.Authentication.Models;
+﻿using DfT.ZEV.Common.MVC.Authentication.Models;
+using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 
-namespace DfT.ZEV.Common.MVC.Authentication.Services;
+namespace DfT.ZEV.Common.MVC.Authentication.Services.Implementations;
 
 /// <inheritdoc />
 public class BasicAuthUserValidationService : IBasicAuthUserValidationService

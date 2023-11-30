@@ -31,6 +31,7 @@ public class UnitOfWorkTests
         _unitOfWork.Vehicles.Should().NotBeNull();
         _unitOfWork.Processes.Should().NotBeNull();
         _unitOfWork.Users.Should().NotBeNull();
+        _unitOfWork.Manufacturers.Should().NotBeNull();
     }
    
 

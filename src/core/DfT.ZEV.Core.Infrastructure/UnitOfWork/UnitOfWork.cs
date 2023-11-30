@@ -1,5 +1,6 @@
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using Microsoft.EntityFrameworkCore.Storage;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
@@ -13,11 +14,15 @@ internal sealed class UnitOfWork : IUnitOfWork
     public IVehicleRepository Vehicles => _vehicles ??= new VehicleRepository(_dbContext);
     public IProcessRepository Processes => _processes ??= new ProcessRepository(_dbContext);
     public IUserRepository Users => _users ??= new UserRepository(_dbContext);
-
+    public IManufacturerRepository Manufacturers => _manufacturers ??= new ManufacturerRepository(_dbContext);
+    public IPermissionRepository Permissions => _permissions ??= new PermissionRepository(_dbContext);
+    
     private readonly AppDbContext _dbContext;
     private IVehicleRepository _vehicles;
     private IProcessRepository _processes;
     private IUserRepository _users;
+    private IManufacturerRepository _manufacturers;
+    private IPermissionRepository _permissions;
     private IDbContextTransaction _transaction;
     public UnitOfWork(AppDbContext dbContext)
     {
