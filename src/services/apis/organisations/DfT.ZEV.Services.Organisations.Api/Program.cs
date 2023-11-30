@@ -1,4 +1,4 @@
-using DfT.ZEV.Services.Organisation.Api;
+using DfT.ZEV.Services.Organisations.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.SetupServices();

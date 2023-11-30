@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "DfT.ZEV.Services.Organisation.Api": {
+    "DfT.ZEV.Services.Organisations.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

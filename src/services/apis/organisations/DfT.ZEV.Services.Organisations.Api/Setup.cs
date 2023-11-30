@@ -4,12 +4,12 @@ using DfT.ZEV.Common.Middlewares.ErrorHandling;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
-using DfT.ZEV.Services.Organisation.Api.Features.Accounts;
-using DfT.ZEV.Services.Organisation.Api.Features.Manufacturers;
-using DfT.ZEV.Services.Organisation.Api.Features.Permissions;
+using DfT.ZEV.Services.Organisations.Api.Features.Accounts;
+using DfT.ZEV.Services.Organisations.Api.Features.Manufacturers;
+using DfT.ZEV.Services.Organisations.Api.Features.Permissions;
 using Microsoft.AspNetCore.Http.Json;
 
-namespace DfT.ZEV.Services.Organisation.Api;
+namespace DfT.ZEV.Services.Organisations.Api;
 
 public static class Setup
 {
