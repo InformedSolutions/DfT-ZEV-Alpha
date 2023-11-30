@@ -44,3 +44,8 @@ variable "compliance_calculation_svc_max_db_connections" {
   description = "Maximum size of DB connection pool for each instance of the service"
   default     = 2
 }
+
+variable "source_commit_hash" {
+  description = "The source commit hash of the function being deployed"
+  type        = string
+}

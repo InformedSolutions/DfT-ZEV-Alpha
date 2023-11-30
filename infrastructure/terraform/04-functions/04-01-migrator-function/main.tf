@@ -32,6 +32,7 @@ resource "google_cloudfunctions2_function" "database_migrations_runner" {
 
     environment_variables = {
       GOOGLE_BUILDABLE = "./services/functions/migrator/DfT.ZEV.Services.Migrator.Handler"
+      BUILDID          = var.source_commit_hash
     }
 
     source {

@@ -1,5 +1,5 @@
 locals {
-  name_prefix = "${var.environment}-zev"
+  name_prefix            = "${var.environment}-zev"
   serverless_subnet_name = "serverless-subnet"
 }
 
