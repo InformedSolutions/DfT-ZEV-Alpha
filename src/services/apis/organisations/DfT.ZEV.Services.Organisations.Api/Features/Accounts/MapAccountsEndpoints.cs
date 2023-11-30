@@ -3,7 +3,7 @@ using DfT.ZEV.Core.Application.Accounts.Queries.GetAllUsers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DfT.ZEV.Services.Organization.Api.Features.Accounts;
+namespace DfT.ZEV.Services.Organisation.Api.Features.Accounts;
 
 public static class MapAccountsEndpointsExtension
 {

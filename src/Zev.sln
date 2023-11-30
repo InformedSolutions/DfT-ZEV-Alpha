@@ -71,13 +71,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.SchemeData
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.Migrator.Handler", "services\functions\migrator\DfT.ZEV.Services.Migrator.Handler\DfT.ZEV.Services.Migrator.Handler.csproj", "{E57EEC45-5042-4124-8BEB-0AA53B4265A4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Organization", "Organization", "{92E3D69A-16D9-4459-9186-9AB62B34340D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Organisation", "Organisation", "{92E3D69A-16D9-4459-9186-9AB62B34340D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apis", "apis", "{1B23ADF6-D4BE-45F4-9F01-4E8E0EF291C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "functions", "functions", "{CE5D89DE-AEE2-414C-BBB4-4C15E19A3D25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.Organization.Api", "services\apis\organization\DfT.ZEV.Services.Organization.Api\DfT.ZEV.Services.Organization.Api.csproj", "{7F377BBC-395A-40F7-927D-89B66000AF94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Services.Organisation.Api", "services\apis\Organisation\DfT.ZEV.Services.Organisation.Api\DfT.ZEV.Services.Organisation.Api.csproj", "{7F377BBC-395A-40F7-927D-89B66000AF94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
