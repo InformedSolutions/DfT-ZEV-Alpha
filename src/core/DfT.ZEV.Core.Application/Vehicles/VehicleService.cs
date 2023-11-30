@@ -129,8 +129,14 @@ internal sealed class VehicleService : IVehicleService
     {
         if (!_manufacturerNames.Contains(vehicle.Mh))
         {
-           await _unitOfWork.Manufacturers.InsertAsync(new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N'), CancellationToken.None);
-           await _unitOfWork.SaveChangesAsync();
+           //await _unitOfWork.Manufacturers.InsertAsync(new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N'), CancellationToken.None);
+           //await _unitOfWork.SaveChangesAsync();
+           await _mediator.Send(new CreateManufacturerCommand()
+           {
+               Name = vehicle.Mh,
+               Co2Target = 0,
+               DerogationStatus = 'N'
+           });
            _manufacturerNames = (await _unitOfWork.Manufacturers.GetManufacturerNamesAsync()).ToList();
         }
 
