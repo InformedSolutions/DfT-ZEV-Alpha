@@ -21,8 +21,5 @@ internal sealed class ManufacturerConfiguration : IEntityTypeConfiguration<Manuf
         
         builder.Property(x => x.DerogationStatus)
             .IsRequired();
-        
-        builder.Navigation(x => x.RolesBridgeTable)
-            .AutoInclude();
     }
 }

@@ -10,7 +10,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasMany(x => x.Users)
+        builder.HasMany(x => x.UserManufacturerBridges)
             .WithMany(x => x.Permissions);
     }
 }

@@ -10,8 +10,7 @@ public sealed class Manufacturer
     public float Co2Target { get; private set; }
     public char DerogationStatus { get; private set; }
     
-    public ICollection<RolesBridge> RolesBridgeTable { get; private set; } = new List<RolesBridge>();
-    
+    public ICollection<UserManufacturerBridge> UserBridges { get; private set; } = new List<UserManufacturerBridge>();
     protected Manufacturer() { }
 
     public Manufacturer(string name)

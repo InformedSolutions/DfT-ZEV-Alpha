@@ -12,12 +12,12 @@ internal sealed class UserRepository : IUserRepository
     public UserRepository(AppDbContext dbContext) => _dbContext = dbContext;
 
     public async ValueTask<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await _dbContext.Users.Include(x => x.RolesBridges)
+        => await _dbContext.Users
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async ValueTask<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Users
-            .Include(x => x.Permissions)
+            .Include(x => x.ManufacturerBridges)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync(cancellationToken);
 

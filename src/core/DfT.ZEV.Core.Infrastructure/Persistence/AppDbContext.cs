@@ -26,8 +26,7 @@ public class AppDbContext : DbContext
     public virtual DbSet<ManufacturerPool> ManufacturerPools { get; set; } = null!;
     public virtual DbSet<InternalManufacturerActivity> InternalManufacturerActivities { get; set; } = null!;
     public virtual DbSet<ManufacturerTradingActivity> ManufacturerTradingActivities { get; set; } = null!;
-    public virtual DbSet<Role> Roles { get; set; } = null!;
-    public virtual DbSet<RolesBridge> RolesBridges { get; set; } = null!;
+   
     public virtual DbSet<Permission> Permissions { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,14 +37,14 @@ public class AppDbContext : DbContext
         }
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        modelBuilder.Entity<Permission>()
-            .HasData(
-                new Permission("Permission1"), 
-                new Permission("Permission2"), 
-                new Permission("Permission3"),
-                new Permission("Permission4"),
-                new Permission("Permission5"),
-                new Permission("Permission6")
-                );
+       // modelBuilder.Entity<Permission>()
+       //     .HasData(
+       //         new Permission("Permission1"), 
+       //         new Permission("Permission2"), 
+       //         new Permission("Permission3"),
+       //         new Permission("Permission4"),
+       //         new Permission("Permission5"),
+       //         new Permission("Permission6")
+       //         );
     }
 }

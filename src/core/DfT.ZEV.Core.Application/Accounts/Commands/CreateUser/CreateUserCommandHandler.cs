@@ -54,7 +54,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         }
 
         var user = new User(id); 
-        user.AddPermissions(permissions);
+        //user.AddPermissions(permissions);
         
         await _unitOfWork.Users.InsertAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

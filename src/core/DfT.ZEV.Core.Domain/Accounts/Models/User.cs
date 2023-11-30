@@ -8,9 +8,9 @@ public sealed class User : IAggregateRoot
     public Guid Id { get;  }
     public DateTimeOffset CreatedAt { get; }
     
-    public ICollection<RolesBridge> RolesBridges { get; private set; } = new List<RolesBridge>();
     public ICollection<ManufacturerPool> ManufacturerPools { get; private set; } = new List<ManufacturerPool>();
-    public ICollection<Permission> Permissions { get; private set; } = new List<Permission>();
+    public ICollection<UserManufacturerBridge> ManufacturerBridges { get; private set; } = new List<UserManufacturerBridge>();
+    
     public User() { }
     
     public User(Guid id)
@@ -19,17 +19,9 @@ public sealed class User : IAggregateRoot
         CreatedAt = DateTimeOffset.UtcNow;
     }
     
-    public void AddRole(Role role, Manufacturer manufacturer)
+    public void UpdatePermissions(Guid manufacturerId,IEnumerable<Permission> permissions)
     {
-        var rolesBridge = new RolesBridge(this, manufacturer, role);
-        RolesBridges.Add(rolesBridge);
-    }
-    
-    public void AddPermissions(IEnumerable<Permission> permissions)
-    {
-        foreach (var permission in permissions)
-        {
-            Permissions.Add(permission);
-        }
+        var bridge = ManufacturerBridges.FirstOrDefault(x => x.ManufacturerId == manufacturerId);
+       
     }
 }
