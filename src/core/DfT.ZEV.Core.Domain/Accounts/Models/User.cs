@@ -24,4 +24,12 @@ public sealed class User : IAggregateRoot
         var rolesBridge = new RolesBridge(this, manufacturer, role);
         RolesBridges.Add(rolesBridge);
     }
+    
+    public void AddPermissions(IEnumerable<Permission> permissions)
+    {
+        foreach (var permission in permissions)
+        {
+            Permissions.Add(permission);
+        }
+    }
 }

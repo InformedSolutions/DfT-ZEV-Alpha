@@ -16,7 +16,10 @@ internal sealed class UserRepository : IUserRepository
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async ValueTask<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
-        => await _dbContext.Users.ToListAsync(cancellationToken);
+        => await _dbContext.Users
+            .Include(x => x.Permissions)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync(cancellationToken);
 
     public async ValueTask<IEnumerable<User>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
         => await _dbContext.Users.OrderByDescending(x => x.CreatedAt).Skip(page * pageSize).Take(pageSize).ToListAsync(cancellationToken);

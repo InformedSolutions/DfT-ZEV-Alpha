@@ -9,5 +9,9 @@ internal class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<User, GetAllUsersDTO>();
+        CreateMap<Permission, UserPermissionDto>()
+            .ForMember(x => x.Name, 
+                opt => opt
+                    .MapFrom(src => src.PermissionName));
     }
 }

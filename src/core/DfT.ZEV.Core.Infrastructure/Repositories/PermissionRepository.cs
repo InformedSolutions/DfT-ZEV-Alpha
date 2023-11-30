@@ -13,4 +13,7 @@ internal sealed class PermissionRepository : IPermissionRepository
 
     public async Task<IEnumerable<Permission>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Permissions.OrderByDescending(x => x.PermissionName).ToListAsync(cancellationToken);
+
+    public async Task<IEnumerable<Permission>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        => await _dbContext.Permissions.Where(x => ids.Contains(x.Id)).ToListAsync(cancellationToken);
 }
