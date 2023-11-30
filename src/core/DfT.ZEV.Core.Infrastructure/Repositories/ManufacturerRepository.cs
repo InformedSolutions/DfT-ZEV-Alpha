@@ -3,6 +3,7 @@ using DfT.ZEV.Core.Domain.Accounts.Services;
 using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using DfT.ZEV.Core.Infrastructure.Persistence;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfT.ZEV.Core.Infrastructure.Repositories;
@@ -30,6 +31,9 @@ internal sealed class ManufacturerRepository : IManufacturerRepository
 
     public async Task InsertAsync(Manufacturer manufacturer, CancellationToken cancellationToken = default)
         => await _context.Manufacturers.AddAsync(manufacturer,cancellationToken);
+
+    public async Task BulkInsertAsync(IList<Manufacturer> manufacturers, CancellationToken cancellationToken = default)
+        => await _context.BulkInsertAsync(manufacturers, cancellationToken: cancellationToken);
 
     public void Update(Manufacturer manufacturer)
         => _context.Manufacturers.Update(manufacturer);

@@ -14,15 +14,13 @@ public class VehicleServiceTests
     private VehicleService _service = null!;
     private IFixture _fixture = null!;
     private Mock<IUnitOfWork> _mockUnitOfWork = null!;
-    private Mock<IMediator> _mockMediator = null!;
 
     [SetUp]
     public void SetUp()
     {
         // Initialize the service with mocked dependencies
         _mockUnitOfWork = new Mock<IUnitOfWork>();
-        _mockMediator = new Mock<IMediator>();
-        _service = new VehicleService(_mockUnitOfWork.Object, _mockMediator.Object);
+        _service = new VehicleService(_mockUnitOfWork.Object);
         _fixture = new Fixture().Customize(new CompositeCustomization(new DateOnlyCustomization()));
 
         // Configure the mock to return a value for GetManufacturerNamesAsync

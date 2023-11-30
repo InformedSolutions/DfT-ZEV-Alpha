@@ -12,22 +12,24 @@ namespace DfT.ZEV.Core.Application.Vehicles;
 internal sealed class VehicleService : IVehicleService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMediator _mediator;
 
-    private IReadOnlyList<string> _manufacturerNames = new List<string>();
-    public VehicleService(IUnitOfWork unitOfWork, IMediator mediator)
+    private List<string> _manufacturerNames = new();
+    private List<Manufacturer> _temporaryManufacturers = new();
+    public VehicleService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mediator = mediator;
     }
 
     /// <inheritdoc />
     public async Task ApplyRules(IList<Vehicle> vehicles)
     {
+        _manufacturerNames = (await _unitOfWork.Manufacturers.GetManufacturerNamesAsync(CancellationToken.None)).ToList();
         foreach (var vehicle in vehicles)
         {
             await ApplyRules(vehicle);
         }
+        
+        await SaveManufacturers();
     }
 
     /// <inheritdoc />
@@ -129,17 +131,17 @@ internal sealed class VehicleService : IVehicleService
     {
         if (!_manufacturerNames.Contains(vehicle.Mh))
         {
-           //await _unitOfWork.Manufacturers.InsertAsync(new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N'), CancellationToken.None);
-           //await _unitOfWork.SaveChangesAsync();
-           await _mediator.Send(new CreateManufacturerCommand()
-           {
-               Name = vehicle.Mh,
-               Co2Target = 0,
-               DerogationStatus = 'N'
-           });
-           _manufacturerNames = (await _unitOfWork.Manufacturers.GetManufacturerNamesAsync()).ToList();
+            var manufacturer = new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N');
+            _temporaryManufacturers.Add(manufacturer);
+            _manufacturerNames.Add(vehicle.Mh);
         }
 
         return vehicle;
+    }
+
+    private async Task SaveManufacturers()
+    {
+        await _unitOfWork.Manufacturers.BulkInsertAsync(_temporaryManufacturers);
+        await _unitOfWork.SaveChangesAsync();
     }
 }
