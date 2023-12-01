@@ -1,4 +1,4 @@
-name: DfT.ZEV (Push to release)
+name: DfT.ZEV.Services.Functions.ComplianceCalculator (Release)
 
 on:
   workflow_dispatch:
