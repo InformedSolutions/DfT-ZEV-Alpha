@@ -44,6 +44,7 @@ jobs:
       run:
         working-directory: ./infrastructure/terraform/05-websites/05-01-scheme-administration-website
     steps:
+    - uses: actions/checkout@v2
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:

@@ -48,6 +48,7 @@ jobs:
       run:
         working-directory: ./infrastructure/terraform/03-apis/03-02-scheme-data-api
     steps:
+    - uses: actions/checkout@v2
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:

@@ -37,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     working-directory: ./infrastructure/terraform/04-functions/04-01-migrator-function
     steps:
+    - uses: actions/checkout@v2
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
