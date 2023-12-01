@@ -32,8 +32,8 @@ internal class PostgresHealthCheck : IHealthCheck
         catch(Exception ex)
         {
             return HealthCheckResult.Unhealthy(
-                "Connections failed to open to the database.",
-                exception: ex);
+                "Cannot connect to the database."
+                );
         }
     }
 }
