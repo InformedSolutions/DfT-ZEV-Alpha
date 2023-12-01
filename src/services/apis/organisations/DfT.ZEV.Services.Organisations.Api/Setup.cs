@@ -16,6 +16,8 @@ public static class Setup
     public static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddHealthChecks();
+
         builder.Services.AddSwaggerGen();
         builder.Services.ConfigureGoogleCloudSettings(builder.Configuration);
         builder.Services.AddIdentityPlatform();
@@ -43,6 +45,8 @@ public static class Setup
         app.MapAccountsEndpoints();
         app.MapManufacturerEndpoints();
         app.MapPermissionsEndpoints();
+        app.MapHealthChecks("/health");
+
         return app;
     }
 }

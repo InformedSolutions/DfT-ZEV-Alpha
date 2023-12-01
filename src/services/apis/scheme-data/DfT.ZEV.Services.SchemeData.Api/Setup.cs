@@ -13,7 +13,8 @@ public static class Setup
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        
+        builder.Services.AddHealthChecks();
+
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
@@ -32,8 +33,11 @@ public static class Setup
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-
+        
         app.MapProcessesEndpoints();
+        
+        app.MapHealthChecks("/healthz");
+
         return app;
     }
 }
