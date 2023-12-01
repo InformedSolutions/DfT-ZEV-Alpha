@@ -10,14 +10,11 @@ on:
       - '!README.md'
       - '!**/README.MD'
 
-defaults:
-  run:
-    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
-
 jobs:
 
   build-test:
     runs-on: ubuntu-latest
+    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
 
     steps:
     - uses: actions/checkout@v4
