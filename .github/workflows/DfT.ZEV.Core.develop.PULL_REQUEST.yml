@@ -2,7 +2,9 @@ name: DfT.ZEV.Core (Pull request)
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches:
+      - develop
+      - hotfix/**
     paths:
       - 'src/core/**'
       - '!README.md'

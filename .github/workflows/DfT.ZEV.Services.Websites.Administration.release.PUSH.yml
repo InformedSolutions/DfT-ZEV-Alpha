@@ -1,17 +1,15 @@
-name: DfT.ZEV (Push to release)
+name: DfT.ZEV.Services.Websites.Administration (Release)
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - release/**
     paths:
-      - 'src/services/functions/compliance-calculation/**'
+      - 'src/services/websites/zev-administration-portal/**'
       - 'src/common/**'
       - 'src/core/**'
       - '!README.md'
       - '!**/README.MD'
-      - 'infrastructure/terraform/04-functions/04-02-import-and-compliance-function/**'
 
 env:
     DEPLOY_ENVIRONMENT: release
@@ -22,26 +20,25 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
+    working-directory: ./src/services/websites/zev-administration-portal
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Postgres Database for tests
-      working-directory: .
-      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: "6.0.x"
+        dotnet-version: '6.0.x'
 
     - name: Build
-      run: make build-test
+      run: make build
+
+    - name: Test with coverage
+      run: make test-coverage
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/04-functions/04-02-import-and-compliance-function
+    working-directory: ./infrastructure/terraform/05-websites/05-01-scheme-administration-website
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
@@ -52,6 +49,12 @@ jobs:
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.6.3
+
+    - name: Build docker image
+      run: make docker-build
+
+    - name: Build docker image
+      run: make docker-push
 
     - name: Terraform init
       run: make init

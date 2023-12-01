@@ -1,4 +1,4 @@
-name: DfT.ZEV.Services.Websites.ManufacturerReview (Pull request)
+name: DfT.ZEV.Services.APIs.Organisations (Pull request)
 
 on:
   pull_request:
@@ -6,23 +6,24 @@ on:
       - develop
       - hotfix/**
     paths:
-      - 'src/services/websites/manufacturer-data-review-portal/**'
+      - 'src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api/**'
       - 'src/common/**'
       - 'src/core/**'
       - '!README.md'
       - '!**/README.MD'
 
-defaults:
-  run:
-    working-directory: ./src/services/websites/manufacturer-data-review-portal
-
 jobs:
 
   build-test:
     runs-on: ubuntu-latest
+    working-directory: ./src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Setup Postgres Database
+      working-directory: .
+      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3

@@ -1,17 +1,13 @@
-name: DfT.ZEV (Push to release)
+name: DfT.ZEV.Services.Functions.Migrator (Push)
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - release/**
     paths:
-      - 'src/services/functions/compliance-calculation/**'
-      - 'src/common/**'
-      - 'src/core/**'
+      - 'src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler/**'
       - '!README.md'
       - '!**/README.MD'
-      - 'infrastructure/terraform/04-functions/04-02-import-and-compliance-function/**'
 
 env:
     DEPLOY_ENVIRONMENT: release
@@ -26,27 +22,23 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup Postgres Database for tests
-      working-directory: .
-      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: "6.0.x"
+        dotnet-version: '6.0.x'
 
     - name: Build
-      run: make build-test
+      run: make build
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/04-functions/04-02-import-and-compliance-function
+    working-directory: ./infrastructure/terraform/04-functions/04-01-migrator-function
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.RELEASE_GOOGLE_CREDENTIALS }}
+        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
