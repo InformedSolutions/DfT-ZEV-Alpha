@@ -2,7 +2,8 @@ name: DfT.ZEV.Services.APIs.SchemeData (Pull request)
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches:
+      - develop
     paths:
       - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
       - 'src/common/**'

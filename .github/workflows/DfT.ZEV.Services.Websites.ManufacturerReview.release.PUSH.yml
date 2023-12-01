@@ -1,30 +1,27 @@
-name: DfT.ZEV.Services.APIs.Organisations (Push)
+name: DfT.ZEV.Services.Websites.ManufacturerReview (Push)
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches:
+      - release/**
     paths:
-      - 'src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api/**'
+      - 'src/services/websites/manufacturer-data-review-portal/**'
       - 'src/common/**'
       - 'src/core/**'
       - '!README.md'
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: dev
+    DEPLOY_ENVIRONMENT: release
     SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api
+    working-directory: ./src/services/websites/manufacturer-data-review-portal
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Postgres Database
-      working-directory: .
-      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -37,26 +34,26 @@ jobs:
     - name: Test with coverage
       run: make test-coverage
 
-    - name: Build docker image
-      run: make docker-build
-
-    - name: Build docker image
-      run: make docker-push
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/03-apis/03-01-organisation-api
+    working-directory: ./infrastructure/terraform/05-websites/05-02-manufacturer-data-review-website
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+        credentials_json: ${{ secrets.RELEASE_GOOGLE_CREDENTIALS }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.6.3
+
+    - name: Build docker image
+      run: make docker-build
+
+    - name: Build docker image
+      run: make docker-push
 
     - name: Terraform init
       run: make init

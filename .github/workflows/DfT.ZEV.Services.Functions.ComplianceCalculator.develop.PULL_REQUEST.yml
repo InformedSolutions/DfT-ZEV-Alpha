@@ -2,7 +2,8 @@ name: DfT.ZEV.Services.Functions.ComplianceCalculator (Pull request)
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches:
+      - develop
     paths:
       - 'src/services/functions/compliance-calculation/**'
       - 'src/common/**'

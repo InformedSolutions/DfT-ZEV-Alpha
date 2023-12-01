@@ -1,12 +1,12 @@
-name: DfT.ZEV.Services.APIs.SchemeData (Push)
+name: DfT.ZEV.Services.Websites.ManufacturerReview (Push)
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
       - hotfix/**
     paths:
-      - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
+      - 'src/services/websites/manufacturer-data-review-portal/**'
       - 'src/common/**'
       - 'src/core/**'
       - '!README.md'
@@ -18,15 +18,11 @@ env:
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
+    working-directory: ./src/services/websites/manufacturer-data-review-portal
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Postgres Database
-      working-directory: .
-      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -42,7 +38,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/03-apis/03-02-scheme-data-api
+    working-directory: ./infrastructure/terraform/05-websites/05-02-manufacturer-data-review-website
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1

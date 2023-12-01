@@ -2,7 +2,8 @@ name: DfT.ZEV.Services.Websites.Administration (Pull request)
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches:
+      - develop
     paths:
       - 'src/services/websites/zev-administration-portal/**'
       - 'src/common/**'

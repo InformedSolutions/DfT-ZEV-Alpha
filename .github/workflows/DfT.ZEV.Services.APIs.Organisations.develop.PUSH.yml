@@ -1,4 +1,4 @@
-name: DfT.ZEV.Services.APIs.SchemeData (Push)
+name: DfT.ZEV.Services.APIs.Organisations (Push)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - develop
       - hotfix/**
     paths:
-      - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
+      - 'src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api/**'
       - 'src/common/**'
       - 'src/core/**'
       - '!README.md'
@@ -20,7 +20,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
+    working-directory: ./src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api
     steps:
     - uses: actions/checkout@v4
 
@@ -42,7 +42,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/03-apis/03-02-scheme-data-api
+    working-directory: ./infrastructure/terraform/03-apis/03-01-organisation-api
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1

@@ -1,10 +1,9 @@
-name: DfT.ZEV.Services.APIs.SchemeData (Push)
+name: DfT.ZEV.Services.APIs.SchemeData (Release)
 
 on:
   push:
     branches:
-      - develop
-      - hotfix/**
+      - release/**
     paths:
       - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
       - 'src/common/**'
@@ -13,7 +12,7 @@ on:
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: dev
+    DEPLOY_ENVIRONMENT: release
     SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
@@ -47,7 +46,7 @@ jobs:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+        credentials_json: ${{ secrets.RELEASE_GOOGLE_CREDENTIALS }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3

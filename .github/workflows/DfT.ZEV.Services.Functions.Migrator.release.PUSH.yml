@@ -1,32 +1,26 @@
-name: DfT.ZEV.Services.APIs.SchemeData (Push)
+name: DfT.ZEV.Services.Functions.Migrator (Push)
 
 on:
   push:
     branches:
-      - develop
-      - hotfix/**
+      - release/**
     paths:
-      - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
-      - 'src/common/**'
-      - 'src/core/**'
+      - 'src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler/**'
       - '!README.md'
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: dev
+    DEPLOY_ENVIRONMENT: release
     SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
+    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Postgres Database
-      working-directory: .
-      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -36,13 +30,10 @@ jobs:
     - name: Build
       run: make build
 
-    - name: Test with coverage
-      run: make test-coverage
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/03-apis/03-02-scheme-data-api
+    working-directory: ./infrastructure/terraform/04-functions/04-01-migrator-function
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
@@ -53,12 +44,6 @@ jobs:
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.6.3
-
-    - name: Build docker image
-      run: make docker-build
-
-    - name: Build docker image
-      run: make docker-push
 
     - name: Terraform init
       run: make init

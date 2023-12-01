@@ -2,7 +2,8 @@ name: DfT.ZEV.Services.APIs.Organisations (Pull request)
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches:
+      - develop
     paths:
       - 'src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api/**'
       - 'src/common/**'

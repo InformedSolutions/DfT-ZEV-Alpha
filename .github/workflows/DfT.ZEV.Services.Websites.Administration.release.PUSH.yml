@@ -1,32 +1,28 @@
-name: DfT.ZEV.Services.APIs.SchemeData (Push)
+name: DfT.ZEV.Services.Websites.Administration (Release)
 
 on:
   push:
     branches:
-      - develop
-      - hotfix/**
+      - release/**
     paths:
-      - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
+      - 'src/services/websites/zev-administration-portal/**'
       - 'src/common/**'
       - 'src/core/**'
       - '!README.md'
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: dev
+    DEPLOY_ENVIRONMENT: release
     SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
+    working-directory: ./src/services/websites/zev-administration-portal
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Postgres Database
-      working-directory: .
-      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -42,12 +38,12 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/03-apis/03-02-scheme-data-api
+    working-directory: ./infrastructure/terraform/05-websites/05-01-scheme-administration-website
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+        credentials_json: ${{ secrets.RELEASE_GOOGLE_CREDENTIALS }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
