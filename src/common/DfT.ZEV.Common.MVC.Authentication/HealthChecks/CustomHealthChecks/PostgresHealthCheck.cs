@@ -1,5 +1,6 @@
 using DfT.ZEV.Common.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -8,10 +9,11 @@ namespace DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 internal class PostgresHealthCheck : IHealthCheck
 {
     private readonly IOptions<PostgresConfiguration> _postgresConfiguration;
-
-    public PostgresHealthCheck(IOptions<PostgresConfiguration> postgresConfiguration)
+    private readonly ILogger<PostgresHealthCheck> _logger;
+    public PostgresHealthCheck(IOptions<PostgresConfiguration> postgresConfiguration, ILogger<PostgresHealthCheck> logger)
     {
         _postgresConfiguration = postgresConfiguration;
+        _logger = logger;
     }
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
@@ -31,6 +33,7 @@ internal class PostgresHealthCheck : IHealthCheck
         }
         catch(Exception ex)
         {
+            _logger.LogError(ex, "Error while checking the database health.");
             return HealthCheckResult.Unhealthy(
                 "Cannot connect to the database."
                 );
