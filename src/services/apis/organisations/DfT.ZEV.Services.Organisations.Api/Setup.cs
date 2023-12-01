@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Middlewares.ErrorHandling;
+using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
@@ -16,7 +17,7 @@ public static class Setup
     public static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddHealthChecks();
+        builder.Services.AddHealthCheckServices();
 
         builder.Services.AddSwaggerGen();
         builder.Services.ConfigureGoogleCloudSettings(builder.Configuration);
@@ -45,7 +46,7 @@ public static class Setup
         app.MapAccountsEndpoints();
         app.MapManufacturerEndpoints();
         app.MapPermissionsEndpoints();
-        app.MapHealthChecks("/health");
+        app.UseHealthChecks();
 
         return app;
     }
