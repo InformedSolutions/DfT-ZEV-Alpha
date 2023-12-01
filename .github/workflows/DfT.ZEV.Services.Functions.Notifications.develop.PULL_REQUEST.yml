@@ -1,0 +1,34 @@
+name: DfT.ZEV.Services.Functions.Notifications (Pull request)
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - hotfix/**
+    paths:
+      - 'src/services/functions/notifications/DfT.ZEV.Services.Notifications.Handler/**'
+      - '!README.md'
+      - '!**/README.MD'
+
+env:
+    DEPLOY_ENVIRONMENT: dev
+    SOURCE_COMMIT_HASH: ${{ github.sha }}
+    TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
+
+jobs:
+
+  build-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/services/functions/notifications/DfT.ZEV.Services.Notifications.Handler
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build
+      run: make build
