@@ -4,6 +4,8 @@ build:
 build-no-restore:
 	cd DfT.ZEV.Administration.Web && dotnet build --no-restore
 
+build-test: build test-coverage
+
 clean:
 	cd DfT.ZEV.Administration.Web && dotnet clean
 

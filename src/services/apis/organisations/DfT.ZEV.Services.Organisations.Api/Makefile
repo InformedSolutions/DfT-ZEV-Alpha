@@ -4,10 +4,13 @@ build:
 build-no-restore:
 	dotnet build --no-restore
 
+build-test: build test-coverage
+
 clean:
 	dotnet clean
 
-clean-build: clean build
+clean-build:
+	clean build
 
 restore:
 	dotnet restore
