@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Core.Infrastructure;
 using Microsoft.AspNetCore.Http.Json;
 
@@ -13,8 +14,7 @@ public static class Setup
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddHealthChecks();
-
+        builder.Services.AddHealthCheckServices();
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
@@ -35,9 +35,9 @@ public static class Setup
         app.UseSwaggerUI();
         
         app.MapProcessesEndpoints();
-        
-        app.MapHealthChecks("/health");
 
+
+        app.UseHealthChecks();
         return app;
     }
 }
