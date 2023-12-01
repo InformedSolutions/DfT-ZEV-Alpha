@@ -14,6 +14,7 @@ public static class ApplicationDependencyInjection
     
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddDomainServices();
         services.AddAutoMapper(typeof(ApplicationDependencyInjection).Assembly);
         services.AddMediatR(typeof(ApplicationDependencyInjection).Assembly);
         return services;
@@ -24,7 +25,7 @@ public static class ApplicationDependencyInjection
     /// </summary>
     /// <param name="services">Service collection</param>
     /// <returns></returns>
-    public static IServiceCollection AddDomainServices(this IServiceCollection services)
+    private static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
         services.AddTransient<IVehicleService, VehicleService>();
         services.AddTransient<IProcessService,ProcessService>();

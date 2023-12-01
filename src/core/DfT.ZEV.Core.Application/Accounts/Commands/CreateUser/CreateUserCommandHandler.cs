@@ -61,11 +61,12 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         
         await _unitOfWork.Users.InsertAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-
         await _usersService.UpdateUserClaimsAsync(user);
         
         _logger.LogInformation("Created user with email {Email}", request.Email);
-
+        
+        await _usersService.RequestPasswordResetAsync(user);
+        
         return new CreateUserCommandResponse(user.Id);
     }
 
