@@ -1,4 +1,5 @@
 using DfT.ZEV.Core.Domain.Accounts.Models;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace DfT.ZEV.Core.Domain.Manufacturers.Models;
 
@@ -10,7 +11,7 @@ public sealed class ManufacturerPool
     public Guid? PrimaryContactId { get; private set; }
     public User? PrimaryContact { get; private set; }
 
-    protected ManufacturerPool() { }
+    private ManufacturerPool() { }
 
     public ManufacturerPool(string name)
     {

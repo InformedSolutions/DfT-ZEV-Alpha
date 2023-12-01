@@ -1,3 +1,4 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 namespace DfT.ZEV.Core.Domain.Manufacturers.Models;
 
 public sealed class InternalManufacturerActivity
@@ -8,5 +9,14 @@ public sealed class InternalManufacturerActivity
     public string ActivityType { get; private set; } = null!;
     public DateTimeOffset ActionInitiated { get; private set; }
 
-    protected InternalManufacturerActivity() { }
+    private InternalManufacturerActivity() { }
+    
+    public InternalManufacturerActivity(Guid manufacturerId, string status, string activityType, DateTimeOffset actionInitiated)
+    {
+        Id = Guid.NewGuid();
+        ManufacturerId = manufacturerId;
+        Status = status;
+        ActivityType = activityType;
+        ActionInitiated = actionInitiated;
+    }
 }

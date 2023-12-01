@@ -34,7 +34,7 @@ public class CreateManufacturerCommandHandler : IRequestHandler<CreateManufactur
         
         _logger.LogInformation("Created manufacturer {Name}", request.Name);
         
-        return new CreateManufacturerCommandResponse()
+        return new CreateManufacturerCommandResponse
         {
             Id = manufacturer.Id
         };

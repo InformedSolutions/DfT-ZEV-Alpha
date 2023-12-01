@@ -1,5 +1,6 @@
 using DfT.ZEV.Core.Domain.Common;
 using DfT.ZEV.Core.Domain.Manufacturers.Models;
+// ReSharper disable CollectionNeverUpdated.Global
 
 namespace DfT.ZEV.Core.Domain.Accounts.Models;
 

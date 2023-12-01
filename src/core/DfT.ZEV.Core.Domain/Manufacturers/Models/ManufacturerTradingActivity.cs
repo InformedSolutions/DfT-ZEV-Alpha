@@ -1,3 +1,4 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 namespace DfT.ZEV.Core.Domain.Manufacturers.Models;
 
 public sealed class ManufacturerTradingActivity
@@ -17,7 +18,7 @@ public sealed class ManufacturerTradingActivity
     public float TradeAmount { get; private set; }
     public float TradeValue { get; private set; }
 
-    protected ManufacturerTradingActivity() { }
+    private ManufacturerTradingActivity() { }
 
     public ManufacturerTradingActivity(char status, string applicableScheme, string tradeType, float tradeAmount, float tradeValue)
     {

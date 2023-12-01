@@ -8,7 +8,7 @@ internal class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<User, GetAllUsersDTO>()
+        CreateMap<User, GetAllUsersDto>()
             .ForMember(x => x.Manufacturies, opt => opt
                 .MapFrom(src => src.ManufacturerBridges));
         

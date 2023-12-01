@@ -48,7 +48,7 @@ public class ServiceStartup : FunctionsStartup
     {
         services.ConfigureBucketSettings(configuration);
         services.AddRepositories();
-        services.AddDomainServices();
+        services.AddApplication();
         services.AddApplication();
         //TO-DO: Add Serilog from commons
         //services.AddSerilog(configuration);

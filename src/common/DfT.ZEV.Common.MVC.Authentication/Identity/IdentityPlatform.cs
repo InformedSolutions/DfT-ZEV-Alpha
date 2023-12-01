@@ -28,4 +28,28 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         => await FirebaseAuth.DefaultInstance.TenantManager
             .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
             .CreateUserAsync(userRecordArgs);
+
+    public async Task SetUserClaimsAsync(Guid userId, IReadOnlyDictionary<string, object> claims)
+    {
+        var user = await FirebaseAuth.DefaultInstance.TenantManager
+            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .GetUserAsync(userId.ToString());
+        
+        await FirebaseAuth.DefaultInstance.TenantManager
+            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .SetCustomUserClaimsAsync(user.Uid, claims);
+    }
+
+    public async Task<string> GetPasswordResetLink(Guid userId)
+    {
+        var user = await FirebaseAuth.DefaultInstance.TenantManager
+            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .GetUserAsync(userId.ToString());
+        
+        return await FirebaseAuth.DefaultInstance.TenantManager
+            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .GeneratePasswordResetLinkAsync(user.Email);
+    }
+     
+    
 }

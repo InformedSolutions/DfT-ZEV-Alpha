@@ -19,10 +19,10 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
         return new AppDbContext(optionsBuilder.Options);
     }
 
-    private string GetConnectionString(string[] args)
+    private static string GetConnectionString(IReadOnlyList<string> args)
     {
-        var connectionString = args.Length > 0 ? args[0] : null;
-        connectionString = connectionString ?? Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
+        var connectionString = args.Count > 0 ? args[0] : null;
+        connectionString ??= Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
 
         if (connectionString is null or "") throw new ArgumentNullException(nameof(connectionString));
 

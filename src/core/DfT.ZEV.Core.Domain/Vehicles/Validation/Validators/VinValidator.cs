@@ -22,12 +22,13 @@ public sealed class VinValidator<T> : AsyncPropertyValidator<T, string>
             var character = c.ToString().ToLower();
             var result = CalculateResult(c);
 
-            if ((index >= 1 && index <= 7) || index == 9)
-                weight = 9 - index;
-            else if (index == 8)
-                weight = 10;
-            else if (index >= 10 && index <= 17)
-                weight = 19 - index;
+            weight = index switch
+            {
+                >= 1 and <= 7 or 9 => 9 - index,
+                8 => 10,
+                >= 10 and <= 17 => 19 - index,
+                _ => weight
+            };
             if (index == 9)
                 checkDigit = character == "x" ? 10 : result;
             checkSum += result * weight;

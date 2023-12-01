@@ -1,3 +1,4 @@
+// ReSharper disable UnusedMember.Local
 namespace DfT.ZEV.Core.Domain.Accounts.Models;
 
 public sealed class Permission
@@ -6,8 +7,8 @@ public sealed class Permission
     public string PermissionName { get; private set; } = null!;
     
     public ICollection<UserManufacturerBridge> UserManufacturerBridges { get; private set; } = new List<UserManufacturerBridge>();
-    
-    protected Permission() { }
+
+    private Permission() { }
     
     public Permission(string permissionName)
     {

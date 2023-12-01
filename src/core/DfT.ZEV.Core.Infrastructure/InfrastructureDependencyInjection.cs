@@ -14,7 +14,7 @@ namespace DfT.ZEV.Core.Infrastructure;
 public static class InfrastructureDependencyInjection
 {
     /// <summary>
-    ///     This method adds the repositories and unit of workto the service collection.
+    ///     This method adds the repositories and unit of work to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
     public static void AddRepositories(this IServiceCollection services)
@@ -31,7 +31,7 @@ public static class InfrastructureDependencyInjection
     {
         services.AddDbContextPool<AppDbContext>(opt =>
         {
-            // This causes errors while working in multithreaded processing, need to deep dive this topic
+            // This causes errors while working in multi-threaded processing, need to deep dive this topic
           //  opt.UseNpgsql(configuration.ConnectionString,
           //     conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
           opt.UseNpgsql(configuration.ConnectionString);
