@@ -49,25 +49,23 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         try
         {
             await _identityPlatform.CreateUser(args);
+            var user = new User(id); 
+            user.UpdatePermissions(manufacturer,permissions);
+        
+            await _unitOfWork.Users.InsertAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _usersService.UpdateUserClaimsAsync(user);
+            await _usersService.RequestPasswordResetAsync(user);
         }
         catch(Exception e)
         {
             _logger.LogError("Failed to create user: {Message}", e.Message);
             throw UserHandlerExceptions.CouldNotCreateUser(e.Message);
         }
-
-        var user = new User(id); 
-        user.UpdatePermissions(manufacturer,permissions);
-        
-        await _unitOfWork.Users.InsertAsync(user, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-        await _usersService.UpdateUserClaimsAsync(user);
         
         _logger.LogInformation("Created user with email {Email}", request.Email);
         
-        await _usersService.RequestPasswordResetAsync(user);
-        
-        return new CreateUserCommandResponse(user.Id);
+        return new CreateUserCommandResponse(id);
     }
 
     private static string CreateSecureRandomString(int count = 64) =>
