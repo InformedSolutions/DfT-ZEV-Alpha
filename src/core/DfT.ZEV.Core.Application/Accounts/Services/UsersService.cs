@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Core.Application.Accounts.Services;
 
+
+/// <inheritdoc/>
 internal sealed class UsersService : IUsersService
 {
     private readonly IIdentityPlatform _identityPlatform;
@@ -15,6 +17,7 @@ internal sealed class UsersService : IUsersService
         _logger = logger;
     }
 
+    /// <inheritdoc/>
     public async Task UpdateUserClaimsAsync(User user)
     {
         var claims = new Dictionary<string, object>();
@@ -25,6 +28,7 @@ internal sealed class UsersService : IUsersService
         await _identityPlatform.SetUserClaimsAsync(user.Id, claims);
     }
 
+    /// <inheritdoc/>
     public async Task RequestPasswordResetAsync(User user)
     {
         var resetLink = await _identityPlatform.GetPasswordResetLink(user.Id);

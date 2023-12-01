@@ -5,6 +5,7 @@ using DfT.ZEV.Core.Infrastructure.Persistence;
 
 namespace DfT.ZEV.Core.Infrastructure.Repositories;
 
+/// <inheritdoc/>
 internal sealed class ProcessRepository : IProcessRepository
 {
     private readonly AppDbContext _context;
@@ -14,11 +15,13 @@ internal sealed class ProcessRepository : IProcessRepository
         _context = context;
     }
 
+    /// <inheritdoc/>
     public async Task<Process?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Processes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
+    /// <inheritdoc/>
     public async Task<IEnumerable<Process>> GetPagedAsync(int page, int pageSize,
         CancellationToken cancellationToken = default)
     {
@@ -26,16 +29,19 @@ internal sealed class ProcessRepository : IProcessRepository
             .ToListAsync(cancellationToken);
     }
 
+    /// <inheritdoc/>
     public async Task AddAsync(Process process, CancellationToken cancellationToken = default)
     {
         await _context.Processes.AddAsync(process, cancellationToken);
     }
 
+    /// <inheritdoc/>
     public void Update(Process process)
     {
         _context.Processes.Update(process);
     }
 
+    /// <inheritdoc/>
     public void Delete(Process process)
     {
         _context.Processes.Remove(process);
