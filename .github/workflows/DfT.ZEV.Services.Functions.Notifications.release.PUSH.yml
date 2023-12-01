@@ -1,11 +1,11 @@
-name: DfT.ZEV.Services.Functions.Migrator (Release)
+name: DfT.ZEV.Services.Functions.Notifications (Release)
 
 on:
   push:
     branches:
       - release/**
     paths:
-      - 'src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler/**'
+      - 'src/services/functions/notifications/DfT.ZEV.Services.Notifications.Handler/**'
       - '!README.md'
       - '!**/README.MD'
 
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
+        working-directory: ./src/services/functions/notifications/DfT.ZEV.Services.Notifications.Handler
     steps:
     - uses: actions/checkout@v4
 
@@ -35,13 +35,15 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/04-functions/04-01-migrator-function
+    defaults:
+      run:
+        working-directory: ./infrastructure/terraform/04-functions/04-03-notifications-function
     steps:
     - uses: actions/checkout@v2
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
-        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+        credentials_json: ${{ secrets.RELEASE_GOOGLE_CREDENTIALS }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
