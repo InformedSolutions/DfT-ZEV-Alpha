@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - develop
+      - hotfix/**
     paths:
       - 'src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler/**'
       - '!README.md'

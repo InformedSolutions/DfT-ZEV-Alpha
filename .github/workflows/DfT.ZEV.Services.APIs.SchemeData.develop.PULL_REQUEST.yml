@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - develop
+      - hotfix/**
     paths:
       - 'src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api/**'
       - 'src/common/**'

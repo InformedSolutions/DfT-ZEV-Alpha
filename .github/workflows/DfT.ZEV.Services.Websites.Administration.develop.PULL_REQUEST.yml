@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - develop
+      - hotfix/**
     paths:
       - 'src/services/websites/zev-administration-portal/**'
       - 'src/common/**'

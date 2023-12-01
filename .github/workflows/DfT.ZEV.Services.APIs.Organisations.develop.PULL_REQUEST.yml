@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - develop
+      - hotfix/**
     paths:
       - 'src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api/**'
       - 'src/common/**'
