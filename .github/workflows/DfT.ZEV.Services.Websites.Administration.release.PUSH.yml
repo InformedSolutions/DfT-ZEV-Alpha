@@ -20,7 +20,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/websites/zev-administration-portal
+    defaults:
+      run:
+        working-directory: ./src/services/websites/zev-administration-portal
     steps:
     - uses: actions/checkout@v4
 
@@ -38,7 +40,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/05-websites/05-01-scheme-administration-website
+    defaults:
+      run:
+        working-directory: ./infrastructure/terraform/05-websites/05-01-scheme-administration-website
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1

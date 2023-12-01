@@ -16,7 +16,9 @@ jobs:
 
   build-test:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api
+    defaults:
+      run:
+        working-directory: ./src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api
 
     steps:
     - uses: actions/checkout@v4

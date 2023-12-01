@@ -20,7 +20,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
+    defaults:
+      run:
+        working-directory: ./src/services/apis/scheme-data/DfT.ZEV.Services.SchemeData.Api
     steps:
     - uses: actions/checkout@v4
 
@@ -42,7 +44,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/03-apis/03-02-scheme-data-api
+    defaults:
+      run:
+        working-directory: ./infrastructure/terraform/03-apis/03-02-scheme-data-api
     steps:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1

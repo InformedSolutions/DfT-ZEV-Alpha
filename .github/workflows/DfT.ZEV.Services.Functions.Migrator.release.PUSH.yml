@@ -18,7 +18,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
+    defaults:
+      run:
+        working-directory: ./src/services/functions/compliance-calculation/DfT.ZEV.Services.ComplianceCalculation.Handler
     steps:
     - uses: actions/checkout@v4
 
