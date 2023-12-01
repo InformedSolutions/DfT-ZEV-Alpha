@@ -1,0 +1,35 @@
+name: DfT.ZEV.Services.APIs.Organisations (Pull request)
+
+on:
+  pull_request:
+    branches: [ develop ]
+    paths:
+      - 'src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api/**'
+      - 'src/common/**'
+      - 'src/core/**'
+      - '!README.md'
+      - '!**/README.MD'
+
+jobs:
+
+  build-test:
+    runs-on: ubuntu-latest
+    working-directory: ./src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Postgres Database
+      working-directory: .
+      run: docker compose -f infrastructure/docker/docker-compose.yml up -d
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build
+      run: make build
+
+    - name: Test with coverage
+      run: make test-coverage
