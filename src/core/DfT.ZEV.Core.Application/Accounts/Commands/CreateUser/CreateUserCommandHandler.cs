@@ -4,6 +4,7 @@ using DfT.ZEV.Core.Application.Accounts.Exceptions;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Models;
+using DfT.ZEV.Core.Domain.Accounts.Services;
 using FirebaseAdmin.Auth;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -14,12 +15,14 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IIdentityPlatform _identityPlatform;
+    private readonly IUsersService _usersService;
     private readonly ILogger<CreateUserCommandHandler> _logger;
-    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform, ILogger<CreateUserCommandHandler> logger)
+    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform, ILogger<CreateUserCommandHandler> logger, IUsersService usersService)
     {
         _unitOfWork = unitOfWork;
         _identityPlatform = identityPlatform;
         _logger = logger;
+        _usersService = usersService;
     }
 
     public async Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -59,12 +62,11 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         await _unitOfWork.Users.InsertAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _usersService.UpdateUserClaimsAsync(user);
+        
         _logger.LogInformation("Created user with email {Email}", request.Email);
 
-        return new CreateUserCommandResponse
-        {
-            Id = user.Id
-        };
+        return new CreateUserCommandResponse(user.Id);
     }
 
     private static string CreateSecureRandomString(int count = 64) =>

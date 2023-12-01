@@ -1,6 +1,8 @@
+using DfT.ZEV.Core.Application.Accounts.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DfT.ZEV.Core.Application.Processes;
 using DfT.ZEV.Core.Application.Vehicles;
+using DfT.ZEV.Core.Domain.Accounts.Services;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using MediatR;
@@ -26,6 +28,7 @@ public static class ApplicationDependencyInjection
     {
         services.AddTransient<IVehicleService, VehicleService>();
         services.AddTransient<IProcessService,ProcessService>();
+        services.AddTransient<IUsersService,UsersService>();
         return services;
     }
     
