@@ -36,7 +36,7 @@ public static class Setup
         
         app.MapProcessesEndpoints();
         
-        app.MapHealthChecks("/healthz");
+        app.MapHealthChecks("/health");
 
         return app;
     }
