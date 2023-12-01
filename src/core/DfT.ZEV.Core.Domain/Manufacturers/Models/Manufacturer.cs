@@ -5,13 +5,13 @@ namespace DfT.ZEV.Core.Domain.Manufacturers.Models;
 public sealed class Manufacturer
 {
     public Guid Id { get; }
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     public Guid PoolMemberId { get; private set; }
     public float Co2Target { get; private set; }
     public char DerogationStatus { get; private set; }
     
     public ICollection<UserManufacturerBridge> UserBridges { get; private set; } = new List<UserManufacturerBridge>();
-    protected Manufacturer() { }
+    private Manufacturer() { }
 
     public Manufacturer(string name)
     {

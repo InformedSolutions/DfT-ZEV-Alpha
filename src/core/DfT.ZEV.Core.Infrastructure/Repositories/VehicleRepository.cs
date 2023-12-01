@@ -10,7 +10,6 @@ internal sealed class VehicleRepository : IVehicleRepository
 {
     private readonly AppDbContext _context;
 
-    private bool _disposed;
 
     /// <summary>
     ///     This method initializes a new instance of the <see cref="VehicleRepository" /> class.
@@ -26,26 +25,5 @@ internal sealed class VehicleRepository : IVehicleRepository
     {
         await _context.BulkInsertAsync(vehicles, cancellationToken: ct);
         await _context.BulkInsertAsync(vehicles.Select(x => x.Summary).ToList(), cancellationToken: ct);
-    }
-
-    /// <inheritdoc />
-    public async Task Save()
-    {
-        await _context.SaveChangesAsync();
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        // ReSharper disable once GCSuppressFinalizeForTypeWithoutDestructor
-        GC.SuppressFinalize(this);
-    }
-
-    private void Dispose(bool disposing)
-    {
-        if (!_disposed)
-            if (disposing)
-                _context.Dispose();
-        _disposed = true;
     }
 }

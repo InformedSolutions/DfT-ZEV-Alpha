@@ -13,7 +13,7 @@ public class ManufacturiesWithPermissions
     public IEnumerable<ManufacturyPermissions> Permissions { get; set; } = null!;
 }
 
-public class GetAllUsersDTO
+public class GetAllUsersDto
 {
     public Guid Id { get; set; }
     public DateTime Created { get; set; }

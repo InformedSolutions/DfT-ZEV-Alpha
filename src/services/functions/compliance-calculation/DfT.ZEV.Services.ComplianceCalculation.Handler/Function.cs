@@ -56,7 +56,7 @@ public class Function : IHttpFunction
         var executionId = Guid.NewGuid();
         var body = await GetRequestBody(context);
         
-        var process = await _processService.CreateProcessAsync(executionId, ProcessTypeEnum.ComplianceDataImport);
+        var process = await _processService.CreateProcessAsync(executionId, ProcessType.ComplianceDataImport);
         using (LogContext.PushProperty("CorrelationId", executionId.ToString()))
         {
             await Run(body, process).ConfigureAwait(false);

@@ -1,4 +1,5 @@
 using DfT.ZEV.Core.Domain.Manufacturers.Models;
+// ReSharper disable UnusedMember.Local
 
 namespace DfT.ZEV.Core.Domain.Accounts.Models;
 
@@ -9,12 +10,12 @@ public sealed class UserManufacturerBridge
     public Guid UserId { get; private set; }
     public Guid ManufacturerId { get; private set; }
     
-    public User User { get; private set; }
-    public Manufacturer Manufacturer { get; private set; }
+    public User User { get; private set; } = null!;
+    public Manufacturer Manufacturer { get; private set; } = null!;
 
-    public ICollection<Permission> Permissions { get; private set; }
-    
-    protected UserManufacturerBridge() {}
+    public ICollection<Permission> Permissions { get; private set; } = null!;
+
+    private UserManufacturerBridge() {}
     
     public UserManufacturerBridge(User user, Manufacturer manufacturer)
     {

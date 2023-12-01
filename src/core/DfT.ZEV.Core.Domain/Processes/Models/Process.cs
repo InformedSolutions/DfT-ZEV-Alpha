@@ -7,8 +7,8 @@ public sealed class Process
 {
     public Guid Id { get; set; }
 
-    public ProcessTypeEnum Type { get; set; }
-    public ProcessStateEnum State { get; set; }
+    public ProcessType Type { get; set; }
+    public ProcessState State { get; set; }
 
     public JsonDocument? Metadata { get; set; }
     public JsonDocument? Result { get; set; }
@@ -23,18 +23,18 @@ public sealed class Process
     {
     }
 
-    public Process(Guid id, ProcessTypeEnum processType)
+    public Process(Guid id, ProcessType processType)
     {
         Id = id;
         Created = DateTime.UtcNow;
-        State = ProcessStateEnum.Waiting;
+        State = ProcessState.Waiting;
         LastUpdated = DateTime.UtcNow;
         Type = processType;
     }
 
     public void Start(object? metadata = default)
     {
-        State = ProcessStateEnum.Running;
+        State = ProcessState.Running;
         Started = DateTime.UtcNow;
         LastUpdated = DateTime.UtcNow;
         
@@ -44,7 +44,7 @@ public sealed class Process
     
     public void Finish(object? result = default)
     {
-        State = ProcessStateEnum.Finished;
+        State = ProcessState.Finished;
         Finished = DateTime.UtcNow;
         LastUpdated = DateTime.UtcNow;
         
@@ -54,7 +54,7 @@ public sealed class Process
     
     public void Fail(object? result = default)
     {
-        State = ProcessStateEnum.Failed;
+        State = ProcessState.Failed;
         Finished = DateTime.UtcNow;
         LastUpdated = DateTime.UtcNow;
         

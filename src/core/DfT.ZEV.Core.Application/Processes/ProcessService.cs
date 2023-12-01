@@ -1,9 +1,8 @@
+using DfT.ZEV.Core.Application.Processes.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Processes.Models;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Processes.Values;
-using DfT.ZEV.Core.Infrastructure.Repositories;
-using DfT.ZEV.Core.Infrastructure.UnitOfWork;
 
 namespace DfT.ZEV.Core.Application.Processes;
 
@@ -16,7 +15,7 @@ internal sealed class ProcessService : IProcessService
         _unitOfWork = unitOfWork;
     }
 
-    public async ValueTask<Process> CreateProcessAsync(Guid id, ProcessTypeEnum processType, CancellationToken cancellationToken = default)
+    public async ValueTask<Process> CreateProcessAsync(Guid id, ProcessType processType, CancellationToken cancellationToken = default)
     {
         var process = new Process(id, processType);
         await _unitOfWork.Processes.AddAsync(process, cancellationToken);
@@ -28,7 +27,7 @@ internal sealed class ProcessService : IProcessService
     {
         var process = await _unitOfWork.Processes.GetByIdAsync(id, cancellationToken);
         if (process is null)
-            throw new Exception($"Process with id {id} not found.");
+            throw ProcessExceptions.NotFound(id);
         
         process.Start(metadata);
         _unitOfWork.Processes.Update(process);
@@ -41,7 +40,7 @@ internal sealed class ProcessService : IProcessService
     {
         var process = await _unitOfWork.Processes.GetByIdAsync(id, cancellationToken);
         if (process is null)
-            throw new Exception($"Process with id {id} not found.");
+            throw ProcessExceptions.NotFound(id);
         
         process.Finish(result);
         _unitOfWork.Processes.Update(process);
@@ -54,7 +53,7 @@ internal sealed class ProcessService : IProcessService
     {
        var process = await _unitOfWork.Processes.GetByIdAsync(id, cancellationToken);
        if(process is null)
-           throw new Exception($"Process with id {id} not found.");
+           throw ProcessExceptions.NotFound(id);
        
        process.Fail(result);
        

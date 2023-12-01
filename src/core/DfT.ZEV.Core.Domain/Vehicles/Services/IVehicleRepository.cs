@@ -5,7 +5,7 @@ namespace DfT.ZEV.Core.Domain.Vehicles.Services;
 /// <summary>
 ///     Represents a repository for managing vehicles.
 /// </summary>
-public interface IVehicleRepository : IDisposable
+public interface IVehicleRepository
 {
     /// <summary>
     ///     Inserts a list of vehicles into the repository in bulk.

@@ -34,7 +34,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
             throw UserHandlerExceptions.PermissionsNotFound(nonExistentPermissionIds);
 
         var id = Guid.NewGuid();
-        var args = new UserRecordArgs()
+        var args = new UserRecordArgs
         {
             Email = request.Email,
             EmailVerified = false,

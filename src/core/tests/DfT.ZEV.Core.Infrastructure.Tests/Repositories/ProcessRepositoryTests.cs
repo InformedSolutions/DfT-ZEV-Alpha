@@ -75,14 +75,14 @@ internal class ProcessRepositoryTests : BaseRepositoryTest<ProcessRepository>
 
         _context.Processes.Add(process);
         await _context.SaveChangesAsync();
-        process.State = ProcessStateEnum.Failed;
+        process.State = ProcessState.Failed;
 
         // Act
         _repository.Update(process);
         await _context.SaveChangesAsync();
 
         // Assert
-        _context.Processes.Single().State.Should().Be(ProcessStateEnum.Failed);
+        _context.Processes.Single().State.Should().Be(ProcessState.Failed);
     }
 
     [Test]

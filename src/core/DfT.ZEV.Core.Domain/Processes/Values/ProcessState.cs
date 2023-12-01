@@ -1,6 +1,6 @@
 namespace DfT.ZEV.Core.Domain.Processes.Values;
 
-public enum ProcessStateEnum
+public enum ProcessState
 {
     Waiting = 1,
     Running = 2,

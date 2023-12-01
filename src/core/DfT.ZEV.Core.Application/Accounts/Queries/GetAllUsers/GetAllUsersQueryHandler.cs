@@ -19,9 +19,9 @@ public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery,GetAllUs
     {
         var users = await _unitOfWork.Users.GetAllAsync(cancellationToken);
 
-        return new GetAllUsersQueryResponse()
+        return new GetAllUsersQueryResponse
         {
-            Users = _mapper.Map<IEnumerable<GetAllUsersDTO>>(users)
+            Users = _mapper.Map<IEnumerable<GetAllUsersDto>>(users)
         };
     }
 }

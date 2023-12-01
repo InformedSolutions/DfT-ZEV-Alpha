@@ -1,10 +1,8 @@
-using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Values;
-using MediatR;
 
 namespace DfT.ZEV.Core.Application.Vehicles;
 
@@ -14,7 +12,7 @@ internal sealed class VehicleService : IVehicleService
     private readonly IUnitOfWork _unitOfWork;
 
     private List<string> _manufacturerNames = new();
-    private List<Manufacturer> _temporaryManufacturers = new();
+    private readonly List<Manufacturer> _temporaryManufacturers = new();
     public VehicleService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
@@ -127,16 +125,15 @@ internal sealed class VehicleService : IVehicleService
         throw new NotImplementedException();
     }
 
-    public async Task<Vehicle> UpsertManufacturer(Vehicle vehicle)
+    public Task<Vehicle> UpsertManufacturer(Vehicle vehicle)
     {
-        if (!_manufacturerNames.Contains(vehicle.Mh))
-        {
-            var manufacturer = new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N');
-            _temporaryManufacturers.Add(manufacturer);
-            _manufacturerNames.Add(vehicle.Mh);
-        }
+        if (_manufacturerNames.Contains(vehicle.Mh)) return Task.FromResult(vehicle);
+        
+        var manufacturer = new Manufacturer(vehicle.Mh).WithCo2Target(0).WithDerogationStatus('N');
+        _temporaryManufacturers.Add(manufacturer);
+        _manufacturerNames.Add(vehicle.Mh);
 
-        return vehicle;
+        return Task.FromResult(vehicle);
     }
 
     private async Task SaveManufacturers()

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AutoFixture;
+using DfT.ZEV.Common.Exceptions;
 using DfT.ZEV.Core.Application.Processes;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Processes.Models;
@@ -30,7 +31,7 @@ public class ProcessServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        var processType = _fixture.Create<ProcessTypeEnum>();
+        var processType = _fixture.Create<ProcessType>();
         _unitOfWorkMock
             .Setup(u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType),
                 It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
@@ -41,7 +42,7 @@ public class ProcessServiceTests
         // Assert
         result.Id.Should().Be(id);
         result.Type.Should().Be(processType);
-        result.State.Should().Be(ProcessStateEnum.Waiting);
+        result.State.Should().Be(ProcessState.Waiting);
         _unitOfWorkMock.Verify(
             u => u.Processes.AddAsync(It.Is<Process>(p => p.Id == id && p.Type == processType),
                 It.IsAny<CancellationToken>()), Times.Once);
@@ -109,7 +110,7 @@ public class ProcessServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(process);
-        result.State.Should().Be(ProcessStateEnum.Running);
+        result.State.Should().Be(ProcessState.Running);
         _unitOfWorkMock.Verify(u => u.Processes.Update(process), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -131,7 +132,7 @@ public class ProcessServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(process);
-        result.State.Should().Be(ProcessStateEnum.Finished);
+        result.State.Should().Be(ProcessState.Finished);
         _unitOfWorkMock.Verify(u => u.Processes.Update(process), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -152,7 +153,7 @@ public class ProcessServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(process);
-        result.State.Should().Be(ProcessStateEnum.Failed);
+        result.State.Should().Be(ProcessState.Failed);
         _unitOfWorkMock.Verify(u => u.Processes.Update(process), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -166,7 +167,7 @@ public class ProcessServiceTests
             .ReturnsAsync((Process)null);
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () => await _processService.StartProcessAsync(id));
+        Assert.ThrowsAsync<HandlerException>(async () => await _processService.StartProcessAsync(id));
     }
 
     [Test]
@@ -178,7 +179,7 @@ public class ProcessServiceTests
             .ReturnsAsync((Process)null);
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () => await _processService.FinishProcessAsync(id));
+        Assert.ThrowsAsync<HandlerException>(async () => await _processService.FinishProcessAsync(id));
     }
 
     [Test]
@@ -190,6 +191,6 @@ public class ProcessServiceTests
             .ReturnsAsync((Process)null);
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () => await _processService.FailProcessAsync(id));
+        Assert.ThrowsAsync<HandlerException>(async () => await _processService.FailProcessAsync(id));
     }
 }
