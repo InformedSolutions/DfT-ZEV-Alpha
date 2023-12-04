@@ -30,7 +30,7 @@ public class Notification
     /// <summary>
     /// Gets or sets list of parameters used to replace template placeholders.
     /// </summary>
-    public Dictionary<string, string> TemplateParameters { get; set; } = new Dictionary<string, string>();
+    public Dictionary<string, dynamic> TemplateParameters { get; set; } = new Dictionary<string, dynamic>();
 
     /// <summary>
     /// Gets or sets notification type eg. ApplicationResponse, PasswordReset etc.

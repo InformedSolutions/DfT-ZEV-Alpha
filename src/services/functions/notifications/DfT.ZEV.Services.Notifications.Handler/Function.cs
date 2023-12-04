@@ -1,19 +1,12 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Models;
+using DfT.ZEV.Common.Services;
 using Google.Cloud.Functions.Framework;
 using Google.Cloud.Functions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Serilog.Context;
-using DfT.ZEV.Core.Domain.Processes.Services;
-using DfT.ZEV.Core.Domain.Processes.Values;
-using DfT.ZEV.Core.Infrastructure.Persistence;
 using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Services.Notifications.Handler;
@@ -26,9 +19,12 @@ public class Function : IHttpFunction
 {
     private readonly ILogger<Function> _logger;
 
-    public Function(ILogger<Function> logger)
+    private readonly INotificationsService _notificationsService;
+
+    public Function(ILogger<Function> logger, INotificationsService notificationsService)
     {
         _logger = logger;
+        _notificationsService = notificationsService;
     }
 
     /// <summary>
@@ -36,11 +32,9 @@ public class Function : IHttpFunction
     /// </summary>
     public async Task HandleAsync(HttpContext context)
     {
-        throw new NotImplementedException();
-    }
-
-    private async Task Run(HttpContext context)
-    {
-        throw new NotImplementedException();
+        using TextReader reader = new StreamReader(context.Request.Body);
+        var json = await reader.ReadToEndAsync();
+        var notification = JsonSerializer.Deserialize<Notification>(json);
+        var result = _notificationsService.SendNotification(notification);
     }
 }
