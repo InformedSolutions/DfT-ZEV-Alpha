@@ -11,19 +11,10 @@ namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 [Route("account")]
 public partial class AccountController : Controller
 {
-    private readonly ISignInService _signInService;
-    private readonly ISignOutService _signOutService;
-    private readonly IForgottenPasswordService _resetPasswordService;
 
-
-    public AccountController(
-        ISignInService signInService,
-        ISignOutService signOutService,
-        IForgottenPasswordService resetPasswordService)
+    public AccountController()
     {
-        _signInService = signInService;
-        _signOutService = signOutService;
-        _resetPasswordService = resetPasswordService;
+       
     }
 
     public IActionResult Index()
@@ -34,11 +25,11 @@ public partial class AccountController : Controller
     [HttpGet("sign-in")]
     public IActionResult SignIn([FromQuery] string message)
     {
-        if (User.Identity.IsAuthenticated
-            && User.Identity.AuthenticationType != BasicAuthenticationDefaults.AuthenticationScheme)
-        {
-            return Redirect("/");
-        }
+        //if (User.Identity.IsAuthenticated
+        //    && User.Identity.AuthenticationType != BasicAuthenticationDefaults.AuthenticationScheme)
+        //{
+        //    return Redirect("/");
+        //}
 
         if (!string.IsNullOrEmpty(message))
         {
@@ -57,9 +48,9 @@ public partial class AccountController : Controller
             return View(viewModel);
         }
 
-        var result = await _signInService.SignIn(viewModel);
+        //var result = await _signInService.SignIn(viewModel);
 
-        if (result.ForceInitialPasswordSet)
+        /*if (result.ForceInitialPasswordSet)
         {
             TempData["UserEmailSignInAttempt"] = viewModel.Email;
             return RedirectToAction(nameof(SetInitialPassword));
@@ -80,7 +71,7 @@ public partial class AccountController : Controller
 
             viewModel.CleanPassword();
             return View(viewModel);
-        }
+        }*/
 
         return !string.IsNullOrEmpty(returnUrl) ? LocalRedirect(returnUrl) : RedirectToAction("Index", "Home");
     }
@@ -94,7 +85,7 @@ public partial class AccountController : Controller
     [HttpPost("sign-out")]
     public async Task<IActionResult> Logout()
     {
-        await _signOutService.SignOut();
+        //await _signOutService.SignOut();
 
         return RedirectToAction(nameof(SignOutPage));
     }

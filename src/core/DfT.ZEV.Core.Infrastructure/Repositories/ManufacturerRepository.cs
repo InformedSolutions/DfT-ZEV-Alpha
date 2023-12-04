@@ -23,7 +23,14 @@ internal sealed class ManufacturerRepository : IManufacturerRepository
 
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<Manufacturer>> GetAllAsync(CancellationToken cancellationToken = default)
-        => await _context.Manufacturers.ToListAsync(cancellationToken);
+        => await _context.Manufacturers.Include(x => x.UserBridges).ToListAsync(cancellationToken);
+    
+    /// <inheritdoc/>
+    public async ValueTask<IEnumerable<Manufacturer>> SearchAsync(string term, CancellationToken cancellationToken = default)
+        => await _context.Manufacturers.Include(x => x.UserBridges)
+            .Where(x => x.Name.ToLower().Contains(term.ToLower()))
+            .ToListAsync(cancellationToken);
+
 
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<Manufacturer>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default)

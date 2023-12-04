@@ -50,6 +50,9 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
             .GeneratePasswordResetLinkAsync(user.Email);
     }
-     
-    
+
+    public async Task AuthorizeUser(string username, string password)
+    {
+       throw new NotImplementedException();
+    }
 }

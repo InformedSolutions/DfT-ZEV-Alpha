@@ -1,0 +1,42 @@
+@using DfT.ZEV.Core.Domain.Manufacturers.Models
+@model DfT.ZEV.Administration.Web.Models.OrganizationsViewModel
+
+@{
+    ViewData["Title"] = "Organizations";
+    ViewData["ActivePage"] = "Organizations";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-s">
+            <a class="govuk-link" asp-action="Index" asp-controller="Home">Placeholder</a>
+        </h2>
+        <p class="govuk-body-s">
+            Organizations page
+        </p>
+        @using (Html.BeginForm())
+        {
+            <govuk-input asp-for="@Model.SearchTerm" inputmode="text" autocomplete="true" data-test="signin-email">
+                <govuk-input-label>Search term</govuk-input-label>
+            </govuk-input>
+            
+            <govuk-button type="submit" data-test="search">Search</govuk-button>
+        }
+
+        <table>
+            <tr>
+                <th>Manufacturer name</th>
+                <th>Number of accounts</th>
+                <th>Action</th>
+              </tr>
+            @foreach (Manufacturer manufacturer in Model.Manufacturers)
+            {
+                <tr>
+                    <td>@manufacturer.Name</td>
+                    <td>@manufacturer.UserBridges.Count</td>
+                    <td>Manage accounts</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
