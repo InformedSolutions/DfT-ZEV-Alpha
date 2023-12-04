@@ -54,8 +54,10 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             .GeneratePasswordResetLinkAsync(user.Email);
     }
 
-    public async Task<string> AuthorizeUser(string username, string password)
-        => (await _googleIdentityApiClient.Authorize(username, password,
-            _googleCloudConfiguration.Value.Tenancy.Manufacturers)).IdToken;
-    
+    public async Task<AuthorizationResponse> AuthorizeUser(string username, string password)
+        => await _googleIdentityApiClient.Authorize(username, password,
+            _googleCloudConfiguration.Value.Tenancy.Manufacturers);
+
+    public async Task<RefreshTokenResponse> RefreshUser(string refreshToken)
+        => await _googleIdentityApiClient.RefreshToken(refreshToken);
 }

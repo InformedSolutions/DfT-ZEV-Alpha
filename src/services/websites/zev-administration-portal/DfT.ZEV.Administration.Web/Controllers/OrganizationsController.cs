@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
 using DfT.ZEV.Core.Domain.Abstractions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DfT.ZEV.Administration.Web.Controllers;
@@ -12,11 +13,12 @@ public class OrganizationsController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMediator _mediator;
-    
-    public OrganizationsController(IMediator mediator, IUnitOfWork unitOfWork)
+    private readonly IAuthorizationService _authorizationService;
+    public OrganizationsController(IMediator mediator, IUnitOfWork unitOfWork, IAuthorizationService authorizationService)
     {
         _mediator = mediator;
         _unitOfWork = unitOfWork;
+        _authorizationService = authorizationService;
     }
     
     [HttpGet]
@@ -34,5 +36,23 @@ public class OrganizationsController : Controller
         var manufacturers = await  _unitOfWork.Manufacturers.SearchAsync(model.SearchTerm);
         var dto = new OrganizationsViewModel() { Manufacturers = manufacturers.OrderByDescending(x => x.UserBridges.Count).ToList() };
         return this.View(dto);
+    }
+
+    [HttpGet("test")]
+    public async Task<IActionResult> Test()
+    {
+        var claims = User.Claims.ToList();
+        if(claims.Any())
+        {
+            return this.View(new TestViewModel()
+            {
+                IsAuthorized = true,
+                Name = claims.FirstOrDefault(x => x.Type == "email")?.Value
+            });
+        }
+        return this.View(new TestViewModel()
+        {
+            IsAuthorized = false
+        });
     }
 }

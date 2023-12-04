@@ -98,7 +98,7 @@ public class Startup
 
         var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
         services.ConfigureGoogleCloudSettings(this.Configuration);
-        services.AddIdentityPlatform();
+        services.AddIdentityPlatform(Configuration);
         services.AddDbContextPool<AppDbContext>(opt =>
         {
             // This causes errors while working in multi-threaded processing, need to deep dive this topic
@@ -108,6 +108,8 @@ public class Startup
         });
         services.AddApplication();
         services.AddRepositories();
+
+        
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
         services.AddScoped<IBusinessEventLogger, BusinessEventLogger>();
@@ -136,7 +138,7 @@ public class Startup
         app.UseExceptionHandler("/Error/500");
         app.UseMiddleware<WebsiteExceptionMiddleware>();
         app.UseMiddleware<CorrelationIdLoggerMiddleware>();
-
+        app.UseIdentity();
         var allowedHostnames = Configuration.GetValue<string>("AllowedHostnames").Split(",");
 
         app.UseAllowedHostFilteringMiddleware(new HostFilteringOptions

@@ -21,7 +21,7 @@ public static class Setup
 
         builder.Services.AddSwaggerGen();
         builder.Services.ConfigureGoogleCloudSettings(builder.Configuration);
-        builder.Services.AddIdentityPlatform();
+        builder.Services.AddIdentityPlatform(builder.Configuration);
         builder.Services.AddTransient<RestExceptionHandlerMiddleware>();
         
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));

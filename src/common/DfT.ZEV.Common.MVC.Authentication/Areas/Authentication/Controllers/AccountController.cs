@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
@@ -26,6 +28,21 @@ public partial class AccountController : Controller
         return RedirectToAction(nameof(SignIn));
     }
 
+    [HttpGet("details")]
+    public IActionResult Details()
+    {
+        var claims = User.Claims.ToList();
+        if (claims.Any())
+        {
+            return this.View(new AccountDetails()
+            {
+                Email = claims.FirstOrDefault(x => x.Type == "email")?.Value
+            });
+        }
+        
+        return Redirect("~/");
+    }
+    
     [HttpGet("sign-in")]
     public IActionResult SignIn([FromQuery] string message)
     {
@@ -51,7 +68,19 @@ public partial class AccountController : Controller
             viewModel.CleanPassword();
             return View(viewModel);
         }
-        var result = await _identityPlatform.AuthorizeUser(viewModel.Email, viewModel.Password);
+
+        try
+        {
+            var result = await _identityPlatform.AuthorizeUser(viewModel.Email, viewModel.Password);
+            HttpContext.Session.SetString("Token",result.IdToken);
+            HttpContext.Session.SetString("RefreshToken",result.RefreshToken);
+
+
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
         _logger.LogInformation("User {Email} signed in successfully", viewModel.Email);
         //var result = await _signInService.SignIn(viewModel);
 
@@ -59,31 +88,20 @@ public partial class AccountController : Controller
         {
             TempData["UserEmailSignInAttempt"] = viewModel.Email;
             return RedirectToAction(nameof(SetInitialPassword));
-        }
-
-        if (result.ForcePasswordChange)
-        {
-            TempData["UserEmailSignInAttempt"] = viewModel.Email;
-            return RedirectToAction(nameof(ChangeExpiredPassword));
-        }
-
-        if (!result.Succeeded)
-        {
-            foreach (var (key, value) in result.Errors)
-            {
-                ModelState.AddModelError(key, value);
-            }
-
-            viewModel.CleanPassword();
-            return View(viewModel);
         }*/
 
-        return !string.IsNullOrEmpty(returnUrl) ? LocalRedirect(returnUrl) : RedirectToAction("Index", "Home");
+        //return !string.IsNullOrEmpty(returnUrl) ? LocalRedirect(returnUrl) : RedirectToAction("Index", "Home");
+        //return RedirectToPage("/Index");
+        
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet("sign-out")]
     public IActionResult SignOutPage()
     {
+        HttpContext.Session.Remove("Token");
+        HttpContext.Session.Remove("RefreshToken");
+
         return View();
     }
 
@@ -91,7 +109,8 @@ public partial class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         //await _signOutService.SignOut();
-
+        HttpContext.Session.Remove("Token");
+        HttpContext.Session.Remove("RefreshToken");
         return RedirectToAction(nameof(SignOutPage));
     }
 
