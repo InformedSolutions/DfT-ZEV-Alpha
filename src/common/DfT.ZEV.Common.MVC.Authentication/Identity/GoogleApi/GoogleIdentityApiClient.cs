@@ -11,8 +11,8 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
-    private readonly string _verifyPasswordUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
-
+    private const string VerifyPasswordUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
+    private const string RefreshTokenUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
     public GoogleIdentityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
     {
         _googleCloudConfiguration = googleCloudConfiguration;
@@ -21,7 +21,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
 
     public async Task<AuthorizationResponse> Authorize(string mail, string password, string tenantId)
     {
-        var apiUrl = string.Format(_verifyPasswordUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
+        var apiUrl = string.Format(VerifyPasswordUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
         
         var request = new AuthorizationRequest()
         {
@@ -42,5 +42,35 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
             throw new Exception($"Google API returned status code {result.StatusCode}");
         
         return JsonConvert.DeserializeObject<AuthorizationResponse>(await result.Content.ReadAsStringAsync());
+    }
+
+    public async Task<RefreshTokenResponse> RefreshToken(string token)
+    {
+        var apiUrl = string.Format(RefreshTokenUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
+        var request = new RefreshTokenRequest()
+        {
+            RefreshToken = token
+        };
+        
+        var requestJson = JsonConvert.SerializeObject(request, new JsonSerializerSettings()
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy()
+            },
+        });
+        
+        var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+        
+        if(result.StatusCode != HttpStatusCode.OK)
+            throw new Exception($"Google API returned status code {result.StatusCode}");
+
+        return JsonConvert.DeserializeObject<RefreshTokenResponse>(await result.Content.ReadAsStringAsync(), new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy()
+            }
+        });
     }
 }
