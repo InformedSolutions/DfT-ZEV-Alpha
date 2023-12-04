@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
@@ -9,11 +10,11 @@ namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 internal sealed class IdentityPlatform : IIdentityPlatform
 {
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
-    private readonly IGoogleApiClient _googleApiClient;
-    public IdentityPlatform(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IGoogleApiClient googleApiClient)
+    private readonly IGoogleIdentityApiClient _googleIdentityApiClient;
+    public IdentityPlatform(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IGoogleIdentityApiClient googleIdentityApiClient)
     {
         _googleCloudConfiguration = googleCloudConfiguration;
-        _googleApiClient = googleApiClient;
+        _googleIdentityApiClient = googleIdentityApiClient;
 
         if(FirebaseApp.DefaultInstance == null)
         {
@@ -54,7 +55,7 @@ internal sealed class IdentityPlatform : IIdentityPlatform
     }
 
     public async Task<string> AuthorizeUser(string username, string password)
-        => (await _googleApiClient.Authorize(username, password,
+        => (await _googleIdentityApiClient.Authorize(username, password,
             _googleCloudConfiguration.Value.Tenancy.Manufacturers)).IdToken;
     
 }

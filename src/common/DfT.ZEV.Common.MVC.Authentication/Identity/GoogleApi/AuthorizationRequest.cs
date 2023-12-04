@@ -1,6 +1,4 @@
-using Newtonsoft.Json;
-
-namespace DfT.ZEV.Common.MVC.Authentication.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 
 public class AuthorizationRequest
 {
