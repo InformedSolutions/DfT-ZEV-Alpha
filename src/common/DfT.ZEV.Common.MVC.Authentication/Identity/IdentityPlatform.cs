@@ -1,12 +1,8 @@
-using System.Text;
 using DfT.ZEV.Common.Configuration;
-using Firebase.Auth;
-using Firebase.Auth.Providers;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Options;
-using UserCredential = Firebase.Auth.UserCredential;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 

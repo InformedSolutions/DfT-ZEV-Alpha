@@ -7,13 +7,13 @@ using Newtonsoft.Json.Serialization;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 
-public class GoogleApiClient : IGoogleApiClient
+public class GoogleIndetityApiClient : IGoogleIndetityApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
     private readonly string _verifyPasswordUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
 
-    public GoogleApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
+    public GoogleIndetityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
     {
         _googleCloudConfiguration = googleCloudConfiguration;
         _httpClient = httpClient;

@@ -1,4 +1,3 @@
-using Firebase.Auth;
 using FirebaseAdmin.Auth;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Identity;
