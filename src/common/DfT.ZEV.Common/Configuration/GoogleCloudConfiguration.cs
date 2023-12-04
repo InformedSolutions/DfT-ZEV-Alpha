@@ -11,6 +11,6 @@ public class GoogleCloudConfiguration
     public const string SectionName = "GoogleCloud";
 
     public string ProjectId { get; set; } = null!;
-    
+    public string ApiKey { get; set; } = null!;
     public TenancyConfiguration Tenancy { get; set; } = null!;
 }

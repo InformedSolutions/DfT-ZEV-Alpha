@@ -4,6 +4,8 @@ using idunno.Authentication.Basic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using DfT.ZEV.Common.MVC.Authentication.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -11,10 +13,12 @@ namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 [Route("account")]
 public partial class AccountController : Controller
 {
-
-    public AccountController()
+    private readonly IIdentityPlatform _identityPlatform;
+    private readonly ILogger<AccountController> _logger;
+    public AccountController(IIdentityPlatform identityPlatform, ILogger<AccountController> logger)
     {
-       
+        _identityPlatform = identityPlatform;
+        _logger = logger;
     }
 
     public IActionResult Index()
@@ -47,7 +51,8 @@ public partial class AccountController : Controller
             viewModel.CleanPassword();
             return View(viewModel);
         }
-
+        var result = await _identityPlatform.AuthorizeUser(viewModel.Email, viewModel.Password);
+        _logger.LogInformation("User {Email} signed in successfully", viewModel.Email);
         //var result = await _signInService.SignIn(viewModel);
 
         /*if (result.ForceInitialPasswordSet)

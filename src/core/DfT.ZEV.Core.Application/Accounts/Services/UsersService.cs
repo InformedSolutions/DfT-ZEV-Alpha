@@ -35,8 +35,9 @@ internal sealed class UsersService : IUsersService
         _logger.LogInformation("Generate password reset link for user {Id}: {ResetLink}", user.Id, resetLink);
     }
 
-    public Task<string> AuthorizeUser(string username, string password)
+    public async Task<string> AuthorizeUser(string username, string password)
     {
-        throw new NotImplementedException();
+        var token = await _identityPlatform.AuthorizeUser(username, password);
+        return token;
     }
 }
