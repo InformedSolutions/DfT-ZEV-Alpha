@@ -4,10 +4,7 @@
     ViewData["ActivePage"] = "Home";
 }
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <p class="govuk-body-s">
-            Email: @Model.Email
-        </p>
-    </div>
-</div>
+<h1 class="govuk-heading-l">Account details</h1>
+
+<p>Mail: @Model.IdentityAccountDetails.Email</p>
+<p>Name: @Model.IdentityAccountDetails.Name</p>

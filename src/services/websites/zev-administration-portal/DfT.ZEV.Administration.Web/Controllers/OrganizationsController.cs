@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfT.ZEV.Administration.Web.Controllers;
 
+[Authorize]
 [Route("organization")]
 public class OrganizationsController : Controller
 {

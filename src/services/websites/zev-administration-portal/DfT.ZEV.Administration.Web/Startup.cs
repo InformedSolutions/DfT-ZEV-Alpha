@@ -193,7 +193,7 @@ public class Startup
 
         app.UseRouting();
 
-        // app.UseAuthentication();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseSession();

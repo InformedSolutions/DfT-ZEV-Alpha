@@ -37,7 +37,8 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
         });
         
         var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-        
+        var contents = await result.Content.ReadAsStringAsync();
+
         if(result.StatusCode != HttpStatusCode.OK)
             throw new Exception($"Google API returned status code {result.StatusCode}");
         

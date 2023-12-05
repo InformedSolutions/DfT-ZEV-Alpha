@@ -34,7 +34,7 @@ public partial class AccountController : Controller
         {
             return this.View(new AccountDetails()
             {
-                Email = claims.FirstOrDefault(x => x.Type == "email")?.Value
+               IdentityAccountDetails = User.GetAccountDetails()
             });
         }
         
@@ -74,13 +74,12 @@ public partial class AccountController : Controller
             HttpContext.Session.SetString("RefreshToken",result.RefreshToken);
 
             return RedirectToAction("Index", "Home");
-
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error signing in user {Email}", viewModel.Email);
             viewModel.CleanPassword();
-            ViewData["message"] = "InvalidCredentials";
-
+            ModelState.AddModelError(string.Empty, "The email or password you entered is incorrect");
             return View();
         }
         _logger.LogInformation("User {Email} signed in successfully", viewModel.Email);

@@ -1,3 +1,4 @@
+using System.Net;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,10 +21,13 @@ public static class IdentityExtensions
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddCookie("Cookie")
+            })
             .AddJwtBearer(options =>
             {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = googleConfig.Token.Issuer,
@@ -31,7 +35,8 @@ public static class IdentityExtensions
                     ValidAudience = googleConfig.Token.Audience,
                     ValidateAudience = true,
                 };
-            });
+            })
+           ;
 
         services.AddTransient<TokenMiddleware>();
         services.AddHttpClient<IGoogleIdentityApiClient, GoogleIdentityApiClient>();
@@ -53,6 +58,15 @@ public static class IdentityExtensions
             await next();
         });
         app.UseMiddleware<TokenMiddleware>();
+        app.UseStatusCodePages(async context => {
+            var request = context.HttpContext.Request;
+            var response = context.HttpContext.Response;
+
+            if (response.StatusCode == (int)HttpStatusCode.Unauthorized)   
+            {
+                response.Redirect("/account/sign-in");
+            }
+        });
         app.UseAuthentication();
         app.UseAuthorization();
         

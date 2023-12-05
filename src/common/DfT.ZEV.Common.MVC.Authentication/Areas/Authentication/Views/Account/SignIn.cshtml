@@ -44,14 +44,6 @@
     </NotificationBannerViewComponent>
 }
 
-@if (ViewData["message"] as string == "InvalidCredentials")
-{
-    <NotificationBannerViewComponent
-        banner-type="success"
-        body="The email address or password you entered is incorrect.">
-    </NotificationBannerViewComponent>
-}
-
 
 <h1 class="govuk-heading-l">@pageTitle</h1>
 
@@ -64,11 +56,7 @@
     <govuk-input asp-for="@Model.Password" type="password" autocomplete="true" data-test="signin-password">
         <govuk-input-label>Password</govuk-input-label>
     </govuk-input>
-    if (ViewData["message"] as string == "InvalidCredentials")
-    {
-        <p>Could not log in</p>
-    }
-
+    
     @Html.HiddenFor(m => m.UserId)
 
     @if (isUserPasswordManagementEnabled)
