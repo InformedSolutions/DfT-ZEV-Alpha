@@ -30,4 +30,5 @@ variable "max_instance_count" {
 variable "source_commit_hash" {
   description = "The docker image to deploy"
   type        = string
+  default     = "latest"
 }

@@ -22,8 +22,9 @@ variable "environment" {
 }
 
 variable "source_commit_hash" {
-  description = "The docker image to deploy"
+  description = "The source commit hash of the function being deployed"
   type        = string
+  default     = "latest"
 }
 
 variable "notifications_svc_resource_quotas" {

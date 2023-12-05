@@ -24,4 +24,5 @@ variable "environment" {
 variable "source_commit_hash" {
   description = "The docker image to deploy"
   type        = string
+  default     = "latest"
 }

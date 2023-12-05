@@ -48,4 +48,5 @@ variable "compliance_calculation_svc_max_db_connections" {
 variable "source_commit_hash" {
   description = "The source commit hash of the function being deployed"
   type        = string
+  default     = "latest"
 }
