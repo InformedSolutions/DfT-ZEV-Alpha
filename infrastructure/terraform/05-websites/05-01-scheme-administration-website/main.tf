@@ -23,6 +23,8 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
         container_port = 80
       }
 
+      # TODO: Add startup and liveness probe
+
       env {
         name  = "DEPLOYED_AT"
         value = local.deployed_at
@@ -39,7 +41,40 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
         value = true
       }
 
-      # TODO: Add startup and liveness probe
+      env {
+        name  = "Services__OrganisationApiBaseUrl"
+        value = data.terraform_remote_state.organisation_api.outputs.service_url
+      }
+
+      env {
+        name  = "GoogleCloud__ProjectId"
+        value = var.project
+      }
+
+      env {
+        name  = "GoogleCloud__ApiKey"
+        value = "TODO" # TODO: fill or switch to IAM
+      }
+
+      env {
+        name  = "GoogleCloud__Tenancy__Admin"
+        value = "TODO" # TODO: use valid value
+      }
+
+      env {
+        name  = "GoogleCloud__Tenancy__Manufacturers"
+        value = "TODO" # TODO: use valid value
+      }
+
+      env {
+        name  = "GoogleCloud__Token__Issuer"
+        value = "TODO" # TODO: use valid value
+      }
+
+      env {
+        name  = "GoogleCloud__Token__Audience"
+        value = "TODO" # TODO: use valid value
+      }
     }
   }
 
