@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DfT.ZEV.Common.Models;
 using DfT.ZEV.Common.Services;
@@ -32,9 +33,18 @@ public class Function : IHttpFunction
     /// </summary>
     public async Task HandleAsync(HttpContext context)
     {
+        _logger.LogDebug("Deserialising request payload");
         using TextReader reader = new StreamReader(context.Request.Body);
         var json = await reader.ReadToEndAsync();
-        var notification = JsonSerializer.Deserialize<Notification>(json);
+        
+        var jsonSerializerOptions = new JsonSerializerOptions() {
+            PropertyNameCaseInsensitive = true
+        };
+        
+        jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+        var notification = JsonSerializer.Deserialize<Notification>(json, jsonSerializerOptions);
+        _logger.LogDebug("Invoking service layer");
         var result = _notificationsService.SendNotification(notification);
     }
 }
