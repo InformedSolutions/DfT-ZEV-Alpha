@@ -58,8 +58,8 @@ resource "null_resource" "docker_build" {
     command     = "make docker-build && make docker-push"
 
     environment = {
-      REGISTRY_URL = data.terraform_remote_state.backends.outputs.image_repository_url
-      COMMIT_HASH  = var.source_commit_hash
+      REGISTRY_URL       = data.terraform_remote_state.backends.outputs.image_repository_url
+      SOURCE_COMMIT_HASH = var.source_commit_hash
     }
   }
 }
