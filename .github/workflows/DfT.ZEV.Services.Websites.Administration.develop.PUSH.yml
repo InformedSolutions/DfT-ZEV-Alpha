@@ -57,6 +57,10 @@ jobs:
       with:
         terraform_version: 1.6.3
 
+    - name: Docker build
+      working-directory: ./src/services/websites/zev-administration-portal
+      run: make docker-build      
+
     - name: Terraform init
       run: make init
 
