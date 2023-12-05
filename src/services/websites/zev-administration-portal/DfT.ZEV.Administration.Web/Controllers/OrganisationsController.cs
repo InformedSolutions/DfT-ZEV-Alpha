@@ -1,63 +1,59 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
-using DfT.ZEV.Common.Services.Clients;
 using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
-using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
-using DfT.ZEV.Core.Domain.Abstractions;
-using MediatR;
+using DfT.ZEV.Core.Application.Clients;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace DfT.ZEV.Administration.Web.Controllers;
 
 [Authorize]
-[Route("organization")]
-public class OrganizationsController : Controller
+[Route("organisation")]
+public class OrganisationsController : Controller
 {
-    private readonly OrganizationApiClient _organizationApi;
-    public OrganizationsController(OrganizationApiClient organizationApi)
+    private readonly OrganisationApiClient _organisationApi;
+    public OrganisationsController(OrganisationApiClient organisationApi)
     {
-      
-        _organizationApi = organizationApi;
+        _organisationApi = organisationApi;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var res = await _organizationApi.GetManufacturersAsync("");
-        var dto = new OrganizationsViewModel() { Manufacturers = res.Manufacturers };
+        var res = await _organisationApi.GetManufacturersAsync("");
+        var dto = new OrganisationsViewModel() { Manufacturers = res.Manufacturers };
         return this.View(dto);
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> Index(OrganizationsViewModel model)
+    public async Task<IActionResult> Index(OrganisationsViewModel model)
     {
         model.SearchTerm = model.SearchTerm ?? string.Empty;
-        var res = await _organizationApi.GetManufacturersAsync(model.SearchTerm);
-        var dto = new OrganizationsViewModel() { Manufacturers = res.Manufacturers.ToList() };
+        var res = await _organisationApi.GetManufacturersAsync(model.SearchTerm);
+        var dto = new OrganisationsViewModel() { Manufacturers = res.Manufacturers.ToList() };
         return this.View(dto);
     }
-    
+
     [HttpGet("{id:guid}/manage")]
     public async Task<IActionResult> Manage(Guid id)
     {
-        var manufacturer = await _organizationApi.GetManufacturerByIdAsync(id);
-        if(manufacturer is null)
+        var manufacturer = await _organisationApi.GetManufacturerByIdAsync(id);
+        if (manufacturer is null)
         {
             return this.NotFound();
         }
-        
-        var dto = new ManageOrganizationViewModel()
+
+        var dto = new ManageOrganisationViewModel()
         {
             Id = id,
             Dto = manufacturer
         };
         return this.View(dto);
     }
-    
+
     [HttpGet("{id:guid}/manage/add")]
     public async Task<IActionResult> ManageAddUser(Guid id)
     {
@@ -65,25 +61,25 @@ public class OrganizationsController : Controller
     }
 
     [HttpPost("{id:guid}/manage/add")]
-    public async Task<IActionResult> ManageAddUser(Guid id, ManageOrganizationAddUserModel model)
+    public async Task<IActionResult> ManageAddUser(Guid id, ManageOrganisationAddUserModel model)
     {
         var command = new CreateUserCommand()
         {
             ManufacturerId = id,
             Email = model.Email,
-            PermissionIds = new Guid[] {  }
+            PermissionIds = new Guid[] { }
         };
 
         //var res = await _mediator.Send(command);
-        var res = await _organizationApi.CreateUserAsync(command);
-        return RedirectToAction("Manage", new {id = id});
+        var res = await _organisationApi.CreateUserAsync(command);
+        return RedirectToAction("Manage", new { id = id });
     }
-    
+
     [HttpGet("test")]
     public async Task<IActionResult> Test()
     {
         var claims = User.Claims.ToList();
-        if(claims.Any())
+        if (claims.Any())
         {
             return this.View(new TestViewModel()
             {

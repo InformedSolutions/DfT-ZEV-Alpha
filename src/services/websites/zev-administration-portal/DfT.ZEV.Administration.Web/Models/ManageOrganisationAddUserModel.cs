@@ -1,6 +1,6 @@
 namespace DfT.ZEV.Administration.Web.Models;
 
-public class ManageOrganizationAddUserModel
+public class ManageOrganisationAddUserModel
 {
     public string Email { get; set; }
 }

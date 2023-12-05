@@ -5,10 +5,12 @@ using DfT.ZEV.Administration.Web.Extensions.TagHelpers;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Middlewares;
+using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Core.Application;
+using DfT.ZEV.Core.Application.Clients;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using GovUk.Frontend.AspNetCore;
@@ -23,15 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Serilog;
-using System.Collections.Generic;
-using System.Web;
-using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Common.Middlewares;
-using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
-using DfT.ZEV.Common.Security;
-using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
-using DfT.ZEV.Common.Services;
+
 
 namespace DfT.ZEV.Administration.Web;
 

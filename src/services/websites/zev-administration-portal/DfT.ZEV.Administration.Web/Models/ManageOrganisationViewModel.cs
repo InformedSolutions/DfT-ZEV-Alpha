@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
+
 
 namespace DfT.ZEV.Administration.Web.Models;
 
-public class ManageOrganizationViewModel
+public class ManageOrganisationViewModel
 {
     public GetManufacturerByIdQueryDto Dto { get; set; }
     public Guid Id { get; set; }
