@@ -30,6 +30,7 @@ variable "govuk_notify_api_key" {
   description = "GOV.UK Notify API key"
   type        = string
   default     = "replace"
+  sensitive   = true
 }
 
 variable "notifications_svc_resource_quotas" {
