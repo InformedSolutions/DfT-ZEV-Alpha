@@ -22,3 +22,8 @@ output "app_data_buckets" {
     manufacturer_data_bucket_id = google_storage_bucket.manufacturer_data.id
   }
 }
+
+output "image_repository_url" {
+  description = "The URL of the Docker image repository"
+  value       = "${google_artifact_registry_repository.image_repository.location}-docker.pkg.dev/${google_artifact_registry_repository.image_repository.project}/${google_artifact_registry_repository.image_repository.repository_id}"
+}
