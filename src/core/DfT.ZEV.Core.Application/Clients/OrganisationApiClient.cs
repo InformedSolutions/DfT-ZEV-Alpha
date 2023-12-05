@@ -1,51 +1,35 @@
-using System.Net.Http.Json;
 using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetAllManufacturers;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
-using Newtonsoft.Json;
+using DfT.ZEV.Common.HttpClients;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace DfT.ZEV.Core.Application.Clients;
 
-public class OrganisationApiClient
+public class OrganisationApiClient : BaseHttpClient
 {
-    private readonly HttpClient _httpClient;
-    
-    public OrganisationApiClient(HttpClient httpClient) => _httpClient = httpClient;
+    public OrganisationApiClient(
+        HttpClient httpClient,
+        ILogger<OrganisationApiClient> logger,
+        IHttpContextAccessor httpContextAccessor)
+        : base(httpClient, logger, httpContextAccessor)
+    {
+    }
 
     public async Task<GetAllManufacturersQueryResponse?> GetManufacturersAsync(string search)
     {
-        var response = await _httpClient.GetAsync($"manufacturers?search={search}");
-        if (response.IsSuccessStatusCode)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            var res =  JsonConvert.DeserializeObject<GetAllManufacturersQueryResponse>(content); 
-            return res;
-        }
-        return null;
+        return await GetAsync<GetAllManufacturersQueryResponse>($"manufacturers?search={search}");
     }
     
     public async Task<GetManufacturerByIdQueryDto?> GetManufacturerByIdAsync(Guid id)
     {
-        var response = await _httpClient.GetAsync($"manufacturers/{id}");
-        if (response.IsSuccessStatusCode)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            var res =  JsonConvert.DeserializeObject<GetManufacturerByIdQueryDto>(content); 
-            return res;
-        }
-        return null;
+        return await GetAsync<GetManufacturerByIdQueryDto?>($"manufacturers/{id}");
     }
     
     public async Task<CreateUserCommandResponse?> CreateUserAsync(CreateUserCommand request)
     {
-        var response = await _httpClient.PostAsJsonAsync("accounts", request);
-        if (response.IsSuccessStatusCode)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            var res =  JsonConvert.DeserializeObject<CreateUserCommandResponse>(content); 
-            return res;
-        }
-        return null;
+        return await PostAsync<CreateUserCommandResponse?, CreateUserCommand>("accounts", request);        
     }
     
     // public async Task<AuthorizationResponse> AuthorizeUser(AuthorizationRequest request)
