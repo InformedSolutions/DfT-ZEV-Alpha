@@ -6,7 +6,6 @@ using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisations.Api.Features.Accounts;
-using DfT.ZEV.Services.Organisations.Api.Features.Auth;
 using DfT.ZEV.Services.Organisations.Api.Features.Manufacturers;
 using DfT.ZEV.Services.Organisations.Api.Features.Permissions;
 using Microsoft.AspNetCore.Http.Json;
