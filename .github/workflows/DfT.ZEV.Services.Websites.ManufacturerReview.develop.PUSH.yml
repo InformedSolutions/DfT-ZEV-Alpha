@@ -63,4 +63,4 @@ jobs:
       run: make init
 
     - name: Deploy
-      run: make apply
+      run: terraform apply -var-file="../../configuration/environments/${DEPLOY_ENVIRONMENT}.tfvars"
