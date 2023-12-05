@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
@@ -59,24 +60,26 @@ public class OrganizationsController : Controller
         return this.View(dto);
     }
     
-    [HttpPost("{guid:id}/manage")]
-    public async Task<IActionResult> ManageAddUser(Guid id, ManageOrganizationViewModel model)
+    [HttpGet("{id:guid}/manage/add")]
+    public async Task<IActionResult> ManageAddUser(Guid id)
     {
-        if(model.UserEmail is null || string.IsNullOrEmpty(model.UserEmail))
-            this.View()
-        var command = new CreateUserCommand()
-        {
-            Email = model.UserEmail,
-            ManufacturerId = id,
-            PermissionIds = model.UserPermissionIds.ToArray()
-        };
-        
-        var res = await  _mediator.Send(command);
-        
         return View();
     }
 
+    [HttpPost("{id:guid}/manage/add")]
+    public async Task<IActionResult> ManageAddUser(Guid id, ManageOrganizationAddUserModel model)
+    {
+        var command = new CreateUserCommand()
+        {
+            ManufacturerId = id,
+            Email = model.Email,
+            PermissionIds = new Guid[] {  }
+        };
 
+        var res = await _mediator.Send(command);
+        return RedirectToAction(nameof(Index));
+    }
+    
     [HttpGet("test")]
     public async Task<IActionResult> Test()
     {

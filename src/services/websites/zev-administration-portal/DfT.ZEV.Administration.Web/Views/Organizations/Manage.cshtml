@@ -16,6 +16,8 @@
         <p class="govuk-heading-s">
             @Model.Id</p>
         
+                <a class="govuk-link" asp-action="ManageAddUser" asp-route-id=@Model.Id asp-controller="Organizations">Add user</a>
+
         <table>
             <tr>
                 <th>Account id</th>
