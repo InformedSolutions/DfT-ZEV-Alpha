@@ -11,3 +11,8 @@ output "vpc_serverless_connector_id" {
   description = "ID of the VPC Serverless Connector"
   value       = google_vpc_access_connector.serverless_connector.id
 }
+
+output "ssl_policy_id" {
+  description = "ID of the default SSL Policy"
+  value       = google_compute_ssl_policy.default.id
+}

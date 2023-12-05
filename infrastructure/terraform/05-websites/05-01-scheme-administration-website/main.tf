@@ -6,7 +6,7 @@ locals {
 resource "google_cloud_run_v2_service" "scheme_administration_portal" {
   name     = "${local.name_prefix}-scheme-administration-portal"
   location = var.region
-  ingress  = "INGRESS_TRAFFIC_INTERNAL_ONLY"
+  ingress  = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 
   template {
     service_account = google_service_account.scheme_administration_portal.email
@@ -19,6 +19,10 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
     containers {
       image = "${data.terraform_remote_state.backends.outputs.image_repository_url}/zev-administration-portal:${var.source_commit_hash}"
 
+      ports {
+        container_port = 80
+      }
+
       env {
         name  = "DEPLOYED_AT"
         value = local.deployed_at
@@ -28,6 +32,14 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
         name  = "BUILDID"
         value = var.source_commit_hash
       }
+
+      # TODO: setup users
+      env {
+        name  = "BasicAuth__IsEnabled"
+        value = true
+      }
+
+      # TODO: Add startup and liveness probe
     }
   }
 
