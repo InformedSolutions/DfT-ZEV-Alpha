@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DfT.ZEV.Common.Enumerations;
@@ -35,14 +37,24 @@ public class NotificationsService : INotificationsService
     {
         try
         {
+            Dictionary<string, dynamic> templateParameters = null;
+
+            if (notification.TemplateParameters != null)
+            {
+                _logger.LogInformation("Reading template parameters from request");
+                templateParameters = notification.TemplateParameters.ToDictionary(k => k.Key, k => (dynamic) k.Value);
+            }
+
             if (notification.NotificationType == NotificationType.EMAIL)
             {
-                return SendEmailNotification(notification);
+                _logger.LogInformation("Handling email dispatch request");
+                return SendEmailNotification(notification, templateParameters);
             }
 
             if (notification.NotificationType == NotificationType.SMS)
             {
-                return SendSmsNotification(notification);
+                _logger.LogInformation("Handling SMS dispatch request");
+                return SendSmsNotification(notification, templateParameters);
             }
 
             throw new ValidationException($"Unrecognised notification type {notification.NotificationType}");
@@ -58,12 +70,14 @@ public class NotificationsService : INotificationsService
     /// Private helper for dispatching notifications of type email.
     /// </summary>
     /// <param name="notification"><see cref="Notification"/>.</param>
+    /// <param name="templateParameters">Parameters to inject into message template placeholders.</param>
     /// <returns>Http status code indicator as to whether the dispatch attempt was successful.</returns>
-    private HttpStatusCode SendEmailNotification(Notification notification)
+    private HttpStatusCode SendEmailNotification(Notification notification, Dictionary<string, dynamic> templateParameters)
     {
         foreach (var recipient in notification.Recipients)
         {
-            var notificationResponse = _notificationClient.SendEmail(recipient, notification.TemplateId.ToString(), notification.TemplateParameters);
+            _logger.LogInformation($"Dispatching email using template id {notification.TemplateId}");
+            var notificationResponse = _notificationClient.SendEmail(recipient, notification.TemplateId.ToString(), templateParameters);
             _logger.LogInformation($"Successfully sent email notification with ID: {notificationResponse.id}");
         }
 
@@ -74,12 +88,14 @@ public class NotificationsService : INotificationsService
     /// Private helper for dispatching notifications of type SMS.
     /// </summary>
     /// <param name="notification"><see cref="Notification"/>.</param>
+    /// <param name="templateParameters">Parameters to inject into message template placeholders.</param>
     /// <returns>Http status code indicator as to whether the dispatch attempt was successful.</returns>
-    private HttpStatusCode SendSmsNotification(Notification notification)
+    private HttpStatusCode SendSmsNotification(Notification notification, Dictionary<string, dynamic> templateParameters)
     {
         foreach (var recipient in notification.Recipients)
         {
-            var notificationResponse = _notificationClient.SendSms(recipient, notification.TemplateId.ToString(), notification.TemplateParameters);
+            _logger.LogInformation($"Dispatching SMS using template id {notification.TemplateId}");
+            var notificationResponse = _notificationClient.SendSms(recipient, notification.TemplateId.ToString(), templateParameters);
             _logger.LogInformation($"Successfully sent SMS notification with ID: {notificationResponse.id}");
         }
 
