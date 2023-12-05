@@ -14,11 +14,8 @@ on:
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: dev
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
-    TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
-    TF_LOG: DEBUG
-    REGISTRY_URL: europe-west1-docker.pkg.dev/informed-zev/dev-zev-repository
+  DEPLOY_ENVIRONMENT: dev
+  TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
   build:

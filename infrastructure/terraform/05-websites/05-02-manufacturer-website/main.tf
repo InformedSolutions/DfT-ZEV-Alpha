@@ -42,4 +42,24 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
       # TODO: Add startup and liveness probe
     }
   }
+
+  depends_on = [
+    null_resource.docker_build,
+  ]
+}
+
+resource "null_resource" "docker_build" {
+  triggers = {
+    always_run = local.deployed_at
+  }
+
+  provisioner "local-exec" {
+    working_dir = "../../../../src/services/websites/manufacturer-data-review-portal"
+    command     = "make docker-build && make docker-push"
+
+    environment = {
+      REGISTRY_URL       = data.terraform_remote_state.backends.outputs.image_repository_url
+      SOURCE_COMMIT_HASH = var.source_commit_hash
+    }
+  }
 }
