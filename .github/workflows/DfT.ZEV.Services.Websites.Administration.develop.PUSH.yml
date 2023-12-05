@@ -15,7 +15,7 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: dev
-    TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
+    TF_VAR_source_commit_hash: ${{ github.sha }}
 
 jobs:
 
