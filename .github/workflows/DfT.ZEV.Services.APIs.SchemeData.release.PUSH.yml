@@ -13,7 +13,6 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: release
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
@@ -62,4 +61,6 @@ jobs:
       run: make init
 
     - name: Deploy
-      run: make apply-auto-approve
+      run: | 
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
+        make apply-auto-approve
