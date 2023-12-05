@@ -1,3 +1,8 @@
+variable "tf_state_bucket" {
+  type        = string
+  description = "Bucket in which terraform state of other layers is held"
+}
+
 variable "region" {
   type        = string
   description = "GCP region to which resources will be deployed."
@@ -14,6 +19,12 @@ variable "environment" {
   type        = string
   description = "Name of the environment."
   nullable    = false
+}
+
+variable "max_instance_count" {
+  type        = number
+  description = "Maximum number of instances to be started."
+  default     = 50
 }
 
 variable "source_commit_hash" {
