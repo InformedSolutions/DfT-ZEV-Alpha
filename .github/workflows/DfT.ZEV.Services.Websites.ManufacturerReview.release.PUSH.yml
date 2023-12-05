@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./infrastructure/terraform/05-websites/05-02-manufacturer-data-review-website
+        working-directory: ./infrastructure/terraform/05-websites/05-02-manufacturer-website
     steps:
     - uses: actions/checkout@v2
     - name: Authenticate to Google Cloud

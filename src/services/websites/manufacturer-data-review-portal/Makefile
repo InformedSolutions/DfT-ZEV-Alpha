@@ -13,7 +13,13 @@ clean-build:
 	cd DfT.ZEV.ManufacturerReview.Web && clean build
 
 docker-build:
-	cd ../../../.. && docker build -f DfT.ZEV.ManufacturerReview.Dockerfile -t zev-manufacturer-review .
+	cd ../../../.. && docker build -f DfT.ZEV.ManufacturerReview.Dockerfile -t zev-manufacturer-portal .
+
+docker-push:
+	docker tag zev-manufacturer-portal ${REGISTRY_URL}/zev-manufacturer-portal:${SOURCE_COMMIT_HASH}
+	docker push ${REGISTRY_URL}/zev-manufacturer-portal:${SOURCE_COMMIT_HASH}
+	docker tag zev-manufacturer-portal ${REGISTRY_URL}/zev-manufacturer-portal:latest
+	docker push ${REGISTRY_URL}/zev-manufacturer-portal:latest
 
 docker-run:
 	docker run -p 5014:80 zev-manufacturer-review

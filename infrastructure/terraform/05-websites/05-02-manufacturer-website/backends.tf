@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    prefix = "terraform/websites/scheme-administration-website"
+    prefix = "terraform/websites/manufacturer-website"
   }
 }
 

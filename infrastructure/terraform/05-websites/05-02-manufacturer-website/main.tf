@@ -3,13 +3,13 @@ locals {
   deployed_at = timestamp()
 }
 
-resource "google_cloud_run_v2_service" "scheme_administration_portal" {
-  name     = "${local.name_prefix}-scheme-administration-portal"
+resource "google_cloud_run_v2_service" "manufacturer_portal" {
+  name     = "${local.name_prefix}-manufacturer-portal"
   location = var.region
   ingress  = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 
   template {
-    service_account = google_service_account.scheme_administration_portal.email
+    service_account = google_service_account.manufacturer_portal.email
 
     scaling {
       min_instance_count = 0
@@ -17,7 +17,7 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
     }
 
     containers {
-      image = "${data.terraform_remote_state.backends.outputs.image_repository_url}/zev-administration-portal:${var.source_commit_hash}"
+      image = "${data.terraform_remote_state.backends.outputs.image_repository_url}/zev-manufacturer-portal:${var.source_commit_hash}"
 
       ports {
         container_port = 80
@@ -54,7 +54,7 @@ resource "null_resource" "docker_build" {
   }
 
   provisioner "local-exec" {
-    working_dir = "../../../../src/services/websites/zev-administration-portal"
+    working_dir = "../../../../src/services/websites/manufacturer-data-review-portal"
     command     = "make docker-build && make docker-push"
 
     environment = {
