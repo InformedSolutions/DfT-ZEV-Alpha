@@ -69,4 +69,4 @@ jobs:
     - name: Deploy
       run: | 
         gcloud auth configure-docker europe-west1-docker.pkg.dev
-        make apply-auto-approve
+        make
