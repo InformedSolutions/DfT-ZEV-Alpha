@@ -14,10 +14,12 @@ namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 public partial class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
-    //private readonly OrganizationApiClient
-    public AccountController(ILogger<AccountController> logger)
+    private readonly IIdentityPlatform _identityPlatform;
+
+    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform)
     {
         _logger = logger;
+        _identityPlatform = identityPlatform;
     }
 
     public IActionResult Index()
@@ -31,7 +33,7 @@ public partial class AccountController : Controller
         var claims = User.Claims.ToList();
         if (claims.Any())
         {
-            return this.View(new AccountDetails()
+            return View(new AccountDetails()
             {
                IdentityAccountDetails = User.GetAccountDetails()
             });
@@ -43,12 +45,6 @@ public partial class AccountController : Controller
     [HttpGet("sign-in")]
     public IActionResult SignIn([FromQuery] string message)
     {
-        //if (User.Identity.IsAuthenticated
-        //    && User.Identity.AuthenticationType != BasicAuthenticationDefaults.AuthenticationScheme)
-        //{
-        //    return Redirect("/");
-        //}
-
         if (!string.IsNullOrEmpty(message))
         {
             ViewData["message"] = message;
@@ -68,8 +64,9 @@ public partial class AccountController : Controller
 
         try
         {
-            //var result = await _identityPlatform.AuthorizeUser(viewModel.Email, viewModel.Password);
-            var result = 
+            var authenticationRequest = new AuthenticationRequest(viewModel.Email,viewModel.Password);
+            var result = await _identityPlatform.AuthenticateUser(authenticationRequest);
+
             HttpContext.Session.SetString("Token",result.IdToken);
             HttpContext.Session.SetString("RefreshToken",result.RefreshToken);
 
@@ -82,19 +79,6 @@ public partial class AccountController : Controller
             ModelState.AddModelError(string.Empty, "The email or password you entered is incorrect");
             return View();
         }
-        _logger.LogInformation("User {Email} signed in successfully", viewModel.Email);
-        //var result = await _signInService.SignIn(viewModel);
-
-        /*if (result.ForceInitialPasswordSet)
-        {
-            TempData["UserEmailSignInAttempt"] = viewModel.Email;
-            return RedirectToAction(nameof(SetInitialPassword));
-        }*/
-
-        //return !string.IsNullOrEmpty(returnUrl) ? LocalRedirect(returnUrl) : RedirectToAction("Index", "Home");
-        //return RedirectToPage("/Index");
-        
-        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet("sign-out")]

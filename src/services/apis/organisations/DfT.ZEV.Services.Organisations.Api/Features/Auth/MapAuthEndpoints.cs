@@ -16,7 +16,7 @@ public static class MapAuthEndpointsExtensions
         return app;
     }
     
-    private static async Task<IResult> GetAllAccounts([FromBody] AuthorizationRequest req,[FromServices] IIdentityPlatform identityPlatform, CancellationToken cancellationToken = default)
+    private static async Task<IResult> GetAllAccounts([FromBody] AuthenticationRequest req,[FromServices] IIdentityPlatform identityPlatform, CancellationToken cancellationToken = default)
         => Results.Ok(await identityPlatform.AuthorizeUser(req));
 
 }

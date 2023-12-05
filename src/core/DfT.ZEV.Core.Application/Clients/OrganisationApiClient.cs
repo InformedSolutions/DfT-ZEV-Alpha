@@ -1,20 +1,16 @@
-using System.Diagnostics;
 using System.Net.Http.Json;
-using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetAllManufacturers;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using AuthorizationRequest = DfT.ZEV.Common.MVC.Authentication.Identity.AuthorizationRequest;
 
-namespace DfT.ZEV.Common.Services.Clients;
+namespace DfT.ZEV.Core.Application.Clients;
 
-public class OrganizationApiClient
+public class OrganisationApiClient
 {
     private readonly HttpClient _httpClient;
     
-    public OrganizationApiClient(HttpClient httpClient) => _httpClient = httpClient;
+    public OrganisationApiClient(HttpClient httpClient) => _httpClient = httpClient;
 
     public async Task<GetAllManufacturersQueryResponse?> GetManufacturersAsync(string search)
     {
