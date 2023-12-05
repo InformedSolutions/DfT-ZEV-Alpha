@@ -13,8 +13,10 @@ using Microsoft.Net.Http.Headers;
 using Serilog;
 using System.Collections.Generic;
 using System.Web;
+using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Middlewares;
+using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 
@@ -95,12 +97,13 @@ public class Startup
         services.AddScoped<IBusinessEventLogger, BusinessEventLogger>();
 
         services.AddOptions();
-
+        services.ConfigureServicesSettings(Configuration);
         services.AddGovUkFrontend(options => options.AddImportsToHtml = false);
 
         services.AddResponseCompression();
 
-        services.AddHealthChecks();
+        //services.AddHealthChecks();
+        services.AddHealthCheckServices();
 
         // Register the Google Analytics configuration
         services.Configure<GoogleAnalyticsOptions>(options =>
@@ -190,7 +193,8 @@ public class Startup
             endpoints.MapControllerRoute(
                 "default",
                 "{controller=Home}/{action=Index}");
-            endpoints.MapHealthChecks("/health");
         });
+        
+        app.UseHealthChecksMvc();
     }
 }
