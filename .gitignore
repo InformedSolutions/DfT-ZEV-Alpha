@@ -429,3 +429,5 @@ bin/
 obj/
 
 .vscode
+
+.env
