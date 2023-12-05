@@ -47,7 +47,6 @@ public static class Setup
         app.MapAccountsEndpoints();
         app.MapManufacturerEndpoints();
         app.MapPermissionsEndpoints();
-        app.MapAuthEndpoints();
         app.UseHealthChecks();
 
         return app;
