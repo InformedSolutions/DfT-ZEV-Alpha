@@ -14,8 +14,8 @@ public static class HealthcheckExtensions
         services.AddTransient<PostgresHealthCheck>();
         
         services.AddHealthChecks()
-            .AddCheck<PostgresHealthCheck>("postgres", HealthStatus.Unhealthy);
-        
+            .AddCheck<PostgresHealthCheck>("postgres", HealthStatus.Unhealthy)
+            .AddCheck<RestServiceHealthCheck>("organization-api-service", HealthStatus.Unhealthy);
         return services;
     }
 
