@@ -16,8 +16,6 @@ docker-build:
 docker-push:
 	docker tag zev-administration ${REGISTRY_URL}/zev-administration-portal:${SOURCE_COMMIT_HASH}
 	docker push ${REGISTRY_URL}/zev-administration-portal:${SOURCE_COMMIT_HASH}
-	docker tag zev-administration ${REGISTRY_URL}/zev-administration-portal:latest
-	docker push ${REGISTRY_URL}/zev-administration-portal:latest
 
 docker-run:
 	docker run -p 5014:80 zev-administration-review

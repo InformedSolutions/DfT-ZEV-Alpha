@@ -59,6 +59,7 @@ resource "null_resource" "docker_build" {
 
     environment = {
       REGISTRY_URL = data.terraform_remote_state.backends.outputs.image_repository_url
+      COMMIT_HASH  = var.source_commit_hash
     }
   }
 }
