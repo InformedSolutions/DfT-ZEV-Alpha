@@ -13,11 +13,10 @@ namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 [Route("account")]
 public partial class AccountController : Controller
 {
-    private readonly IIdentityPlatform _identityPlatform;
     private readonly ILogger<AccountController> _logger;
-    public AccountController(IIdentityPlatform identityPlatform, ILogger<AccountController> logger)
+    //private readonly OrganizationApiClient
+    public AccountController(ILogger<AccountController> logger)
     {
-        _identityPlatform = identityPlatform;
         _logger = logger;
     }
 
@@ -69,7 +68,8 @@ public partial class AccountController : Controller
 
         try
         {
-            var result = await _identityPlatform.AuthorizeUser(viewModel.Email, viewModel.Password);
+            //var result = await _identityPlatform.AuthorizeUser(viewModel.Email, viewModel.Password);
+            var result = 
             HttpContext.Session.SetString("Token",result.IdToken);
             HttpContext.Session.SetString("RefreshToken",result.RefreshToken);
 

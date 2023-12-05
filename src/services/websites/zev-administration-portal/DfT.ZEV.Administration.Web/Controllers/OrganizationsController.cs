@@ -76,7 +76,7 @@ public class OrganizationsController : Controller
 
         //var res = await _mediator.Send(command);
         var res = await _organizationApi.CreateUserAsync(command);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("Manage", new {id = id});
     }
     
     [HttpGet("test")]

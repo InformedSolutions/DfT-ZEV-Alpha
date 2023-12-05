@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using System.Net.Http.Json;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetAllManufacturers;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using AuthorizationRequest = DfT.ZEV.Common.MVC.Authentication.Identity.AuthorizationRequest;
 
 namespace DfT.ZEV.Common.Services.Clients;
 
@@ -49,4 +51,16 @@ public class OrganizationApiClient
         }
         return null;
     }
+    
+    // public async Task<AuthorizationResponse> AuthorizeUser(AuthorizationRequest request)
+    // {
+    //     var response = await _httpClient.PostAsJsonAsync("accounts", new AuthorizationRequest(email, password));
+    //     if (response.IsSuccessStatusCode)
+    //     {
+    //         var content = await response.Content.ReadAsStringAsync();
+    //         var res =  JsonConvert.DeserializeObject<AuthorizationResponse>(content); 
+    //         return res;
+    //     }
+    //     return null;
+    // }
 }
