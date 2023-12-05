@@ -42,7 +42,7 @@ public class RestExceptionHandlerMiddleware : IMiddleware
         var response = new BaseErrorResponse
         {
             StatusCode = (int)HttpStatusCode.NotFound,
-            Data = new { exception.Message}
+            Data = new BaseData{ Message = exception.Message}
         };
 
         return response;
@@ -52,7 +52,7 @@ public class RestExceptionHandlerMiddleware : IMiddleware
         var response = new BaseErrorResponse
         {
             StatusCode = (int)HttpStatusCode.BadRequest,
-            Data = new { exception.Message}
+            Data = new BaseData { Message = exception.Message}
         };
 
         return response;
@@ -62,7 +62,7 @@ public class RestExceptionHandlerMiddleware : IMiddleware
         var response = new BaseErrorResponse
         {
             StatusCode = (int)HttpStatusCode.InternalServerError,
-            Data = new { Message = "Unknown exception was thrown" }
+            Data = new BaseData{ Message = "Unknown exception was thrown" }
         };
 
         return response;
