@@ -1,5 +1,4 @@
 using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Core.Application.Clients.OrganisationApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -12,12 +11,11 @@ public static class Extensions
     public static IServiceCollection AddApiServiceClients(this IServiceCollection services, IConfiguration config)
     {
         var servicesConfiguration = config.GetServicesConfiguration();
-        services.AddHttpClient<IOrganisationApiClient,OrganisationApiClient>(options =>
-            {
-                options.BaseAddress = new Uri(servicesConfiguration.OrganisationApiBaseUrl);
-                options.DefaultRequestHeaders.Add("Accept", "application/json");
-            })  
-            .AddPolicyHandler(GetRetryPolicy())
+        services.AddHttpClient<OrganisationApiClient>(options =>
+        {
+            options.BaseAddress = new Uri(servicesConfiguration.OrganisationApiBaseUrl);
+            options.DefaultRequestHeaders.Add("Accept", "application/json");
+        })  .AddPolicyHandler(GetRetryPolicy())
             .SetHandlerLifetime(TimeSpan.FromMinutes(5));
         
         return services;

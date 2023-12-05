@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
 using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
-using DfT.ZEV.Core.Application.Clients.OrganisationApi;
+using DfT.ZEV.Core.Application.Clients;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,8 +14,8 @@ namespace DfT.ZEV.Administration.Web.Controllers;
 [Route("organisation")]
 public class OrganisationsController : Controller
 {
-    private readonly IOrganisationApiClient _organisationApi;
-    public OrganisationsController(IOrganisationApiClient organisationApi)
+    private readonly OrganisationApiClient _organisationApi;
+    public OrganisationsController(OrganisationApiClient organisationApi)
     {
         _organisationApi = organisationApi;
     }
@@ -40,20 +40,18 @@ public class OrganisationsController : Controller
     [HttpGet("{id:guid}/manage")]
     public async Task<IActionResult> Manage(Guid id)
     {
-        try
-        {
-            var manufacturer = await _organisationApi.GetManufacturerByIdAsync(id);
-            var dto = new ManageOrganisationViewModel()
-            {
-                Id = id,
-                Dto = manufacturer
-            };
-            return this.View(dto);
-
-        }catch(Exception ex)
+        var manufacturer = await _organisationApi.GetManufacturerByIdAsync(id);
+        if (manufacturer is null)
         {
             return this.NotFound();
         }
+
+        var dto = new ManageOrganisationViewModel()
+        {
+            Id = id,
+            Dto = manufacturer
+        };
+        return this.View(dto);
     }
 
     [HttpGet("{id:guid}/manage/add")]

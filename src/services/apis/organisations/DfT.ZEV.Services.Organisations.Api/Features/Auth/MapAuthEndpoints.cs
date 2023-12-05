@@ -8,8 +8,8 @@ public static class MapAuthEndpointsExtensions
 {
     public static WebApplication MapAuthEndpoints(this WebApplication app)
     {
-        app.MapGet("/auth/", GetAllAccounts)
-            .WithTags("Auth");
+        app.MapGet("/accounts/", GetAllAccounts)
+            .WithTags("Accounts");
         
         
         
