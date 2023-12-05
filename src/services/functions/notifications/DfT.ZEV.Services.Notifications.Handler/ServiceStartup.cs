@@ -40,7 +40,7 @@ public class ServiceStartup : FunctionsStartup
 
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
-        var notifyClient = new NotificationClient(configuration.GetValue<string>("GovUkApiKey"));
+        var notifyClient = new NotificationClient(configuration.GetValue<string>("GovUkNotifyApiKey"));
         services.AddSingleton<INotificationClient>(notifyClient);
 
         services.AddScoped<INotificationsService, NotificationsService>();

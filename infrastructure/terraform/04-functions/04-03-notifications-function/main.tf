@@ -14,7 +14,7 @@ data "archive_file" "notifications_service_package" {
 }
 
 resource "google_storage_bucket_object" "notifications_service_package" {
-  name                = "notifications-service/${data.archive_file.compliance_calculation_service_package.output_md5}-${basename(data.archive_file.notifications_service_package.output_path)}"
+  name                = "notifications-service/${data.archive_file.notifications_service_package.output_md5}-${basename(data.archive_file.notifications_service_package.output_path)}"
   bucket              = data.terraform_remote_state.backends.outputs.cloud_function_packages_bucket_name
   source              = data.archive_file.notifications_service_package.output_path
   content_disposition = "attachment"
@@ -45,11 +45,11 @@ resource "google_cloudfunctions2_function" "notifications_service" {
 
   service_config {
     min_instance_count               = 0
-    max_instance_count               = var.compliance_calculation_svc_resource_quotas.max_instance_count
-    max_instance_request_concurrency = var.compliance_calculation_svc_resource_quotas.max_instance_request_concurrency
-    timeout_seconds                  = var.compliance_calculation_svc_resource_quotas.timeout_seconds
-    available_memory                 = var.compliance_calculation_svc_resource_quotas.available_memory
-    available_cpu                    = var.compliance_calculation_svc_resource_quotas.available_cpu
+    max_instance_count               = var.notifications_svc_resource_quotas.max_instance_count
+    max_instance_request_concurrency = var.notifications_svc_resource_quotas.max_instance_request_concurrency
+    timeout_seconds                  = var.notifications_svc_resource_quotas.timeout_seconds
+    available_memory                 = var.notifications_svc_resource_quotas.available_memory
+    available_cpu                    = var.notifications_svc_resource_quotas.available_cpu
 
     # TODO: Enable to limit access after configuring Cloud Tasks
     #            ingress_settings = "ALLOW_INTERNAL_ONLY"
@@ -57,11 +57,17 @@ resource "google_cloudfunctions2_function" "notifications_service" {
     vpc_connector                 = data.terraform_remote_state.network.outputs.vpc_serverless_connector_id
 
     all_traffic_on_latest_revision = true
-    service_account_email          = google_service_account.compliance_calculation_service.email
+    service_account_email          = google_service_account.notifications_service_runner.email
 
     environment_variables = {
       GoogleCloud__ProjectId = var.project
     }
 
+    secret_environment_variables {
+      project_id = var.project
+      key        = "GovUkNotifyApiKey"
+      secret     = google_secret_manager_secret.govuk_notify_api_key.id
+      version    = "latest"
+    }
   }
 }
