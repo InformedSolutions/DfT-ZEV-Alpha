@@ -28,4 +28,14 @@ public static class HealthcheckExtensions
 
         return app;
     }
+    
+    public static IApplicationBuilder UseHealthChecksMvc(this IApplicationBuilder app)
+    {
+        app.UseHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        return app;
+    }
 }
