@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
+using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using DfT.ZEV.Core.Domain.Abstractions;
 using MediatR;
@@ -50,12 +51,6 @@ public class OrganizationsController : Controller
             return this.NotFound();
         }
         
-        //var users = await _unitOfWork.Users.GetUsersByManufacturerIdAsync(id);
-        //var dto = new ManageOrganizationViewModel()
-        //{
-        //    Manufacturer = manufacturer,
-        //    Users = users
-        //};
         var dto = new ManageOrganizationViewModel()
         {
             Id = id,
@@ -63,6 +58,24 @@ public class OrganizationsController : Controller
         };
         return this.View(dto);
     }
+    
+    [HttpPost("{guid:id}/manage")]
+    public async Task<IActionResult> ManageAddUser(Guid id, ManageOrganizationViewModel model)
+    {
+        if(model.UserEmail is null || string.IsNullOrEmpty(model.UserEmail))
+            this.View()
+        var command = new CreateUserCommand()
+        {
+            Email = model.UserEmail,
+            ManufacturerId = id,
+            PermissionIds = model.UserPermissionIds.ToArray()
+        };
+        
+        var res = await  _mediator.Send(command);
+        
+        return View();
+    }
+
 
     [HttpGet("test")]
     public async Task<IActionResult> Test()
