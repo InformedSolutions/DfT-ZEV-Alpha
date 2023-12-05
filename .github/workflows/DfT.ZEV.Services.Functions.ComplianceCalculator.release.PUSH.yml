@@ -15,7 +15,6 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: release
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:

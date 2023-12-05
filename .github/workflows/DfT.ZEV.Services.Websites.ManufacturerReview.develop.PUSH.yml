@@ -15,7 +15,6 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: dev
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_LOG: DEBUG
 
@@ -57,12 +56,10 @@ jobs:
       with:
         terraform_version: 1.6.3
 
-    - name: Docker build
-      working-directory: ./src/services/websites/manufacturer-data-review-portal
-      run: make docker-build
-
     - name: Terraform init
       run: make init
 
     - name: Deploy
-      run: make apply-auto-approve
+      run: | 
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
+        make apply-auto-approve

@@ -11,7 +11,6 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: release
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
@@ -35,7 +34,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    working-directory: ./infrastructure/terraform/04-functions/04-01-migrator-function
+    defaults:
+      run:
+        working-directory: ./infrastructure/terraform/04-functions/04-01-migrator-function
     steps:
     - uses: actions/checkout@v2
     - name: Authenticate to Google Cloud
