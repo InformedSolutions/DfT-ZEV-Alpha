@@ -63,4 +63,4 @@ jobs:
       run: make init
 
     - name: Deploy
-      run: terraform apply -var-file="../../configuration/environments/dev.tfvars"
+      run: make apply-auto-approve
