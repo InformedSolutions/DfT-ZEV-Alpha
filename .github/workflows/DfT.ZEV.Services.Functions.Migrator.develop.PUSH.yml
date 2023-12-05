@@ -1,6 +1,7 @@
 name: DfT.ZEV.Services.Functions.Migrator (Push)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop

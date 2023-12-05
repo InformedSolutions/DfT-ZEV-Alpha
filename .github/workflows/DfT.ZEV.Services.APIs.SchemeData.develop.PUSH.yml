@@ -1,6 +1,7 @@
 name: DfT.ZEV.Services.APIs.SchemeData (Push)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop

@@ -1,7 +1,8 @@
 name: DfT.ZEV.Services.Websites.ManufacturerReview (Push)
 
 on:
-  pull_request:
+  workflow_dispatch:
+  push:
     branches:
       - develop
       - hotfix/**

@@ -1,7 +1,7 @@
 name: DfT.ZEV.Services.Websites.ManufacturerReview (Push)
 
 on:
-  pull_request:
+  push:
     branches:
       - release/**
     paths:

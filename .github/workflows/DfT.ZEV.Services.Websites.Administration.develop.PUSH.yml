@@ -1,6 +1,7 @@
 name: DfT.ZEV.Services.Websites.Administration (Push)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop

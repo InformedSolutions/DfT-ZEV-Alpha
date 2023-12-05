@@ -1,6 +1,7 @@
 name: DfT.ZEV.Services.Functions.Notifications (Push)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
