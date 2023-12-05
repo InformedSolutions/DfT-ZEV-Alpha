@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
+using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using DfT.ZEV.Core.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +38,29 @@ public class OrganizationsController : Controller
         model.SearchTerm = model.SearchTerm ?? string.Empty;
         var manufacturers = await  _unitOfWork.Manufacturers.SearchAsync(model.SearchTerm);
         var dto = new OrganizationsViewModel() { Manufacturers = manufacturers.OrderByDescending(x => x.UserBridges.Count).ToList() };
+        return this.View(dto);
+    }
+    
+    [HttpGet("{id:guid}/manage")]
+    public async Task<IActionResult> Manage(Guid id)
+    {
+        var manufacturer = await _mediator.Send(new GetManufacturerByIdQuery(id));
+        if(manufacturer is null)
+        {
+            return this.NotFound();
+        }
+        
+        //var users = await _unitOfWork.Users.GetUsersByManufacturerIdAsync(id);
+        //var dto = new ManageOrganizationViewModel()
+        //{
+        //    Manufacturer = manufacturer,
+        //    Users = users
+        //};
+        var dto = new ManageOrganizationViewModel()
+        {
+            Id = id,
+            Dto = manufacturer
+        };
         return this.View(dto);
     }
 

@@ -34,7 +34,9 @@
                 <tr>
                     <td>@manufacturer.Name</td>
                     <td>@manufacturer.UserBridges.Count</td>
-                    <td>Manage accounts</td>
+                    <td>
+                        <a class="govuk-link" asp-action="Manage" asp-route-id=@manufacturer.Id asp-controller="Organizations">Manage</a>
+                    </td>
                 </tr>
             }
         </table>

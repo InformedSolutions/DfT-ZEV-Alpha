@@ -15,7 +15,9 @@ internal sealed class ManufacturerRepository : IManufacturerRepository
 
     /// <inheritdoc/>
     public async ValueTask<Manufacturer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await _context.Manufacturers.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        => await _context.Manufacturers
+            .Include(x => x.UserBridges)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     /// <inheritdoc/>
     public async ValueTask<Manufacturer?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
