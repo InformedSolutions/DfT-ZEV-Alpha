@@ -60,12 +60,6 @@ jobs:
       with:
         terraform_version: 1.6.3
 
-    - name: Build docker image
-      run: make docker-build
-
-    - name: Build docker image
-      run: make docker-push
-
     - name: Terraform init
       run: make init
 
