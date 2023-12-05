@@ -15,8 +15,10 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: dev
+    SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_LOG: DEBUG
+    REGISTRY_URL: europe-west1-docker.pkg.dev/informed-zev/dev-zev-repository
 
 jobs:
   build:
@@ -56,10 +58,18 @@ jobs:
       with:
         terraform_version: 1.6.3
 
+    - name: Authenticate against docker registry
+      run: | 
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
+
+    - name: Docker build
+      working-directory: ./src/services/websites/manufacturer-data-review-portal
+      run: |
+        make docker-build
+        make docker-push
+
     - name: Terraform init
       run: make init
 
     - name: Deploy
-      run: | 
-        gcloud auth configure-docker europe-west1-docker.pkg.dev
-        make apply-auto-approve
+      run: make apply-auto-approve
