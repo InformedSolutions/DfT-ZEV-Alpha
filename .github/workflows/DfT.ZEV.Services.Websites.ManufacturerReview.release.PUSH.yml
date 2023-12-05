@@ -12,8 +12,8 @@ on:
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: release
-    TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
+  DEPLOY_ENVIRONMENT: release
+  TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
 
 jobs:
   build:
@@ -58,6 +58,10 @@ jobs:
 
     - name: Build docker image
       run: make docker-push
+
+    - name: Authenticate against docker registry
+      run: |
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
 
     - name: Terraform init
       run: make init

@@ -57,6 +57,10 @@ jobs:
       with:
         terraform_version: 1.6.3
 
+    - name: Authenticate against docker registry
+      run: |
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
+
     - name: Terraform init
       run: make init
 
