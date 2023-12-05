@@ -18,8 +18,6 @@ locals {
       BUILDID     = var.source_commit_hash
 
       GoogleCloud__ProjectId              = var.project
-      GoogleCloud__Tenancy__Admin         = "TODO" # TODO: set valid value
-      GoogleCloud__Tenancy__Manufacturers = "TODO" # TODO: set valid value
   })
 
   db_connection_secret_files = {
