@@ -14,8 +14,8 @@ on:
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: dev
-    TF_VAR_source_commit_hash: ${{ github.sha }}
+  DEPLOY_ENVIRONMENT: dev
+  TF_VAR_source_commit_hash: ${{ github.sha }}
 
 jobs:
 
