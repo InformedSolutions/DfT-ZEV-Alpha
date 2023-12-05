@@ -1,3 +1,8 @@
+output "image_repository_url" {
+  description = "The URL of the Docker image repository"
+  value       = "${google_artifact_registry_repository.image_repository.location}-docker.pkg.dev/${google_artifact_registry_repository.image_repository.project}/${google_artifact_registry_repository.image_repository.repository_id}"
+}
+
 output "postgres_config" {
   description = "The configuration of Postgres database to be used by the applications"
   value = {
@@ -23,7 +28,11 @@ output "app_data_buckets" {
   }
 }
 
-output "image_repository_url" {
-  description = "The URL of the Docker image repository"
-  value       = "${google_artifact_registry_repository.image_repository.location}-docker.pkg.dev/${google_artifact_registry_repository.image_repository.project}/${google_artifact_registry_repository.image_repository.repository_id}"
+output "identity_platform_config" {
+  description = "The configuration of Identity Platform to be used by the applications"
+  value = {
+    api_token                  = google_apikeys_key.identity_platform.key_string
+    administration_tenant_name = google_identity_platform_tenant.administration.name
+    manufacturers_tenant_name  = google_identity_platform_tenant.manufacturers.name
+  }
 }

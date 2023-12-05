@@ -81,3 +81,9 @@ variable "database_username" {
   description = "Username for Postgres database"
   default     = "zev"
 }
+
+variable "identity_platform_authorized_redirect_domains" {
+  type        = list(string)
+  description = "List of domains that authentication servers are allowed to redirect to after signing a user in"
+  default     = []
+}
