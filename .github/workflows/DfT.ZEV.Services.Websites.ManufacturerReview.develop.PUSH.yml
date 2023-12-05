@@ -17,6 +17,7 @@ env:
     DEPLOY_ENVIRONMENT: dev
     SOURCE_COMMIT_HASH: ${{ github.sha }}
     TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
+    TF_LOG: DEBUG
 
 jobs:
   build:
