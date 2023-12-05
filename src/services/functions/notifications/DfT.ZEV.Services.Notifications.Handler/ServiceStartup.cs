@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using DfT.ZEV.Common.Logging;
-using Google.Cloud.SecretManager.V1;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.Services;
 using Notify.Interfaces;
 using Notify.Client;
-using DfT.ZEV.Common.Services;
 
 namespace DfT.ZEV.Services.Notifications.Handler;
 
@@ -41,18 +40,9 @@ public class ServiceStartup : FunctionsStartup
 
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
-        AddNotificationClient(services, configuration);
+        var notifyClient = new NotificationClient(configuration.GetValue<string>("GovUkApiKey"));
+        services.AddSingleton<INotificationClient>(notifyClient);
 
         services.AddScoped<INotificationsService, NotificationsService>();
-    }
-
-    private static void AddNotificationClient(IServiceCollection services, IConfiguration configuration)
-    {
-        var secretVersionName = new SecretVersionName(configuration.GetValue<string>("GoogleCloud:ProjectId"), configuration.GetValue<string>("NotifyApiKeySecretId"), "latest");
-        var secretClient = SecretManagerServiceClient.Create();
-        var secretAccessResponse = secretClient.AccessSecretVersion(secretVersionName);
-        var notifyApiKey = secretAccessResponse.Payload.Data.ToStringUtf8();
-        var notifyClient = new NotificationClient(notifyApiKey);
-        services.AddSingleton<INotificationClient>(notifyClient);
     }
 }
