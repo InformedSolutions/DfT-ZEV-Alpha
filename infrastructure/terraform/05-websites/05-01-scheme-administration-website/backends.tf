@@ -23,3 +23,23 @@ data "terraform_remote_state" "backends" {
     prefix = "terraform/backends"
   }
 }
+
+data "terraform_remote_state" "organisation_api" {
+  backend   = "gcs"
+  workspace = terraform.workspace
+
+  config = {
+    bucket = var.tf_state_bucket
+    prefix = "terraform/apis/organisation-api"
+  }
+}
+
+data "terraform_remote_state" "scheme_data_api" {
+  backend   = "gcs"
+  workspace = terraform.workspace
+
+  config = {
+    bucket = var.tf_state_bucket
+    prefix = "terraform/apis/scheme-data-api"
+  }
+}
