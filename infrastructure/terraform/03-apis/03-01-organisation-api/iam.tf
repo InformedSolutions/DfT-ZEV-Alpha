@@ -16,3 +16,20 @@ resource "google_secret_manager_secret_iam_member" "organisation_api_secrets" {
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.organisation_api.email}"
 }
+
+data "google_iam_policy" "noauth" {
+  binding {
+    role = "roles/run.invoker"
+    members = [
+      "allUsers",
+    ]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "service_noauth" {
+  location = google_cloud_run_v2_service.organisation_api.location
+  project  = google_cloud_run_v2_service.organisation_api.project
+  service  = google_cloud_run_v2_service.organisation_api.name
+
+  policy_data = data.google_iam_policy.noauth.policy_data
+}

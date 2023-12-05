@@ -16,6 +16,11 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       max_instance_count = var.max_instance_count
     }
 
+    vpc_access {
+      connector = data.terraform_remote_state.network.outputs.vpc_serverless_connector_id
+      egress    = "ALL_TRAFFIC"
+    }
+
     containers {
       image = "${data.terraform_remote_state.backends.outputs.image_repository_url}/zev-administration-portal:${var.source_commit_hash}"
 

@@ -12,9 +12,10 @@ module "network" {
 
   subnets = [
     {
-      subnet_name   = local.serverless_subnet_name
-      subnet_ip     = var.serverless_connector_ip_range
-      subnet_region = var.region
+      subnet_name           = local.serverless_subnet_name
+      subnet_ip             = var.serverless_connector_ip_range
+      subnet_region         = var.region
+      subnet_private_access = true
     }
   ]
 }
