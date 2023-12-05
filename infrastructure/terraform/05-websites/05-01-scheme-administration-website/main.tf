@@ -16,12 +16,19 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       max_instance_count = var.max_instance_count
     }
 
+    vpc_access {
+      connector = data.terraform_remote_state.network.outputs.vpc_serverless_connector_id
+      egress    = "ALL_TRAFFIC"
+    }
+
     containers {
       image = "${data.terraform_remote_state.backends.outputs.image_repository_url}/zev-administration-portal:${var.source_commit_hash}"
 
       ports {
         container_port = 80
       }
+
+      # TODO: Add startup and liveness probe
 
       env {
         name  = "DEPLOYED_AT"
@@ -39,7 +46,40 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
         value = true
       }
 
-      # TODO: Add startup and liveness probe
+      env {
+        name  = "Services__OrganisationApiBaseUrl"
+        value = data.terraform_remote_state.organisation_api.outputs.service_url
+      }
+
+      env {
+        name  = "GoogleCloud__ProjectId"
+        value = var.project
+      }
+
+      env {
+        name  = "GoogleCloud__ApiKey"
+        value = "TODO" # TODO: fill or switch to IAM
+      }
+
+      env {
+        name  = "GoogleCloud__Tenancy__Admin"
+        value = "TODO" # TODO: use valid value
+      }
+
+      env {
+        name  = "GoogleCloud__Tenancy__Manufacturers"
+        value = "TODO" # TODO: use valid value
+      }
+
+      env {
+        name  = "GoogleCloud__Token__Issuer"
+        value = "TODO" # TODO: use valid value
+      }
+
+      env {
+        name  = "GoogleCloud__Token__Audience"
+        value = "TODO" # TODO: use valid value
+      }
     }
   }
 
