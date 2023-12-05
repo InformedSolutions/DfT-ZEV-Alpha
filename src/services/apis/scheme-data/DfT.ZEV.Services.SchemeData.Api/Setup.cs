@@ -16,7 +16,7 @@ public static class Setup
         builder.Services.AddSwaggerGen();
         builder.Services.AddHealthCheckServices();
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-
+        builder.Services.ConfigureServicesSettings(builder.Configuration);
         var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
         
         builder.Services.AddDbContext(postgresSettings);
