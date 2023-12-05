@@ -6,6 +6,7 @@ using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisations.Api.Features.Accounts;
+using DfT.ZEV.Services.Organisations.Api.Features.Auth;
 using DfT.ZEV.Services.Organisations.Api.Features.Manufacturers;
 using DfT.ZEV.Services.Organisations.Api.Features.Permissions;
 using Microsoft.AspNetCore.Http.Json;
@@ -21,7 +22,7 @@ public static class Setup
 
         builder.Services.AddSwaggerGen();
         builder.Services.ConfigureGoogleCloudSettings(builder.Configuration);
-        builder.Services.AddIdentityPlatform();
+        builder.Services.AddIdentityPlatform(builder.Configuration);
         builder.Services.AddTransient<RestExceptionHandlerMiddleware>();
         
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -46,6 +47,7 @@ public static class Setup
         app.MapAccountsEndpoints();
         app.MapManufacturerEndpoints();
         app.MapPermissionsEndpoints();
+        app.MapAuthEndpoints();
         app.UseHealthChecks();
 
         return app;

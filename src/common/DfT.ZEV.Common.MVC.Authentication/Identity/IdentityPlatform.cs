@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
@@ -9,10 +10,12 @@ namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 internal sealed class IdentityPlatform : IIdentityPlatform
 {
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
-    public IdentityPlatform(IOptions<GoogleCloudConfiguration> googleCloudConfiguration)
+    private readonly IGoogleIdentityApiClient _googleIdentityApiClient;
+    public IdentityPlatform(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IGoogleIdentityApiClient googleIdentityApiClient)
     {
         _googleCloudConfiguration = googleCloudConfiguration;
-        
+        _googleIdentityApiClient = googleIdentityApiClient;
+
         if(FirebaseApp.DefaultInstance == null)
         {
             var options = new AppOptions
@@ -50,6 +53,11 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
             .GeneratePasswordResetLinkAsync(user.Email);
     }
-     
-    
+
+    public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest)
+        => await _googleIdentityApiClient.Authorize(authorizationRequest.Email, authorizationRequest.Password,
+            _googleCloudConfiguration.Value.Tenancy.Manufacturers);
+
+    public async Task<RefreshTokenResponse> RefreshUser(string refreshToken)
+        => await _googleIdentityApiClient.RefreshToken(refreshToken);
 }

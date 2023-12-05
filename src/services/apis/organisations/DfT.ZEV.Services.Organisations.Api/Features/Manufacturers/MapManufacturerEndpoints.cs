@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 using DfT.ZEV.Core.Application.Manufacturers.Commands.DeleteManufacturer;
 using DfT.ZEV.Core.Application.Manufacturers.Commands.UpdateManufacturer;
@@ -31,9 +32,17 @@ public static class MapManufacturerEndpointsExtensions
     private static async Task<IResult> CreateManufacturer([FromBody] CreateManufacturerCommand request, [FromServices] IMediator mediator, 
         CancellationToken cancellationToken = default)
         => Results.Ok(await mediator.Send(request, cancellationToken));
-    
-    private static async Task<IResult> GetAllManufacturers([FromServices] IMediator mediator, CancellationToken ct)
-        => Results.Ok(await mediator.Send(new GetAllManufacturersQuery(), ct));
+
+    private static async Task<IResult> GetAllManufacturers([FromQuery] string? search, [FromServices] IMediator mediator, CancellationToken ct)
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        var res = await mediator.Send(new GetAllManufacturersQuery(search), ct);
+        stopwatch.Stop();
+        //logger.LogInformation("GetAllManufacturers took {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+        Console.WriteLine("GetAllManufacturers took {0}ms", stopwatch.ElapsedMilliseconds);
+        return Results.Ok(res);
+    }
     
     private static async Task<IResult> GetManufacturerById([FromRoute] Guid id,[FromServices] IMediator mediator, CancellationToken ct)
         => Results.Ok(await mediator.Send(new GetManufacturerByIdQuery(id), ct));

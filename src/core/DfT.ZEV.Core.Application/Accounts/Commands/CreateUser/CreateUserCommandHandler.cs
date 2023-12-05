@@ -55,11 +55,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
             throw UserHandlerExceptions.PermissionsNotFound(nonExistentPermissionIds);
 
         var id = Guid.NewGuid();
+        var password = CreateSecureRandomString();
+        _logger.LogInformation("Password for user with email {Email} is {Password}", request.Email, password);
         var args = new UserRecordArgs
         {
             Email = request.Email,
             EmailVerified = false,
-            Password = CreateSecureRandomString(),
+            Password = password,
             Disabled = false,
             Uid = id.ToString()
         };

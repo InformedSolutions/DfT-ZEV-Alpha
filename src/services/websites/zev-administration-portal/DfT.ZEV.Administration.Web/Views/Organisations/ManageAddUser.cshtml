@@ -1,0 +1,10 @@
+@model DfT.ZEV.Administration.Web.Models.ManageOrganisationAddUserModel
+
+@using (Html.BeginForm())
+{   
+    <govuk-input asp-for="@Model.Email" inputmode="email" autocomplete="true" data-test="new-user-email">
+        <govuk-input-label>Email address</govuk-input-label>
+    </govuk-input>
+        
+    <govuk-button type="submit" >Add</govuk-button>
+}

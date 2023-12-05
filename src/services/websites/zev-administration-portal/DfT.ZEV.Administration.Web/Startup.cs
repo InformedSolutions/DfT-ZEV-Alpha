@@ -1,24 +1,31 @@
-using GovUk.Frontend.AspNetCore;
+using System.Collections.Generic;
+using System.Web;
 using DfT.ZEV.Administration.Web.Extensions.Conventions;
 using DfT.ZEV.Administration.Web.Extensions.TagHelpers;
+using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.Middlewares;
+using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
+using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
+using DfT.ZEV.Common.Security;
+using DfT.ZEV.Core.Application;
+using DfT.ZEV.Core.Application.Clients;
+using DfT.ZEV.Core.Infrastructure;
+using DfT.ZEV.Core.Infrastructure.Persistence;
+using GovUk.Frontend.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Serilog;
-using System.Collections.Generic;
-using System.Web;
-using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Common.Middlewares;
-using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
-using DfT.ZEV.Common.Security;
-using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
+
 
 namespace DfT.ZEV.Administration.Web;
 
@@ -92,6 +99,20 @@ public class Startup
             .Enrich.WithEnvironmentNameLogging()
             .CreateLogger();
 
+        var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
+        services.ConfigureGoogleCloudSettings(this.Configuration);
+        services.AddIdentityPlatform(Configuration);
+        services.AddDbContextPool<AppDbContext>(opt =>
+        {
+            // This causes errors while working in multi-threaded processing, need to deep dive this topic
+            //  opt.UseNpgsql(configuration.ConnectionString,
+            //     conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
+            opt.UseNpgsql(postgresSettings.ConnectionString);
+        });
+        services.AddApplication();
+        services.AddRepositories();
+
+        services.AddApiServiceClients(Configuration);
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
         services.AddScoped<IBusinessEventLogger, BusinessEventLogger>();
@@ -121,7 +142,7 @@ public class Startup
         app.UseExceptionHandler("/Error/500");
         app.UseMiddleware<WebsiteExceptionMiddleware>();
         app.UseMiddleware<CorrelationIdLoggerMiddleware>();
-
+        app.UseIdentity();
         var allowedHostnames = Configuration.GetValue<string>("AllowedHostnames").Split(",");
 
         app.UseAllowedHostFilteringMiddleware(new HostFilteringOptions
@@ -176,7 +197,7 @@ public class Startup
 
         app.UseRouting();
 
-        // app.UseAuthentication();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseSession();
@@ -194,7 +215,7 @@ public class Startup
                 "default",
                 "{controller=Home}/{action=Index}");
         });
-        
+
         app.UseHealthChecksMvc();
     }
 }

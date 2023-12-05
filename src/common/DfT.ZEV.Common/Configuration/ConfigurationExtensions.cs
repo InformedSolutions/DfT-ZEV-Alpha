@@ -55,15 +55,21 @@ public static class ConfigurationExtensions
     public static GoogleCloudConfiguration ConfigureGoogleCloudSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
-        var settings = new GoogleCloudConfiguration();
-        configuration.Bind(GoogleCloudConfiguration.SectionName, settings);
+        var settings = configuration.GetGoogleCloudSettings();
 
         services.AddOptions<GoogleCloudConfiguration>()
             .BindConfiguration(GoogleCloudConfiguration.SectionName);
 
         return settings;
     }
-    
+
+    public static GoogleCloudConfiguration GetGoogleCloudSettings(this IConfiguration configuration)
+    {
+        var settings = new GoogleCloudConfiguration();
+        configuration.Bind(GoogleCloudConfiguration.SectionName, settings);
+        return settings;
+    }
+
     public static ServicesConfiguration ConfigureServicesSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -73,6 +79,13 @@ public static class ConfigurationExtensions
         services.AddOptions<ServicesConfiguration>()
             .BindConfiguration(ServicesConfiguration.SectionName);
 
+        return settings;
+    }
+    
+    public static ServicesConfiguration GetServicesConfiguration(this IConfiguration configuration)
+    {
+        var settings = new ServicesConfiguration();
+        configuration.Bind(ServicesConfiguration.SectionName, settings);
         return settings;
     }
 }

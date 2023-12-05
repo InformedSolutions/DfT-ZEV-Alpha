@@ -24,7 +24,7 @@ public partial class AccountController : Controller
             return View("ForgottenPassword/ForgottenPassword", viewModel);
         }
 
-        await _resetPasswordService.RequestForgottenPasswordChange(viewModel);
+        //await _resetPasswordService.RequestForgottenPasswordChange(viewModel);
 
         // ignore failed operation result not to reveal user existence in db.
         return View("ForgottenPassword/ForgottenPasswordEmailSent", viewModel.Email);
@@ -41,10 +41,12 @@ public partial class AccountController : Controller
     [HttpGet("change-forgotten-password")]
     public async Task<IActionResult> ChangeForgottenPassword([FromQuery] string token)
     {
-        var result = await _resetPasswordService.VerifyForgottenPasswordToken(token);
-        return result.FailedWithRedirect
-            ? RedirectToAction(nameof(ForgottenPasswordFailed))
-            : View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(token));
+        //var result = await _resetPasswordService.VerifyForgottenPasswordToken(token);
+        //return result.FailedWithRedirect
+        //    ? RedirectToAction(nameof(ForgottenPasswordFailed))
+        //    : View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(token));
+        
+        return View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(token));
     }
 
     [UserPasswordManagement]
@@ -56,21 +58,21 @@ public partial class AccountController : Controller
             return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
         }
 
-        var result = await _resetPasswordService.ChangeForgottenPassword(viewModel);
-        if (result.FailedWithRedirect)
-        {
-            return RedirectToAction(nameof(ForgottenPasswordFailed));
-        }
-
-        if (!result.Succeeded)
-        {
-            foreach (var (key, value) in result.Errors)
-            {
-                ModelState.AddModelError(key, value);
-            }
-
-            return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
-        }
+        // var result = await _resetPasswordService.ChangeForgottenPassword(viewModel);
+        // if (result.FailedWithRedirect)
+        // {
+        //     return RedirectToAction(nameof(ForgottenPasswordFailed));
+        // }
+        //
+        // if (!result.Succeeded)
+        // {
+        //     foreach (var (key, value) in result.Errors)
+        //     {
+        //         ModelState.AddModelError(key, value);
+        //     }
+        //
+        //     return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
+        // }
 
         return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }
@@ -204,10 +206,10 @@ public partial class AccountController : Controller
     [HttpGet("account-activation-set-initial-password")]
     public async Task<IActionResult> AccountActivationSetInitialPassword([FromQuery] string token)
     {
-        var result = await _resetPasswordService.VerifyForgottenPasswordToken(token);
-        return result.FailedWithRedirect
-            ? RedirectToAction(nameof(ForgottenPasswordFailed))
-            : View("AccountActivationSetInitialPassword", new ForgottenPasswordChangeViewModel(token));
+        //var result = await _resetPasswordService.VerifyForgottenPasswordToken(token);
+        //return result.FailedWithRedirect
+            //? RedirectToAction(nameof(ForgottenPasswordFailed))
+        return View("AccountActivationSetInitialPassword", new ForgottenPasswordChangeViewModel(token));
     }
 
     [UserPasswordManagement]
@@ -219,21 +221,21 @@ public partial class AccountController : Controller
             return View("AccountActivationSetInitialPassword", viewModel);
         }
 
-        var result = await _resetPasswordService.ChangeForgottenPassword(viewModel);
-        if (result.FailedWithRedirect)
-        {
-            return RedirectToAction(nameof(ForgottenPasswordFailed));
-        }
-
-        if (!result.Succeeded)
-        {
-            foreach (var (key, value) in result.Errors)
-            {
-                ModelState.AddModelError(key, value);
-            }
-
-            return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
-        }
+        // var result = await _resetPasswordService.ChangeForgottenPassword(viewModel);
+        // if (result.FailedWithRedirect)
+        // {
+        //     return RedirectToAction(nameof(ForgottenPasswordFailed));
+        // }
+        //
+        // if (!result.Succeeded)
+        // {
+        //     foreach (var (key, value) in result.Errors)
+        //     {
+        //         ModelState.AddModelError(key, value);
+        //     }
+        //
+        //     return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
+        // }
 
         return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }
