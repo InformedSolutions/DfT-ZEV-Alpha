@@ -1,6 +1,4 @@
-using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
-using idunno.Authentication.Basic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
@@ -75,11 +73,15 @@ public partial class AccountController : Controller
             HttpContext.Session.SetString("Token",result.IdToken);
             HttpContext.Session.SetString("RefreshToken",result.RefreshToken);
 
+            return RedirectToAction("Index", "Home");
 
         }
         catch (Exception ex)
         {
-            throw;
+            viewModel.CleanPassword();
+            ViewData["message"] = "InvalidCredentials";
+
+            return View();
         }
         _logger.LogInformation("User {Email} signed in successfully", viewModel.Email);
         //var result = await _signInService.SignIn(viewModel);

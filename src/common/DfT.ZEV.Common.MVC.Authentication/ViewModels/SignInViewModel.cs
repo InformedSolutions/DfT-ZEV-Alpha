@@ -18,7 +18,9 @@ public class SignInViewModel
     /// If we receive request with this field filled then there is high probability bot has interacted with the app.
     /// </summary>
     public string UserId { get; set; }
-
+    
+    public string Message { get; set; }
+    
     public void CleanPassword()
     {
         Password = null;
