@@ -1,7 +1,8 @@
 name: DfT.ZEV.Services.Websites.ManufacturerReview (Push)
 
 on:
-  pull_request:
+  workflow_dispatch:
+  push:
     branches:
       - develop
       - hotfix/**
@@ -13,12 +14,11 @@ on:
       - '!**/README.MD'
 
 env:
-    DEPLOY_ENVIRONMENT: dev
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
-    TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
+  DEPLOY_ENVIRONMENT: dev
+  TF_VAR_source_commit_hash: ${{ github.sha }}
 
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./infrastructure/terraform/05-websites/05-02-manufacturer-data-review-website
+        working-directory: ./infrastructure/terraform/05-websites/05-02-manufacturer-website
     steps:
     - uses: actions/checkout@v2
     - name: Authenticate to Google Cloud
@@ -55,11 +55,9 @@ jobs:
       with:
         terraform_version: 1.6.3
 
-    - name: Build docker image
-      run: make docker-build
-
-    - name: Build docker image
-      run: make docker-push
+    - name: Authenticate against docker registry
+      run: |
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
 
     - name: Terraform init
       run: make init

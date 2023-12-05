@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Core.Application;
-using DfT.ZEV.Core.Infrastructure;
 using Google.Cloud.Functions.Hosting;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using DfT.ZEV.Core.Infrastructure.Persistence;
+using Serilog;
+using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.Services;
+using Notify.Interfaces;
+using Notify.Client;
 
 namespace DfT.ZEV.Services.Notifications.Handler;
 
@@ -33,9 +31,18 @@ public class ServiceStartup : FunctionsStartup
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRepositories();
-        services.AddApplication();
-        services.AddApplication();
-        services.AddLogging();
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .Enrich.WithAssemblyCompilationModeLogging()
+            .Enrich.WithBuildIdLogging()
+            .Enrich.WithEnvironmentNameLogging()
+            .CreateLogger();
+
+        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+
+        var notifyClient = new NotificationClient(configuration.GetValue<string>("GovUkNotifyApiKey"));
+        services.AddSingleton<INotificationClient>(notifyClient);
+
+        services.AddScoped<INotificationsService, NotificationsService>();
     }
 }

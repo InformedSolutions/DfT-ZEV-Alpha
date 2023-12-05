@@ -1,6 +1,7 @@
 name: DfT.ZEV.Services.APIs.Organisations (Push)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
@@ -14,8 +15,7 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: dev
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
-    TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
+    TF_VAR_source_commit_hash: ${{ github.sha }}
 
 jobs:
   build:
@@ -59,11 +59,9 @@ jobs:
       with:
         terraform_version: 1.6.3
 
-    - name: Build docker image
-      run: make docker-build
-
-    - name: Build docker image
-      run: make docker-push
+    - name: Authenticate against docker registry
+      run: |
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
 
     - name: Terraform init
       run: make init

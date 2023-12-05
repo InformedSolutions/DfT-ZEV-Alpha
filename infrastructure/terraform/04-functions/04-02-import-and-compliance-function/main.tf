@@ -68,6 +68,7 @@ resource "google_cloudfunctions2_function" "compliance_calculation_service" {
       Postgres__MaxPoolSize = 2
       PGSSLCERT             = "/etc/secrets/postgres-cert/${data.terraform_remote_state.backends.outputs.postgres_config.client_certificate_secret_id}"
       PGSSLKEY              = "/etc/secrets/postgres-key/${data.terraform_remote_state.backends.outputs.postgres_config.client_key_secret_id}"
+      BUILDID               = var.source_commit_hash
 
       GoogleCloud__ProjectId      = var.project
       Buckets__ManufacturerImport = data.terraform_remote_state.backends.outputs.app_data_buckets.manufacturer_data_bucket_id

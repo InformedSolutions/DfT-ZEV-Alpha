@@ -1,6 +1,7 @@
 name: DfT.ZEV.Services.Functions.Notifications (Push)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
@@ -12,8 +13,7 @@ on:
 
 env:
     DEPLOY_ENVIRONMENT: dev
-    SOURCE_COMMIT_HASH: ${{ github.sha }}
-    TF_VAR_SOURCE_COMMIT_HASH: ${{ github.sha }}
+    TF_VAR_source_commit_hash: ${{ github.sha }}
 
 jobs:
 

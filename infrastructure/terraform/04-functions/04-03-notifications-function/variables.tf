@@ -22,6 +22,25 @@ variable "environment" {
 }
 
 variable "source_commit_hash" {
-  description = "The docker image to deploy"
+  description = "The source commit hash of the function being deployed"
   type        = string
+  default     = "latest"
+}
+
+variable "notifications_svc_resource_quotas" {
+  type = object({
+    max_instance_count               = number,
+    max_instance_request_concurrency = number,
+    timeout_seconds                  = number,
+    available_memory                 = string,
+    available_cpu                    = number
+  })
+  description = "Resource quotas for Cloud Function Notifications Service."
+  default = {
+    max_instance_count               = 1,
+    max_instance_request_concurrency = 1
+    timeout_seconds                  = 1800,
+    available_memory                 = "2Gi"
+    available_cpu                    = 1,
+  }
 }

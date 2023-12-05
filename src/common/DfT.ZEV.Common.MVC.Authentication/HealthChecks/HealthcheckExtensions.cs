@@ -14,14 +14,24 @@ public static class HealthcheckExtensions
         services.AddTransient<PostgresHealthCheck>();
         
         services.AddHealthChecks()
-            .AddCheck<PostgresHealthCheck>("postgres", HealthStatus.Unhealthy);
-        
+            .AddCheck<PostgresHealthCheck>("postgres", HealthStatus.Unhealthy)
+            .AddCheck<RestServiceHealthCheck>("organization-api-service", HealthStatus.Unhealthy);
         return services;
     }
 
     public static WebApplication UseHealthChecks(this WebApplication app)
     {
         app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        return app;
+    }
+    
+    public static IApplicationBuilder UseHealthChecksMvc(this IApplicationBuilder app)
+    {
+        app.UseHealthChecks("/health", new HealthCheckOptions
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
