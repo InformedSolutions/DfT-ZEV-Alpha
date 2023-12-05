@@ -31,6 +31,7 @@ using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
+using DfT.ZEV.Common.Services;
 
 namespace DfT.ZEV.Administration.Web;
 
@@ -117,7 +118,7 @@ public class Startup
         services.AddApplication();
         services.AddRepositories();
 
-
+        services.AddApiServiceClients(Configuration);
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
         services.AddScoped<IBusinessEventLogger, BusinessEventLogger>();

@@ -17,7 +17,7 @@ public class GetAllManufacturersQueryHandler : IRequestHandler<GetAllManufacture
 
     public async Task<GetAllManufacturersQueryResponse> Handle(GetAllManufacturersQuery request, CancellationToken cancellationToken)
     {
-        var manufacturers = await _unitOfWork.Manufacturers.GetAllAsync(cancellationToken);
+        var manufacturers = await _unitOfWork.Manufacturers.SearchAsync(request.Search,cancellationToken);
 
         return new GetAllManufacturersQueryResponse
         {

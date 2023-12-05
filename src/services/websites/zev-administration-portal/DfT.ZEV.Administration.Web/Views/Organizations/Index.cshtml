@@ -26,14 +26,12 @@
         <table>
             <tr>
                 <th>Manufacturer name</th>
-                <th>Number of accounts</th>
                 <th>Action</th>
               </tr>
-            @foreach (Manufacturer manufacturer in Model.Manufacturers)
+            @foreach (var manufacturer in Model.Manufacturers)
             {
                 <tr>
                     <td>@manufacturer.Name</td>
-                    <td>@manufacturer.UserBridges.Count</td>
                     <td>
                         <a class="govuk-link" asp-action="Manage" asp-route-id=@manufacturer.Id asp-controller="Organizations">Manage</a>
                     </td>

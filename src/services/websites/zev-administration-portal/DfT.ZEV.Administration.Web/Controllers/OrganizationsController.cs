@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
+using DfT.ZEV.Common.Services.Clients;
 using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using DfT.ZEV.Core.Domain.Abstractions;
@@ -16,21 +17,18 @@ namespace DfT.ZEV.Administration.Web.Controllers;
 [Route("organization")]
 public class OrganizationsController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMediator _mediator;
-    private readonly IAuthorizationService _authorizationService;
-    public OrganizationsController(IMediator mediator, IUnitOfWork unitOfWork, IAuthorizationService authorizationService)
+    private readonly OrganizationApiClient _organizationApi;
+    public OrganizationsController(OrganizationApiClient organizationApi)
     {
-        _mediator = mediator;
-        _unitOfWork = unitOfWork;
-        _authorizationService = authorizationService;
+      
+        _organizationApi = organizationApi;
     }
     
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var manufacturers = await  _unitOfWork.Manufacturers.GetAllAsync();
-        var dto = new OrganizationsViewModel() { Manufacturers = manufacturers.OrderByDescending(x => x.UserBridges.Count).ToList() };
+        var res = await _organizationApi.GetManufacturersAsync("");
+        var dto = new OrganizationsViewModel() { Manufacturers = res.Manufacturers };
         return this.View(dto);
     }
     
@@ -38,15 +36,15 @@ public class OrganizationsController : Controller
     public async Task<IActionResult> Index(OrganizationsViewModel model)
     {
         model.SearchTerm = model.SearchTerm ?? string.Empty;
-        var manufacturers = await  _unitOfWork.Manufacturers.SearchAsync(model.SearchTerm);
-        var dto = new OrganizationsViewModel() { Manufacturers = manufacturers.OrderByDescending(x => x.UserBridges.Count).ToList() };
+        var res = await _organizationApi.GetManufacturersAsync(model.SearchTerm);
+        var dto = new OrganizationsViewModel() { Manufacturers = res.Manufacturers.ToList() };
         return this.View(dto);
     }
     
     [HttpGet("{id:guid}/manage")]
     public async Task<IActionResult> Manage(Guid id)
     {
-        var manufacturer = await _mediator.Send(new GetManufacturerByIdQuery(id));
+        var manufacturer = await _organizationApi.GetManufacturerByIdAsync(id);
         if(manufacturer is null)
         {
             return this.NotFound();
@@ -76,7 +74,8 @@ public class OrganizationsController : Controller
             PermissionIds = new Guid[] {  }
         };
 
-        var res = await _mediator.Send(command);
+        //var res = await _mediator.Send(command);
+        var res = await _organizationApi.CreateUserAsync(command);
         return RedirectToAction(nameof(Index));
     }
     
