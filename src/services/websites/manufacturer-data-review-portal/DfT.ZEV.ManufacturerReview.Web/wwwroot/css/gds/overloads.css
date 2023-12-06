@@ -360,13 +360,6 @@ a.sort-by--descending:after {
     display: block !important;
 }
 
-@media (max-width: 40.0625em)
-{
-    .govuk-header__navigation-list {
-        display: none;
-    }
-}
-
 .js-enabled .govuk-header__navigation--open {
     display: block;
 }
