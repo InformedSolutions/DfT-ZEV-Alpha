@@ -22,7 +22,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     public async Task<AuthorizationResponse> Authorize(string mail, string password, string tenantId)
     {
         var apiUrl = string.Format(VerifyPasswordUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
-        
+
         var request = new AuthorizationRequest()
         {
             Email = mail,
@@ -30,18 +30,20 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
             TenantId = tenantId,
             ReturnSecureToken = true
         };
-        
+
         var requestJson = JsonConvert.SerializeObject(request, new JsonSerializerSettings()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         });
-        
+
         var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
         var contents = await result.Content.ReadAsStringAsync();
 
-        if(result.StatusCode != HttpStatusCode.OK)
+        Console.WriteLine(contents);
+
+        if (result.StatusCode != HttpStatusCode.OK)
             throw new Exception($"Google API returned status code {result.StatusCode}");
-        
+
         return JsonConvert.DeserializeObject<AuthorizationResponse>(await result.Content.ReadAsStringAsync());
     }
 
@@ -52,7 +54,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
         {
             RefreshToken = token
         };
-        
+
         var requestJson = JsonConvert.SerializeObject(request, new JsonSerializerSettings()
         {
             ContractResolver = new DefaultContractResolver
@@ -60,10 +62,10 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
                 NamingStrategy = new SnakeCaseNamingStrategy()
             },
         });
-        
+
         var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-        
-        if(result.StatusCode != HttpStatusCode.OK)
+
+        if (result.StatusCode != HttpStatusCode.OK)
             throw new Exception($"Google API returned status code {result.StatusCode}");
 
         return JsonConvert.DeserializeObject<RefreshTokenResponse>(await result.Content.ReadAsStringAsync(), new JsonSerializerSettings
