@@ -109,22 +109,6 @@ public partial class AccountController : Controller
             _logger.LogError(ex, ex.Message);
             return View(viewModel);
         }
-        // var result = await _passwordService.SetInitialPassword(viewModel);
-        // if (result.FailedWithRedirect)
-        // {
-        //     // TODO check if this page is appropriate
-        //     return RedirectToAction(nameof(ForgottenPasswordFailed));
-        // }
-
-        // if (!result.Succeeded)
-        // {
-        //     foreach (var (key, value) in result.Errors)
-        //     {
-        //         ModelState.AddModelError(key, value);
-        //     }
-
-        //     return View(viewModel);
-        // }
 
     }
     #endregion
@@ -140,34 +124,6 @@ public partial class AccountController : Controller
             : View(new ChangeExpiredPasswordViewModel(email));
     }
 
-    // [UserPasswordManagement]
-    // [HttpPost("change-expired-password")]
-    // public async Task<IActionResult> ChangeExpiredPassword(ChangeExpiredPasswordViewModel viewModel)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return View(viewModel);
-    //     }
-
-    //     var result = await _passwordService.ChangeExpiredPassword(viewModel);
-
-    //     if (result.FailedWithRedirect)
-    //     {
-    //         return RedirectToAction(nameof(SignIn));
-    //     }
-
-    //     if (!result.Succeeded)
-    //     {
-    //         foreach (var (key, value) in result.Errors)
-    //         {
-    //             ModelState.AddModelError(key, value);
-    //         }
-
-    //         return View(viewModel);
-    //     }
-
-    //     return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
-    // }
     #endregion
 
     #region ChangePassword
@@ -179,37 +135,6 @@ public partial class AccountController : Controller
         return View();
     }
 
-    // [UserPasswordManagement]
-    // [Authorize]
-    // [HttpPost("change-password")]
-    // public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return View(viewModel);
-    //     }
-
-    //     var result = await _passwordService.ChangePassword(viewModel);
-
-    //     if (result.ForceLogout)
-    //     {
-    //         await _signOutService.SignOut();
-    //         return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "LogoutDueToSecurity" });
-    //     }
-
-    //     if (!result.Succeeded)
-    //     {
-    //         foreach (var (key, value) in result.Errors)
-    //         {
-    //             ModelState.AddModelError(key, value);
-    //         }
-
-    //         return View(viewModel);
-    //     }
-
-    //     await _signOutService.SignOut();
-    //     return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
-    // }
     #endregion
 
     #region AccountActivationSetInitialPassword
@@ -217,9 +142,6 @@ public partial class AccountController : Controller
     [HttpGet("account-activation-set-initial-password")]
     public async Task<IActionResult> AccountActivationSetInitialPassword([FromQuery] string oobCode)
     {
-        //var result = await _resetPasswordService.VerifyForgottenPasswordToken(token);
-        //return result.FailedWithRedirect
-        //? RedirectToAction(nameof(ForgottenPasswordFailed))
         return View("AccountActivationSetInitialPassword", new ForgottenPasswordChangeViewModel(oobCode));
     }
 
@@ -231,22 +153,6 @@ public partial class AccountController : Controller
         {
             return View("AccountActivationSetInitialPassword", viewModel);
         }
-
-        // var result = await _resetPasswordService.ChangeForgottenPassword(viewModel);
-        // if (result.FailedWithRedirect)
-        // {
-        //     return RedirectToAction(nameof(ForgottenPasswordFailed));
-        // }
-        //
-        // if (!result.Succeeded)
-        // {
-        //     foreach (var (key, value) in result.Errors)
-        //     {
-        //         ModelState.AddModelError(key, value);
-        //     }
-        //
-        //     return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
-        // }
 
         return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }

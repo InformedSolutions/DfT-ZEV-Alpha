@@ -60,6 +60,11 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
       }
 
       env {
+        name  = "GoogleCloud__Tenancy__AppTenant"
+        value = data.terraform_remote_state.backends.outputs.identity_platform_config.manufacturers_tenant_name
+      }
+
+      env {
         name  = "GoogleCloud__Token__Issuer"
         value = data.terraform_remote_state.backends.outputs.identity_platform_config.token_issuer
       }
