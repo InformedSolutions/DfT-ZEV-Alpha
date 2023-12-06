@@ -74,22 +74,4 @@ public class OrganisationsController : Controller
         var res = await _organisationApi.CreateUserAsync(command);
         return RedirectToAction("Manage", new { id = id });
     }
-
-    [HttpGet("test")]
-    public async Task<IActionResult> Test()
-    {
-        var claims = User.Claims.ToList();
-        if (claims.Any())
-        {
-            return this.View(new TestViewModel()
-            {
-                IsAuthorized = true,
-                Name = claims.FirstOrDefault(x => x.Type == "email")?.Value
-            });
-        }
-        return this.View(new TestViewModel()
-        {
-            IsAuthorized = false
-        });
-    }
 }
