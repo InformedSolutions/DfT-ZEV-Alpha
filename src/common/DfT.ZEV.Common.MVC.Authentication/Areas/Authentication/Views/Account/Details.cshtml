@@ -1,10 +1,41 @@
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 @model DfT.ZEV.Common.MVC.Authentication.Models.AccountDetails
 @{
     ViewData["Title"] = "Home";
     ViewData["ActivePage"] = "Home";
+
+    var isUserPasswordManagementEnabled = Configuration.GetValue<bool>("UserPasswordManagementEnabled");
+    var isUserEmailChangeEnabled = Configuration.GetValue<bool>("UserEmailChangeEnabled");
 }
 
 <h1 class="govuk-heading-l">Account details</h1>
 
-<p>Mail: @Model.IdentityAccountDetails.Email</p>
-<p>Name: @Model.IdentityAccountDetails.Name</p>
+<govuk-summary-list>
+    <govuk-summary-list-row>
+        <govuk-summary-list-row-key>Email</govuk-summary-list-row-key>
+        <govuk-summary-list-row-value>@Model.IdentityAccountDetails.Email</govuk-summary-list-row-value>
+        @if (isUserEmailChangeEnabled)
+        {
+            <govuk-summary-list-row-actions>
+                <govuk-summary-list-row-action asp-action="RequestEmailChange">
+                    Change
+                </govuk-summary-list-row-action>
+            </govuk-summary-list-row-actions>
+        }
+    </govuk-summary-list-row>
+
+    @if (isUserPasswordManagementEnabled)
+    {
+        <govuk-summary-list-row>
+            <govuk-summary-list-row-key>Password</govuk-summary-list-row-key>
+            <govuk-summary-list-row-value>************</govuk-summary-list-row-value>
+            <govuk-summary-list-row-actions>
+                <govuk-summary-list-row-action asp-action="ChangePassword">
+                    Change
+                </govuk-summary-list-row-action>
+            </govuk-summary-list-row-actions>
+        </govuk-summary-list-row>
+    }
+</govuk-summary-list>
