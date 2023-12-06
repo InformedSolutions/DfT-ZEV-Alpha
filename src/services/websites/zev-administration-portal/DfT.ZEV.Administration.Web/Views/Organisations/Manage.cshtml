@@ -3,39 +3,48 @@
 @model DfT.ZEV.Administration.Web.Models.ManageOrganisationViewModel
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <h2 class="govuk-heading-s">
-            <a class="govuk-link" asp-action="Index" asp-controller="Organisations">Organisations</a>
-            </h2>
-        <p class="govuk-body-s">
-           
-        </p>
-        <h2 class="govuk-heading-s">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-l">
             @Model.Dto.Name
         </h2>
-        <p class="govuk-heading-s">
-            @Model.Id</p>
-        
-                <a class="govuk-link" asp-action="ManageAddUser" asp-route-id=@Model.Id asp-controller="Organisations">Add user</a>
 
-        <table>
-            <tr>
-                <th>Account id</th>
-                <th>Action</th>
-            </tr>
-            @foreach (var manufacturer in Model.Dto.Users)
-            {
-                <tr>
-                    <td>@manufacturer.Id</td>
-                    <td>
-                        ACTION
-                    </td>
-                </tr>
-            }
-        </table>
-        
-        
-        <a class="govuk-link" asp-action="Index" asp-controller="Organisations">Back to Organisations</a>
-        
+        <p>
+            Manufacturer ID: @Model.Id
+        </p>
     </div>
 </div>
+
+
+@if (Model.Dto.Users.Any())
+{
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--l">Accounts</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Account id</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                    @foreach (var account in Model.Dto.Users)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@account.Id</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <p>
+        No accounts have been registered yet for this manufacturer.
+    </p>
+}
+
+
+<a class="govuk-button govuk-button--primary" asp-action="ManageAddUser" asp-route-id=@Model.Id
+    asp-controller="Organisations">Add user</a>
