@@ -27,7 +27,7 @@ gcloud functions deploy dev-zev-compliance-calculation-service --allow-unauthent
 #### Deployment
 
 To deploy migrator service, use the following command:
-``` bash
+``` bash  
 gcloud functions deploy dev-migrator --allow-unauthenticated --entry-point Zev.Services.Migrator.Handler.Function --gen2 --region europe-west1 --runtime dotnet6 --trigger-http --update-build-env-vars GOOGLE_BUILDABLE=./Services/Migrator/Migrator.Handler
 ```
 

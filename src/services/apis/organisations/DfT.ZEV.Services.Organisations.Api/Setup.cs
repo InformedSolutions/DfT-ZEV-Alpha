@@ -29,6 +29,7 @@ public static class Setup
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddApplication();
         var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
+        builder.Services.ConfigureServicesSettings(builder.Configuration);
 
         builder.Services.AddDbContext(postgresSettings);
 

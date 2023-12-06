@@ -76,6 +76,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             await _usersService.UpdateUserClaimsAsync(user);
             await _usersService.RequestPasswordResetAsync(user);
+            
+            
         }
         catch (Exception e)
         {
@@ -84,7 +86,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         }
 
         _logger.LogInformation("Created user with email {Email}", request.Email);
-
+        
+        
         return new CreateUserCommandResponse(id);
     }
 

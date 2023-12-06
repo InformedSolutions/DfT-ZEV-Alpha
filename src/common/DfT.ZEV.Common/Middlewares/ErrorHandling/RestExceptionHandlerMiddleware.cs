@@ -15,9 +15,10 @@ public class RestExceptionHandlerMiddleware : IMiddleware
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
-        { 
+        {
             await next(context);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Something went wrong, error: {ExceptionMessage}", ex.Message);
 
@@ -34,15 +35,27 @@ public class RestExceptionHandlerMiddleware : IMiddleware
         {
             EntityNotFoundException notFoundException => HandleNotFoundException(notFoundException),
             HandlerException handlerException => HandleHandlerException(handlerException),
+            ConflictException conflictException => HandleConflictException(conflictException),
             _ => HandleException(ex)
         };
-    
+
+    private static BaseErrorResponse HandleConflictException(ConflictException exception)
+    {
+        var response = new BaseErrorResponse
+        {
+            StatusCode = (int)HttpStatusCode.Conflict,
+            Data = new { exception.Message }
+        };
+
+        return response;
+    }
+
     private static BaseErrorResponse HandleNotFoundException(EntityNotFoundException exception)
     {
         var response = new BaseErrorResponse
         {
             StatusCode = (int)HttpStatusCode.NotFound,
-            Data = new { exception.Message}
+            Data = new { exception.Message }
         };
 
         return response;
@@ -52,7 +65,7 @@ public class RestExceptionHandlerMiddleware : IMiddleware
         var response = new BaseErrorResponse
         {
             StatusCode = (int)HttpStatusCode.BadRequest,
-            Data = new { exception.Message}
+            Data = new { exception.Message }
         };
 
         return response;

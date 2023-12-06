@@ -4,13 +4,14 @@ public class TenancyConfiguration
 {
     public string Admin { get; set; } = null!;
     public string Manufacturers { get; set; } = null!;
+    public string AppTenant { get; set; } = null!;
 }
 
 public class TokenConfiguration
 {
     public string Issuer { get; set; } = null!;
     public string Audience { get; set; } = null!;
-    
+
 }
 
 public class GoogleCloudConfiguration

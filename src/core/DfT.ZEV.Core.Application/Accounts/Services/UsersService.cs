@@ -11,6 +11,7 @@ internal sealed class UsersService : IUsersService
 {
     private readonly IIdentityPlatform _identityPlatform;
     private readonly ILogger<UsersService> _logger;
+    
     public UsersService(IIdentityPlatform identityPlatform, ILogger<UsersService> logger)
     {
         _identityPlatform = identityPlatform;

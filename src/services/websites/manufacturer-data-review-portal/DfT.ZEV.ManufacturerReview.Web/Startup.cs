@@ -123,6 +123,7 @@ public class Startup
         services.AddResponseCompression();
 
         //services.AddHealthChecks();
+
         services.AddHealthChecks();
         // Register the Google Analytics configuration
         services.Configure<GoogleAnalyticsOptions>(options =>

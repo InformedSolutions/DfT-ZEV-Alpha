@@ -6,6 +6,8 @@ using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.MVC.Authentication.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using DfT.ZEV.Common.Configuration;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -15,11 +17,13 @@ public partial class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
     private readonly IIdentityPlatform _identityPlatform;
+    private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
 
-    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform)
+    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options)
     {
         _logger = logger;
         _identityPlatform = identityPlatform;
+        _googleOptions = options;
     }
 
     public IActionResult Index()
@@ -35,13 +39,13 @@ public partial class AccountController : Controller
         {
             return View(new AccountDetails()
             {
-               IdentityAccountDetails = User.GetAccountDetails()
+                IdentityAccountDetails = User.GetAccountDetails()
             });
         }
-        
+
         return Redirect("~/");
     }
-    
+
     [HttpGet("sign-in")]
     public IActionResult SignIn([FromQuery] string message)
     {
@@ -64,11 +68,11 @@ public partial class AccountController : Controller
 
         try
         {
-            var authenticationRequest = new AuthenticationRequest(viewModel.Email,viewModel.Password);
+            var authenticationRequest = new AuthenticationRequest(viewModel.Email, viewModel.Password);
             var result = await _identityPlatform.AuthenticateUser(authenticationRequest);
 
-            HttpContext.Session.SetString("Token",result.IdToken);
-            HttpContext.Session.SetString("RefreshToken",result.RefreshToken);
+            HttpContext.Session.SetString("Token", result.IdToken);
+            HttpContext.Session.SetString("RefreshToken", result.RefreshToken);
 
             return RedirectToAction("Index", "Home");
         }
