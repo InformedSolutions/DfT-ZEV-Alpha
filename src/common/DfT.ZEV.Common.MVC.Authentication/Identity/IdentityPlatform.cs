@@ -29,38 +29,35 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         }
     }
 
-    public async ValueTask<UserRecord> CreateUser(UserRecordArgs userRecordArgs)
+    public async ValueTask<UserRecord> CreateUser(UserRecordArgs userRecordArgs, string tenantId)
         => await FirebaseAuth.DefaultInstance.TenantManager
-            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .AuthForTenant(tenantId)
             .CreateUserAsync(userRecordArgs);
 
-    public async Task SetUserClaimsAsync(Guid userId, IReadOnlyDictionary<string, object> claims)
+    public async Task SetUserClaimsAsync(Guid userId, IReadOnlyDictionary<string, object> claims, string tenantId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
-            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .AuthForTenant(tenantId)
             .GetUserAsync(userId.ToString());
 
         await FirebaseAuth.DefaultInstance.TenantManager
-            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+            .AuthForTenant(tenantId)
             .SetCustomUserClaimsAsync(user.Uid, claims);
     }
 
-    public async Task<string> GetPasswordResetLink(Guid userId)
+    public async Task<string> GetPasswordResetLink(Guid userId, string tenantId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
-             .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+             .AuthForTenant(tenantId)
              .GetUserAsync(userId.ToString());
 
-        var currentTenant = _googleCloudConfiguration.Value.Tenancy.Manufacturers;
 
-        if (_googleCloudConfiguration.Value.Tenancy.AppTenant == "Admin")
-            currentTenant = _googleCloudConfiguration.Value.Tenancy.Admin;
 
 
         var rq = new PasswordResetCodeRequest()
         {
             UserIp = "127.0.0.1",
-            TenantId = currentTenant,
+            TenantId = tenantId,
             TargetProjectId = _googleCloudConfiguration.Value.ProjectId,
             Email = user.Email
         };
@@ -69,30 +66,26 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         return res.OobCode;
     }
 
-    public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest)
+    public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest, string tenantId)
     {
-        var currentTenant = _googleCloudConfiguration.Value.Tenancy.Manufacturers;
 
-        if (_googleCloudConfiguration.Value.Tenancy.AppTenant == "Admin")
-            currentTenant = _googleCloudConfiguration.Value.Tenancy.Admin;
-
-        Console.WriteLine($"Authenticating user {authorizationRequest.Email} in tenant {currentTenant}");
+        Console.WriteLine($"Authenticating user {authorizationRequest.Email} in tenant {tenantId}");
 
         return await _googleIdentityApiClient.Authorize(authorizationRequest.Email, authorizationRequest.Password,
-                    currentTenant);
+                    tenantId);
     }
 
     public async Task<RefreshTokenResponse> RefreshUser(string refreshToken)
         => await _googleIdentityApiClient.RefreshToken(refreshToken);
 
 
-    public async Task<PasswordChangeResponse> ChangePasswordAsync(string oobCode, string newPassword)
+    public async Task<PasswordChangeResponse> ChangePasswordAsync(string oobCode, string newPassword, string tenantId)
     {
         var request = new PasswordChangeRequest()
         {
             OobCode = oobCode,
             NewPassword = newPassword,
-            TenantId = _googleCloudConfiguration.Value.Tenancy.Manufacturers,
+            TenantId = tenantId,
         };
 
         return await _googleIdentityApiClient.ResetPassword(request);
