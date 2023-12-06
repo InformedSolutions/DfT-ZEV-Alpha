@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
-using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
+using DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
 using DfT.ZEV.Core.Application.Clients;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +63,7 @@ public class OrganisationsController : Controller
     [HttpPost("{id:guid}/manage/add")]
     public async Task<IActionResult> ManageAddUser(Guid id, ManageOrganisationAddUserModel model)
     {
-        var command = new CreateUserCommand()
+        var command = new CreateManufacturerUserCommand()
         {
             ManufacturerId = id,
             Email = model.Email,
