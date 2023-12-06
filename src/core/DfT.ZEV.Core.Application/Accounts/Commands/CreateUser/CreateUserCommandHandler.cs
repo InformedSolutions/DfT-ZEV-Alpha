@@ -33,7 +33,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         _logger = logger;
         _usersService = usersService;
     }
-    
+
     /// <summary>
     /// Handles the creation of a new user.
     /// </summary>
@@ -75,9 +75,11 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
             await _unitOfWork.Users.InsertAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             await _usersService.UpdateUserClaimsAsync(user);
+
+            _logger.LogInformation("Created user with email {Email}", request.Email);
             await _usersService.RequestPasswordResetAsync(user);
-            
-            
+            _logger.LogInformation("Requested password reset for user with email {Email}", request.Email);
+
         }
         catch (Exception e)
         {
@@ -86,8 +88,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         }
 
         _logger.LogInformation("Created user with email {Email}", request.Email);
-        
-        
+
+
         return new CreateUserCommandResponse(id);
     }
 

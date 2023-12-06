@@ -71,7 +71,8 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             UserIp = "127.0.0.1",
             ContinueUrl = "https://www.google.com/",
             TenantId = currentTenant,
-            TargetProjectId = _googleCloudConfiguration.Value.ProjectId
+            TargetProjectId = _googleCloudConfiguration.Value.ProjectId,
+            Email = user.Email
         };
         var res = await _googleIdentityApiClient.GetPasswordResetCode(rq);
         Console.WriteLine($"Password reset code: {res.OobCode}");
