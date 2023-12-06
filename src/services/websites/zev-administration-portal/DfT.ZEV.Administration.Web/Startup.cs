@@ -6,6 +6,7 @@ using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
+using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 using DfT.ZEV.Common.Security;
@@ -22,6 +23,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Serilog;
@@ -124,8 +126,8 @@ public class Startup
         services.AddResponseCompression();
 
         //services.AddHealthChecks();
-        services.AddHealthCheckServices();
-
+        services.AddHealthChecks()
+                 .AddCheck<RestServiceHealthCheck>("organization-api-service", HealthStatus.Unhealthy);
         // Register the Google Analytics configuration
         services.Configure<GoogleAnalyticsOptions>(options =>
             Configuration.GetSection("GoogleAnalytics").Bind(options));
