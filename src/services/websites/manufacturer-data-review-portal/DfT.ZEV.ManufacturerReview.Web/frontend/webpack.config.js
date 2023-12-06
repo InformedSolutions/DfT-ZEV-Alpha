@@ -28,7 +28,7 @@ module.exports = {
             'window.$': 'jquery',
         }),
         new webpack.ProvidePlugin({
-            'window.GOVUKFrontend': './js/gds/govuk-frontend-3.9.1.min.js',
+            'window.GOVUKFrontend': './js/gds/govuk-frontend-4.7.0.min.js',
         }),
         new MiniCssExtractPlugin()
     ]

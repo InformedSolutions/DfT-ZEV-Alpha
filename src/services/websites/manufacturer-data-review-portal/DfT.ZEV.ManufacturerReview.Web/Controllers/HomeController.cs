@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DfT.ZEV.ManufacturerReview.Web.Controllers;
 
 [Route("")]
+[Authorize]
 public class HomeController : Controller
 {
     public HomeController()
