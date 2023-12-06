@@ -4,7 +4,7 @@ locals {
 }
 
 resource "google_cloud_run_v2_service" "scheme_data_api" {
-  name     = "${local.name_prefix}-organisation-api"
+  name     = "${local.name_prefix}-scheme-data-api"
   location = var.region
   ingress  = "INGRESS_TRAFFIC_INTERNAL_ONLY"
 
