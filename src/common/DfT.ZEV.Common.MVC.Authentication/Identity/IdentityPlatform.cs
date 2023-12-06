@@ -11,10 +11,12 @@ internal sealed class IdentityPlatform : IIdentityPlatform
 {
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
     private readonly IGoogleIdentityApiClient _googleIdentityApiClient;
-    public IdentityPlatform(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IGoogleIdentityApiClient googleIdentityApiClient)
+    private readonly IOptions<ServicesConfiguration> _servicesConfiguration;
+    public IdentityPlatform(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IGoogleIdentityApiClient googleIdentityApiClient, IOptions<ServicesConfiguration> servicesConfiguration)
     {
         _googleCloudConfiguration = googleCloudConfiguration;
         _googleIdentityApiClient = googleIdentityApiClient;
+        _servicesConfiguration = servicesConfiguration;
 
         if(FirebaseApp.DefaultInstance == null)
         {
@@ -48,10 +50,16 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         var user = await FirebaseAuth.DefaultInstance.TenantManager
             .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
             .GetUserAsync(userId.ToString());
+
+        var settings = new ActionCodeSettings()
+        {
+            Url = _servicesConfiguration.Value.AdministrationPortalBaseUrl,
+            
+        };
         
         return await FirebaseAuth.DefaultInstance.TenantManager
             .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
-            .GeneratePasswordResetLinkAsync(user.Email);
+            .GeneratePasswordResetLinkAsync(user.Email, settings);
     }
 
     public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest)
