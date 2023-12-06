@@ -21,6 +21,7 @@ COPY ["src/common/DfT.ZEV.Common.MVC.Authentication/DfT.ZEV.Common.MVC.Authentic
 RUN dotnet restore "DfT.ZEV.Administration.Web/DfT.ZEV.Administration.Web.csproj"  -r alpine-x64 /p:PublishReadyToRun=true
 
 COPY ["src/services/websites/zev-administration-portal/", "."]
+COPY ["src/core/", "../../../../core/"]
 COPY ["src/common/", "../../../../common/"]
 COPY stylecop.ruleset stylecop.ruleset
 

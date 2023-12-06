@@ -7,7 +7,7 @@ using DfT.ZEV.Core.Domain.Processes.Values;
 namespace DfT.ZEV.Core.Application.Processes;
 
 /// <inheritdoc/>
-internal sealed class ProcessService : IProcessService
+public sealed class ProcessService : IProcessService
 {
     private readonly IUnitOfWork _unitOfWork;
 

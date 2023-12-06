@@ -7,7 +7,7 @@ using DfT.ZEV.Core.Domain.Vehicles.Values;
 namespace DfT.ZEV.Core.Application.Vehicles;
 
 /// <inheritdoc />
-internal sealed class VehicleService : IVehicleService
+public sealed class VehicleService : IVehicleService
 {
     private readonly IUnitOfWork _unitOfWork;
 

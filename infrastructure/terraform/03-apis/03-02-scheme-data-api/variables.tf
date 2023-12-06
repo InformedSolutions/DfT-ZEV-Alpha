@@ -21,6 +21,18 @@ variable "environment" {
   nullable    = false
 }
 
+variable "max_instance_count" {
+  type        = number
+  description = "Maximum number of instances to be started."
+  default     = 50
+}
+
+variable "postgres_connection_pool_size_per_instance" {
+  type        = number
+  description = "Maximum number of connections to the database per instance."
+  default     = 2
+}
+
 variable "source_commit_hash" {
   description = "The docker image to deploy"
   type        = string
