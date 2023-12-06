@@ -31,8 +31,8 @@ resource "google_apikeys_key" "identity_platform" {
 
   restrictions {
     api_targets {
-      service = ""
-      methods = ["*"]
+        methods = []
+        service = "identitytoolkit.googleapis.com"
     }
   }
 }
