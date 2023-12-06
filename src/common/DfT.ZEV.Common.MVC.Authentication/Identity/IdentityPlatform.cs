@@ -69,15 +69,19 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         var rq = new PasswordResetCodeRequest()
         {
             UserIp = "127.0.0.1",
-            ContinueUrl = "https://www.google.com/",
             TenantId = currentTenant,
             TargetProjectId = _googleCloudConfiguration.Value.ProjectId,
             Email = user.Email
         };
         var res = await _googleIdentityApiClient.GetPasswordResetCode(rq);
-        Console.WriteLine($"Password reset code: {res.OobCode}");
-        Console.WriteLine($"Link: {res.OobLink}");
-        return res.OobCode;
+
+        var link = new UriBuilder(_servicesConfiguration.Value.AdministrationPortalBaseUrl)
+        {
+            Path = "account/set-initial-password",
+            Query = $"oobCode={res.OobCode}"
+        }.Uri.ToString();
+
+        return link;
     }
 
     public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest)

@@ -91,9 +91,6 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
         // Get an access token
         var accessToken = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
 
-
-        //var apiUrl = string.Format(GetOobCodeUrlTemplate, "informed-zev");
-
         var requestJson = JsonConvert.SerializeObject(passwordResetCodeRequest, new JsonSerializerSettings()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
