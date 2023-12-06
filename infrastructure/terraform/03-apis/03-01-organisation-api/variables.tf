@@ -38,3 +38,9 @@ variable "source_commit_hash" {
   type        = string
   default     = "latest"
 }
+
+variable "manufacturer_website_address" {
+  description = "The base URL for the manufacturer website component."
+  type        = string
+  default     = "http://34.144.196.181"
+}

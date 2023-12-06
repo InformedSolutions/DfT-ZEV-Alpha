@@ -39,6 +39,11 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       }
 
       env {
+        name  = "Services__ManufacturerPortalBaseUrl"
+        value = var.manufacturer_website_address
+      }
+
+      env {
         name = local.db_password_env_name
         value_source {
           secret_key_ref {
