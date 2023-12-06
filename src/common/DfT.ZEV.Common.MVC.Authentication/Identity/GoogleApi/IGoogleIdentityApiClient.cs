@@ -2,11 +2,8 @@ namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 
 public interface IGoogleIdentityApiClient
 {
-    public Task<AuthorizationResponse> Authorize(string mail, string password, string tenantId);
-    public Task<RefreshTokenResponse> RefreshToken(string token);
-
-    public Task<PasswordResetCodeResponse> GetPasswordResetCode(PasswordResetCodeRequest passwordResetCodeRequest);
-    public Task<PasswordChangeResponse> ResetPassword(PasswordChangeRequest passwordChangeRequest);
-
-
+    Task<AuthorisationResponse> Authorise(string mail, string password, string tenantId);
+    Task<RefreshTokenResponse> RefreshToken(string token);
+    Task<PasswordResetTokenResponse> GetPasswordResetToken(PasswordResetTokenRequest passwordResetCodeRequest);
+    Task ChangePasswordWithToken(PasswordChangeWithTokenRequest passwordChangeRequest);
 }

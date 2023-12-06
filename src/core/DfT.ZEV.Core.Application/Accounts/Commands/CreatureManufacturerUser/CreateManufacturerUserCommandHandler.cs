@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Core.Application.Accounts.Exceptions;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
@@ -8,30 +9,36 @@ using DfT.ZEV.Core.Domain.Accounts.Services;
 using FirebaseAdmin.Auth;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
+namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
 
 /// <summary>
 /// Handles the creation of a new user.
 /// </summary>
 /// <remarks>
-/// This class is responsible for handling a <see cref="CreateUserCommand"/> and returning a <see cref="CreateUserCommandResponse"/>.
+/// This class is responsible for handling a <see cref="CreateManufacturerUserCommand"/> and returning a <see cref="CreateManufacturerUserCommandResponse"/>.
 /// It uses an instance of <see cref="IUnitOfWork"/> to interact with the database,
 /// an instance of <see cref="IIdentityPlatform"/> to interact with the identity platform,
 /// and an instance of <see cref="IUsersService"/> to manage user-related operations.
 /// </remarks>
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResponse>
+public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufacturerUserCommand, CreateManufacturerUserCommandResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IIdentityPlatform _identityPlatform;
+    private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
+    private readonly IOptions<ServicesConfiguration> _serviceConfiguration;
     private readonly IUsersService _usersService;
-    private readonly ILogger<CreateUserCommandHandler> _logger;
-    public CreateUserCommandHandler(IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform, ILogger<CreateUserCommandHandler> logger, IUsersService usersService)
+    private readonly ILogger<CreateManufacturerUserCommandHandler> _logger;
+    public CreateManufacturerUserCommandHandler(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IOptions<ServicesConfiguration> serviceConfiguration, IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform, ILogger<CreateManufacturerUserCommandHandler> logger, IUsersService usersService)
     {
         _unitOfWork = unitOfWork;
         _identityPlatform = identityPlatform;
         _logger = logger;
         _usersService = usersService;
+
+        _googleCloudConfiguration = googleCloudConfiguration;
+        _serviceConfiguration = serviceConfiguration;
     }
 
     /// <summary>
@@ -43,7 +50,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
     /// <exception cref="ManufacturerHandlerExceptions.ManufacturerNotFound">Thrown when the manufacturer is not found.</exception>
     /// <exception cref="UserHandlerExceptions.PermissionsNotFound">Thrown when one or more permissions are not found.</exception>
     /// <exception cref="UserHandlerExceptions.CouldNotCreateUser">Thrown when user creation failed.</exception>
-    public async Task<CreateUserCommandResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<CreateManufacturerUserCommandResponse> Handle(CreateManufacturerUserCommand request, CancellationToken cancellationToken)
     {
         var manufacturer = await _unitOfWork.Manufacturers.GetByIdAsync(request.ManufacturerId, cancellationToken);
         if (manufacturer is null)
@@ -68,18 +75,17 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
 
         try
         {
-            await _identityPlatform.CreateUser(args);
+            await _identityPlatform.CreateUser(args, _googleCloudConfiguration.Value.Tenancy.Manufacturers);
             var user = new User(id);
             user.UpdatePermissions(manufacturer, permissions);
 
             await _unitOfWork.Users.InsertAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _usersService.UpdateUserClaimsAsync(user);
+            await _usersService.UpdateUserClaimsAsync(user, _googleCloudConfiguration.Value.Tenancy.Manufacturers);
 
             _logger.LogInformation("Created user with email {Email}", request.Email);
-            await _usersService.RequestPasswordResetAsync(user);
+            await _usersService.RequestPasswordResetAsync(user, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, _googleCloudConfiguration.Value.Tenancy.Manufacturers);
             _logger.LogInformation("Requested password reset for user with email {Email}", request.Email);
-
         }
         catch (Exception e)
         {
@@ -90,7 +96,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         _logger.LogInformation("Created user with email {Email}", request.Email);
 
 
-        return new CreateUserCommandResponse(id);
+        return new CreateManufacturerUserCommandResponse(id);
     }
 
     private static string CreateSecureRandomString(int count = 64) =>

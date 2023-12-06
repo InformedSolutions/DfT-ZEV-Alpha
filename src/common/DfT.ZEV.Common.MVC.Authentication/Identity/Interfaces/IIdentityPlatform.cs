@@ -7,8 +7,8 @@ public interface IIdentityPlatform
 {
     public ValueTask<UserRecord> CreateUser(UserRecordArgs userRecordArgs, string tenantId);
     public Task SetUserClaimsAsync(Guid userId, IReadOnlyDictionary<string, object> claims, string tenantId);
-    public Task<string> GetPasswordResetLink(Guid userId, string tenantId);
-    public Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest, string tenantId);
+    public Task<string> GetPasswordResetToken(Guid userId, string tenantId);
+    public Task<AuthorisationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest, string tenantId);
     public Task<RefreshTokenResponse> RefreshUser(string refreshToken);
-    public Task<PasswordChangeResponse> ChangePasswordAsync(string oobCode, string newPassword, string tenantId);
+    public Task ChangePasswordAsync(string oobCode, string newPassword, string tenantId);
 }

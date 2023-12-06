@@ -100,7 +100,7 @@ public partial class AccountController : Controller
 
         try
         {
-            var res = await _identityPlatform.ChangePasswordAsync(viewModel.OobCode, viewModel.Password, _googleOptions.Value.Tenancy.AppTenant);
+            await _identityPlatform.ChangePasswordAsync(viewModel.OobCode, viewModel.Password, _googleOptions.Value.Tenancy.AppTenant);
             return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
         }
         catch (Exception ex)

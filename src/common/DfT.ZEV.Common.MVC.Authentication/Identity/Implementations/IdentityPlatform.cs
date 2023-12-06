@@ -45,33 +45,30 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             .SetCustomUserClaimsAsync(user.Uid, claims);
     }
 
-    public async Task<string> GetPasswordResetLink(Guid userId, string tenantId)
+    public async Task<string> GetPasswordResetToken(Guid userId, string tenantId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
              .AuthForTenant(tenantId)
              .GetUserAsync(userId.ToString());
 
-
-
-
-        var rq = new PasswordResetCodeRequest()
+        var rq = new PasswordResetTokenRequest
         {
             UserIp = "127.0.0.1",
             TenantId = tenantId,
             TargetProjectId = _googleCloudConfiguration.Value.ProjectId,
             Email = user.Email
         };
-        var res = await _googleIdentityApiClient.GetPasswordResetCode(rq);
 
-        return res.OobCode;
+        var res = await _googleIdentityApiClient.GetPasswordResetToken(rq);
+        return res.PasswordResetToken;
     }
 
-    public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest, string tenantId)
+    public async Task<AuthorisationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest, string tenantId)
     {
 
         Console.WriteLine($"Authenticating user {authorizationRequest.Email} in tenant {tenantId}");
 
-        return await _googleIdentityApiClient.Authorize(authorizationRequest.Email, authorizationRequest.Password,
+        return await _googleIdentityApiClient.Authorise(authorizationRequest.Email, authorizationRequest.Password,
                     tenantId);
     }
 
@@ -79,15 +76,15 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         => await _googleIdentityApiClient.RefreshToken(refreshToken);
 
 
-    public async Task<PasswordChangeResponse> ChangePasswordAsync(string oobCode, string newPassword, string tenantId)
+    public async Task ChangePasswordAsync(string oobCode, string newPassword, string tenantId)
     {
-        var request = new PasswordChangeRequest()
+        var request = new PasswordChangeWithTokenRequest
         {
-            OobCode = oobCode,
+            PasswordResetToken = oobCode,
             NewPassword = newPassword,
             TenantId = tenantId,
         };
 
-        return await _googleIdentityApiClient.ResetPassword(request);
+        await _googleIdentityApiClient.ChangePasswordWithToken(request);
     }
 }

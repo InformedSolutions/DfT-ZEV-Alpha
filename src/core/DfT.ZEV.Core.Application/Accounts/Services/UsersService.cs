@@ -19,21 +19,21 @@ internal sealed class UsersService : IUsersService
     }
 
     /// <inheritdoc/>
-    public async Task UpdateUserClaimsAsync(User user)
+    public async Task UpdateUserClaimsAsync(User user, string tenantId)
     {
         var claims = new Dictionary<string, object>();
         var mappedPermissions = user.ManufacturerBridges.Select(x
             => new { Id = x.Manufacturer.Id, Permissions = x.Permissions.Select(p => new { p.Id }) })
             .ToList();
         claims.Add("permissions", mappedPermissions);
-        await _identityPlatform.SetUserClaimsAsync(user.Id, claims);
+        await _identityPlatform.SetUserClaimsAsync(user.Id, claims, tenantId);
     }
 
     /// <inheritdoc/>
-    public async Task RequestPasswordResetAsync(User user)
+    public async Task RequestPasswordResetAsync(User user, string hostAddress, string tenantId)
     {
-        var code = await _identityPlatform.GetPasswordResetLink(user.Id);
-        var link = $"account/set-initial-password/{code}";
+        var code = await _identityPlatform.GetPasswordResetToken(user.Id, tenantId);
+        var link = $"{hostAddress}/account/set-initial-password/{code}";
 
         _logger.LogInformation("Generate password reset link for user {Id}: {ResetLink}", user.Id, link);
     }

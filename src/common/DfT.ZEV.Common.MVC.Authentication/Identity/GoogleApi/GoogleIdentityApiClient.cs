@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
 using Google.Apis.Auth.OAuth2;
@@ -12,23 +13,23 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
-    private const string VerifyPasswordUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
-    private const string RefreshTokenUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
-    private const string GetOobCodeUrlTemplate = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode";
-    private const string ResetPasswordUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword";
+    private const string VerifyPasswordApiUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
+    private const string RefreshTokenApiUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
+    private const string GetOobCodeApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode";
+    private const string ResetPasswordApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword";
+    private static string[] _scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
+
     public GoogleIdentityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
     {
         _googleCloudConfiguration = googleCloudConfiguration;
         _httpClient = httpClient;
     }
 
-    public async Task<AuthorizationResponse> Authorize(string mail, string password, string tenantId)
+    public async Task<AuthorisationResponse> Authorise(string mail, string password, string tenantId)
     {
+        var apiUrl = string.Format(VerifyPasswordApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
 
-
-        var apiUrl = string.Format(VerifyPasswordUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
-        //credential.GetOidcTokenAsync(new OidcTokenOptions() { Audience = apiUrl }));
-        var request = new AuthorizationRequest()
+        var request = new AuthorisationRequest
         {
             Email = mail,
             Password = password,
@@ -36,99 +37,100 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
             ReturnSecureToken = true
         };
 
-        var requestJson = JsonConvert.SerializeObject(request, new JsonSerializerSettings()
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        });
-
+        var requestJson = SerialiseToCamelCaseJson(request);
         var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-        var contents = await result.Content.ReadAsStringAsync();
 
-        Console.WriteLine(contents);
-
-        if (result.StatusCode != HttpStatusCode.OK)
-            throw new Exception($"Google API returned status code {result.StatusCode}");
-
-        return JsonConvert.DeserializeObject<AuthorizationResponse>(await result.Content.ReadAsStringAsync());
+        return result.StatusCode != HttpStatusCode.OK
+            ? throw new ApplicationException($"Google API returned status code {result.StatusCode}")
+            : JsonConvert.DeserializeObject<AuthorisationResponse>(await result.Content.ReadAsStringAsync());
     }
 
     public async Task<RefreshTokenResponse> RefreshToken(string token)
     {
-        var apiUrl = string.Format(RefreshTokenUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
-        var request = new RefreshTokenRequest()
+        var apiUrl = string.Format(RefreshTokenApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
+
+        var request = new RefreshTokenRequest
         {
             RefreshToken = token
         };
 
-        var requestJson = JsonConvert.SerializeObject(request, new JsonSerializerSettings()
+        var requestJson = SerialiseToSnakeCaseJson(request);
+        var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+
+        return result.StatusCode != HttpStatusCode.OK
+            ? throw new ApplicationException($"Google API returned status code {result.StatusCode}")
+            : JsonConvert.DeserializeObject<RefreshTokenResponse>(await result.Content.ReadAsStringAsync(), new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new SnakeCaseNamingStrategy()
+                }
+            });
+    }
+
+    public async Task<PasswordResetTokenResponse> GetPasswordResetToken(PasswordResetTokenRequest passwordResetCodeRequest)
+    {
+        await ConfigureHttpClient();
+        var requestJson = SerialiseToCamelCaseJson(passwordResetCodeRequest);
+        var result = await _httpClient.PostAsync(GetOobCodeApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+
+        return result.StatusCode != HttpStatusCode.OK
+            ? throw new ApplicationException($"Google API returned status code {result.StatusCode}")
+            : JsonConvert.DeserializeObject<PasswordResetTokenResponse>(await result.Content.ReadAsStringAsync());
+    }
+
+    public async Task ChangePasswordWithToken(PasswordChangeWithTokenRequest passwordChangeRequest)
+    {
+        await ConfigureHttpClient();
+        var requestJson = SerialiseToCamelCaseJson(passwordChangeRequest);
+        var result = await _httpClient.PostAsync(ResetPasswordApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+
+        if (result.StatusCode != HttpStatusCode.OK)
+        {
+            throw new ApplicationException($"Google API returned status code {result.StatusCode}");
+        }
+    }
+
+    /// <summary>
+    /// Private helper to serialise to camel case JSON.
+    /// </summary>
+    /// <param name="input">Object to be serialised.</param>
+    /// <returns>Snake-case key formatted JSON object.</returns> 
+    private static string SerialiseToCamelCaseJson(object input)
+    {
+        return JsonConvert.SerializeObject(input, new JsonSerializerSettings()
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        });
+    }
+
+    /// <summary>
+    /// Private helper to serialise to snake-case JSON.
+    /// </summary>
+    /// <param name="input">Object to be serialised.</param>
+    /// <returns>Camel-case key formatted JSON object.</returns> 
+    private static string SerialiseToSnakeCaseJson(object input)
+    {
+        return JsonConvert.SerializeObject(input, new JsonSerializerSettings()
         {
             ContractResolver = new DefaultContractResolver
             {
                 NamingStrategy = new SnakeCaseNamingStrategy()
             },
         });
-
-        var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-
-        if (result.StatusCode != HttpStatusCode.OK)
-            throw new Exception($"Google API returned status code {result.StatusCode}");
-
-        return JsonConvert.DeserializeObject<RefreshTokenResponse>(await result.Content.ReadAsStringAsync(), new JsonSerializerSettings
-        {
-            ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new SnakeCaseNamingStrategy()
-            }
-        });
     }
 
-    public async Task<PasswordResetCodeResponse> GetPasswordResetCode(PasswordResetCodeRequest passwordResetCodeRequest)
+    /// <summary>
+    /// Helper to configure the HTTP client with an access token and project ID for quota field requirements.
+    /// </summary>
+    private async Task ConfigureHttpClient()
     {
-        var scopes = new[] { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
         var credential = GoogleCredential.GetApplicationDefault()
-        .CreateScoped(scopes).CreateWithQuotaProject("informed-zev");
+            .CreateScoped(_scopes).CreateWithQuotaProject(_googleCloudConfiguration.Value.ProjectId);
 
-
-        // Get an access token
         var accessToken = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
 
-        var requestJson = JsonConvert.SerializeObject(passwordResetCodeRequest, new JsonSerializerSettings()
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        });
-        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-        _httpClient.DefaultRequestHeaders.Add("x-goog-user-project", "informed-zev");
-        var result = await _httpClient.PostAsync(GetOobCodeUrlTemplate, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-
-        if (result.StatusCode != HttpStatusCode.OK)
-            throw new Exception($"Google API returned status code {result.StatusCode}");
-
-        _httpClient.DefaultRequestHeaders.Authorization = null;
-        return JsonConvert.DeserializeObject<PasswordResetCodeResponse>(await result.Content.ReadAsStringAsync());
-    }
-
-    public async Task<PasswordChangeResponse> ResetPassword(PasswordChangeRequest passwordChangeRequest)
-    {
-        var scopes = new[] { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
-        var credential = GoogleCredential.GetApplicationDefault()
-        .CreateScoped(scopes).CreateWithQuotaProject("informed-zev");
-
-
-        // Get an access token
-        var accessToken = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
-
-        var requestJson = JsonConvert.SerializeObject(passwordChangeRequest, new JsonSerializerSettings()
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        });
-        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-        _httpClient.DefaultRequestHeaders.Add("x-goog-user-project", "informed-zev");
-        var result = await _httpClient.PostAsync(ResetPasswordUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-
-        if (result.StatusCode != HttpStatusCode.OK)
-            throw new Exception($"Google API returned status code {result.StatusCode}");
-
-        _httpClient.DefaultRequestHeaders.Authorization = null;
-        return JsonConvert.DeserializeObject<PasswordChangeResponse>(await result.Content.ReadAsStringAsync());
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        _httpClient.DefaultRequestHeaders.Add("x-goog-user-project", _googleCloudConfiguration.Value.ProjectId);
     }
 }
