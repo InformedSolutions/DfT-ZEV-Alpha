@@ -18,7 +18,7 @@ docker-build:
 docker-push:
 	docker tag zev-organisation-api ${REGISTRY_URL}/zev-organisation-api:${SOURCE_COMMIT_HASH}
 	docker push ${REGISTRY_URL}/zev-organisation-api:${SOURCE_COMMIT_HASH}
-	docker tag zev-administration ${REGISTRY_URL}/zev-organisation-api:latest
+	docker tag zev-organisation-api ${REGISTRY_URL}/zev-organisation-api:latest
 	docker push ${REGISTRY_URL}/zev-organisation-api:latest
 
 restore:
