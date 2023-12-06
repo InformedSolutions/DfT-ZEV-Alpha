@@ -51,15 +51,6 @@ internal sealed class IdentityPlatform : IIdentityPlatform
              .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
              .GetUserAsync(userId.ToString());
 
-        // var settings = new ActionCodeSettings()
-        // {
-        //     Url = _servicesConfiguration.Value.AdministrationPortalBaseUrl,
-
-        // };
-
-        // return await FirebaseAuth.DefaultInstance.TenantManager
-        //     .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
-        //     .GeneratePasswordResetLinkAsync(user.Email, settings);
         var currentTenant = _googleCloudConfiguration.Value.Tenancy.Manufacturers;
 
         if (_googleCloudConfiguration.Value.Tenancy.AppTenant == "Admin")
@@ -75,13 +66,7 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         };
         var res = await _googleIdentityApiClient.GetPasswordResetCode(rq);
 
-        var link = new UriBuilder(_servicesConfiguration.Value.AdministrationPortalBaseUrl)
-        {
-            Path = "account/set-initial-password",
-            Query = $"oobCode={res.OobCode}"
-        }.Uri.ToString();
-
-        return link;
+        return res.OobCode;
     }
 
     public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest)
@@ -99,4 +84,17 @@ internal sealed class IdentityPlatform : IIdentityPlatform
 
     public async Task<RefreshTokenResponse> RefreshUser(string refreshToken)
         => await _googleIdentityApiClient.RefreshToken(refreshToken);
+
+
+    public async Task<PasswordChangeResponse> ChangePasswordAsync(string oobCode, string newPassword)
+    {
+        var request = new PasswordChangeRequest()
+        {
+            OobCode = oobCode,
+            NewPassword = newPassword,
+            TenantId = _googleCloudConfiguration.Value.Tenancy.Manufacturers,
+        };
+
+        return await _googleIdentityApiClient.ResetPassword(request);
+    }
 }

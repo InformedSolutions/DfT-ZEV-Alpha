@@ -10,4 +10,5 @@ public interface IIdentityPlatform
     public Task<string> GetPasswordResetLink(Guid userId);
     public Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest);
     public Task<RefreshTokenResponse> RefreshUser(string refreshToken);
+    public Task<PasswordChangeResponse> ChangePasswordAsync(string oobCode, string newPassword);
 }

@@ -2,6 +2,7 @@ using DfT.ZEV.Common.MVC.Authentication.Attributes;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -45,7 +46,7 @@ public partial class AccountController : Controller
         //return result.FailedWithRedirect
         //    ? RedirectToAction(nameof(ForgottenPasswordFailed))
         //    : View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(token));
-        
+
         return View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(token));
     }
 
@@ -74,48 +75,58 @@ public partial class AccountController : Controller
         //     return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
         // }
 
-        return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
+        return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }
     #endregion
 
     #region SetInitialPassword
     [UserPasswordManagement]
-    [HttpGet("set-initial-password")]
-    public IActionResult SetInitialPassword()
+    [HttpGet("set-initial-password/{oobCode}")]
+    public IActionResult SetInitialPassword(string oobCode)
     {
         var email = TempData["UserEmailSignInAttempt"]?.ToString();
 
-        return View(new SetInitialPasswordViewModel(email));
+        return View(new SetInitialPasswordViewModel() { OobCode = oobCode });
     }
 
-    // [UserPasswordManagement]
-    // [HttpPost("set-initial-password")]
-    // public async Task<IActionResult> SetInitialPassword(SetInitialPasswordViewModel viewModel)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return View(viewModel);
-    //     }
+    [UserPasswordManagement]
+    [HttpPost("set-initial-password/{oobCode}")]
+    public async Task<IActionResult> SetInitialPassword(string oobCode, SetInitialPasswordViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(viewModel);
+        }
 
-    //     var result = await _passwordService.SetInitialPassword(viewModel);
-    //     if (result.FailedWithRedirect)
-    //     {
-    //         // TODO check if this page is appropriate
-    //         return RedirectToAction(nameof(ForgottenPasswordFailed));
-    //     }
+        try
+        {
+            var res = await _identityPlatform.ChangePasswordAsync(viewModel.OobCode, viewModel.Password);
+            return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, "Could not set initial password. Please try again.");
+            _logger.LogError(ex, ex.Message);
+            return View(viewModel);
+        }
+        // var result = await _passwordService.SetInitialPassword(viewModel);
+        // if (result.FailedWithRedirect)
+        // {
+        //     // TODO check if this page is appropriate
+        //     return RedirectToAction(nameof(ForgottenPasswordFailed));
+        // }
 
-    //     if (!result.Succeeded)
-    //     {
-    //         foreach (var (key, value) in result.Errors)
-    //         {
-    //             ModelState.AddModelError(key, value);
-    //         }
+        // if (!result.Succeeded)
+        // {
+        //     foreach (var (key, value) in result.Errors)
+        //     {
+        //         ModelState.AddModelError(key, value);
+        //     }
 
-    //         return View(viewModel);
-    //     }
+        //     return View(viewModel);
+        // }
 
-    //     return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
-    // }
+    }
     #endregion
 
     #region ChangeExpiredPassword
@@ -200,16 +211,16 @@ public partial class AccountController : Controller
     //     return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
     // }
     #endregion
-    
+
     #region AccountActivationSetInitialPassword
     [UserPasswordManagement]
     [HttpGet("account-activation-set-initial-password")]
-    public async Task<IActionResult> AccountActivationSetInitialPassword([FromQuery] string token)
+    public async Task<IActionResult> AccountActivationSetInitialPassword([FromQuery] string oobCode)
     {
         //var result = await _resetPasswordService.VerifyForgottenPasswordToken(token);
         //return result.FailedWithRedirect
-            //? RedirectToAction(nameof(ForgottenPasswordFailed))
-        return View("AccountActivationSetInitialPassword", new ForgottenPasswordChangeViewModel(token));
+        //? RedirectToAction(nameof(ForgottenPasswordFailed))
+        return View("AccountActivationSetInitialPassword", new ForgottenPasswordChangeViewModel(oobCode));
     }
 
     [UserPasswordManagement]
@@ -237,7 +248,7 @@ public partial class AccountController : Controller
         //     return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
         // }
 
-        return RedirectToAction(nameof(AccountController.SignIn), "Account", new { message = "PasswordChangedSuccess" });
+        return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }
     #endregion
 }

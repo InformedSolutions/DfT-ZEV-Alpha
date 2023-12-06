@@ -60,7 +60,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Creat
         var args = new UserRecordArgs
         {
             Email = request.Email,
-            EmailVerified = false,
+            EmailVerified = true,
             Password = password,
             Disabled = false,
             Uid = id.ToString()

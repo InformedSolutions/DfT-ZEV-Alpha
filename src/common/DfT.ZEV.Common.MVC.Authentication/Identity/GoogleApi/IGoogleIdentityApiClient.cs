@@ -6,6 +6,7 @@ public interface IGoogleIdentityApiClient
     public Task<RefreshTokenResponse> RefreshToken(string token);
 
     public Task<PasswordResetCodeResponse> GetPasswordResetCode(PasswordResetCodeRequest passwordResetCodeRequest);
+    public Task<PasswordChangeResponse> ResetPassword(PasswordChangeRequest passwordChangeRequest);
 
 
 }
