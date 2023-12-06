@@ -78,12 +78,12 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
 
       env {
         name  = "GoogleCloud__Token__Issuer"
-        value = "TODO" # TODO: use valid value
+        value = "https://securetoken.google.com/${var.project}"
       }
 
       env {
         name  = "GoogleCloud__Token__Audience"
-        value = "TODO" # TODO: use valid value
+        value = var.project
       }
     }
   }
