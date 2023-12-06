@@ -32,3 +32,9 @@ variable "source_commit_hash" {
   type        = string
   default     = "latest"
 }
+
+variable "enable_basic_auth" {
+  description = "Whether basic authentication is enabled to access the service."
+  type        = bool
+  default     = false
+}

@@ -18,8 +18,8 @@ locals {
       BUILDID     = var.source_commit_hash
 
       GoogleCloud__ProjectId              = var.project
-      GoogleCloud__Tenancy__Admin         = "TODO" # TODO: set valid value
-      GoogleCloud__Tenancy__Manufacturers = "TODO" # TODO: set valid value
+      GoogleCloud__Tenancy__Admin         = data.terraform_remote_state.backends.outputs.identity_platform_config.administration_tenant_name
+      GoogleCloud__Tenancy__Manufacturers = data.terraform_remote_state.backends.outputs.identity_platform_config.manufacturers_tenant_name
   })
 
   db_connection_secret_files = {

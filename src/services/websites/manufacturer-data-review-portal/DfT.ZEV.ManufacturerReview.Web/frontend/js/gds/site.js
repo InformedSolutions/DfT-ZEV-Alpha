@@ -1,6 +1,6 @@
 ﻿import '../notification-banner';
 import './hide-cookie-notification';
-import GOVUKFrontend from './govuk-frontend-3.9.1.min.js';
+import GOVUKFrontend from './govuk-frontend-4.7.0.min.js';
 import $ from 'jquery';
 
 global.$ = $;
