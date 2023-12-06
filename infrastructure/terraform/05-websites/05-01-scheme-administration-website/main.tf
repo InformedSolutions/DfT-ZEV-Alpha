@@ -52,6 +52,11 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       }
 
       env {
+        name  = "Services__SchemeDataApiBaseUrl"
+        value = data.terraform_remote_state.scheme_data_api.outputs.service_url
+      }
+
+      env {
         name  = "GoogleCloud__ProjectId"
         value = var.project
       }
