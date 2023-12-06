@@ -48,18 +48,35 @@ internal sealed class IdentityPlatform : IIdentityPlatform
     public async Task<string> GetPasswordResetLink(Guid userId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
-            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
-            .GetUserAsync(userId.ToString());
+             .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+             .GetUserAsync(userId.ToString());
 
-        var settings = new ActionCodeSettings()
+        // var settings = new ActionCodeSettings()
+        // {
+        //     Url = _servicesConfiguration.Value.AdministrationPortalBaseUrl,
+
+        // };
+
+        // return await FirebaseAuth.DefaultInstance.TenantManager
+        //     .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
+        //     .GeneratePasswordResetLinkAsync(user.Email, settings);
+        var currentTenant = _googleCloudConfiguration.Value.Tenancy.Manufacturers;
+
+        if (_googleCloudConfiguration.Value.Tenancy.AppTenant == "Admin")
+            currentTenant = _googleCloudConfiguration.Value.Tenancy.Admin;
+
+
+        var rq = new PasswordResetCodeRequest()
         {
-            Url = _servicesConfiguration.Value.AdministrationPortalBaseUrl,
-
+            UserIp = "127.0.0.1",
+            ContinueUrl = "https://www.google.com/",
+            TenantId = currentTenant,
+            TargetProjectId = _googleCloudConfiguration.Value.ProjectId
         };
-
-        return await FirebaseAuth.DefaultInstance.TenantManager
-            .AuthForTenant(_googleCloudConfiguration.Value.Tenancy.Manufacturers)
-            .GeneratePasswordResetLinkAsync(user.Email, settings);
+        var res = await _googleIdentityApiClient.GetPasswordResetCode(rq);
+        Console.WriteLine($"Password reset code: {res.OobCode}");
+        Console.WriteLine($"Link: {res.OobLink}");
+        return res.OobCode;
     }
 
     public async Task<AuthorizationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest)
