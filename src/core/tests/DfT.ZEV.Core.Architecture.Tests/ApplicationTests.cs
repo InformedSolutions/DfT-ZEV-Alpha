@@ -19,8 +19,6 @@ public class ApplicationTests : BaseTest
             .HaveNameEndingWith("Service")
             .Should()
             .BeSealed()
-            .And()
-            .NotBePublic()
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue();

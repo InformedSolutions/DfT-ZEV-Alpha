@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <CodeAnalysisRuleSet>..\..\..\stylecop.ruleset</CodeAnalysisRuleSet>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>        
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>    
         <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    
     </PropertyGroup>
 
