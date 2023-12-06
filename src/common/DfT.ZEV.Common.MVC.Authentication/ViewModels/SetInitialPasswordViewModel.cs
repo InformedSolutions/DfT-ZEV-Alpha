@@ -8,16 +8,8 @@ public class SetInitialPasswordViewModel
     {
     }
 
-    public SetInitialPasswordViewModel(string email)
-    {
-        Email = email;
-    }
-
-    [Required]
-    public string Email { get; set; }
-
-    [Required(ErrorMessage = AuthErrorMessages.TemporaryPasswordEmpty)]
-    public string TemporaryPassword { get; set; }
+    //[Required(ErrorMessage = AuthErrorMessages.TemporaryPasswordEmpty)]
+    //public string TemporaryPassword { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
     public string Password { get; set; }
@@ -26,9 +18,11 @@ public class SetInitialPasswordViewModel
     [Compare(nameof(Password), ErrorMessage = AuthErrorMessages.PasswordsMustMatch)]
     public string PasswordConfirmation { get; set; }
 
+    public string OobCode { get; set; }
+
     public void CleanPasswords()
     {
-        TemporaryPassword = null;
+        //TemporaryPassword = null;
         Password = null;
         PasswordConfirmation = null;
     }

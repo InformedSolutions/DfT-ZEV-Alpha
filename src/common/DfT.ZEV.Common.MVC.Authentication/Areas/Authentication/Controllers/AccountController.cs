@@ -69,7 +69,7 @@ public partial class AccountController : Controller
         try
         {
             var authenticationRequest = new AuthenticationRequest(viewModel.Email, viewModel.Password);
-            var result = await _identityPlatform.AuthenticateUser(authenticationRequest);
+            var result = await _identityPlatform.AuthenticateUser(authenticationRequest, _googleOptions.Value.Tenancy.AppTenant);
 
             HttpContext.Session.SetString("Token", result.IdToken);
             HttpContext.Session.SetString("RefreshToken", result.RefreshToken);

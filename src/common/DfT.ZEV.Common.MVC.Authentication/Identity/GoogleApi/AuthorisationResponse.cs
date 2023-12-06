@@ -1,6 +1,6 @@
 namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 
-public class AuthorizationResponse
+public class AuthorisationResponse
 {
     public string Kind { get; set; } = null!;
     public string LocalId { get; set; }

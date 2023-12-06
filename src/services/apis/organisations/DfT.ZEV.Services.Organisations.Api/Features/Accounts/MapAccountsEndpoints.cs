@@ -1,4 +1,4 @@
-using DfT.ZEV.Core.Application.Accounts.Commands.CreateUser;
+using DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
 using DfT.ZEV.Core.Application.Accounts.Queries.GetAllUsers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ public static class MapAccountsEndpointsExtension
         app.MapGet("/accounts/", GetAllAccounts)
             .WithTags("Accounts");
         
-        app.MapPost("/accounts/", CreateAccount)
+        app.MapPost("/accounts/", CreateManufacturerAccount)
             .WithTags("Accounts");
         
         return app;
@@ -21,6 +21,6 @@ public static class MapAccountsEndpointsExtension
     private static async Task<IResult> GetAllAccounts([FromServices] IMediator mediator, CancellationToken cancellationToken = default)
         => Results.Ok(await mediator.Send(new GetAllUsersQuery(), cancellationToken));
 
-    private static async Task<IResult> CreateAccount([FromBody] CreateUserCommand req,[FromServices] IMediator mediator, CancellationToken cancellationToken = default)
+    private static async Task<IResult> CreateManufacturerAccount([FromBody] CreateManufacturerUserCommand req,[FromServices] IMediator mediator, CancellationToken cancellationToken = default)
         => Results.Ok(await mediator.Send(req, cancellationToken));
 }
