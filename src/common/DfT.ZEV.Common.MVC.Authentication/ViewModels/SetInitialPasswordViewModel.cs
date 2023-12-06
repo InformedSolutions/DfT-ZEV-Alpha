@@ -26,6 +26,8 @@ public class SetInitialPasswordViewModel
     [Compare(nameof(Password), ErrorMessage = AuthErrorMessages.PasswordsMustMatch)]
     public string PasswordConfirmation { get; set; }
 
+    public string OobCode { get; set; }
+
     public void CleanPasswords()
     {
         TemporaryPassword = null;
