@@ -23,7 +23,7 @@ RUN dotnet restore "DfT.ZEV.ManufacturerReview.Web/DfT.ZEV.ManufacturerReview.We
 COPY ["src/services/websites/manufacturer-data-review-portal/", "."]
 COPY ["src/core/", "../../../../core/"]
 COPY ["src/common/", "../../../../common/"]
-COPY stylecop.ruleset stylecop.ruleset
+COPY ["stylecop.ruleset", "../../stylecop.ruleset"]
 
 WORKDIR "/src/DfT.ZEV.ManufacturerReview.Web/frontend"
 RUN npm install -g pnpm
@@ -34,7 +34,7 @@ WORKDIR "/src/DfT.ZEV.ManufacturerReview.Web"
 RUN dotnet build "DfT.ZEV.ManufacturerReview.Web.csproj" -c Release -o /app/build -r alpine-x64 /p:PublishReadyToRun=true
 
 FROM build AS publish
-RUN dotnet publish "DfT.ZEV.ManufacturerReview.Web.csproj" -c Release -o /app/publish --framework net6.0 -r alpine-x64 --self-contained true /p:PublishTrimmed=true /p:PublishReadyToRun=true /p:PublishSingleFile=true
+RUN dotnet publish "DfT.ZEV.ManufacturerReview.Web.csproj" -c Release -o /app/publish -r alpine-x64 --self-contained true /p:PublishReadyToRun=true /p:PublishSingleFile=true
 
 FROM base AS final
 RUN apk add --no-cache tzdata
