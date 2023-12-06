@@ -28,7 +28,7 @@ resource "google_cloudfunctions2_function" "database_migrations_runner" {
 
   build_config {
     runtime     = "dotnet6"
-    entry_point = "Zev.Services.Migrator.Handler.Function"
+    entry_point = "DfT.ZEV.Services.Migrator.Handler.Function"
 
     environment_variables = {
       GOOGLE_BUILDABLE = "./services/functions/migrator/DfT.ZEV.Services.Migrator.Handler"

@@ -97,7 +97,6 @@ public partial class AccountController : Controller
     [HttpPost("sign-out")]
     public async Task<IActionResult> Logout()
     {
-        //await _signOutService.SignOut();
         HttpContext.Session.Remove("Token");
         HttpContext.Session.Remove("RefreshToken");
         return RedirectToAction(nameof(SignOutPage));
