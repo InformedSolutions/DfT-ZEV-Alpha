@@ -1,0 +1,10 @@
+@model DfT.ZEV.Common.MVC.Authentication.Models.AccountDetails
+@{
+    ViewData["Title"] = "Home";
+    ViewData["ActivePage"] = "Home";
+}
+
+<h1 class="govuk-heading-l">Account details</h1>
+
+<p>Mail: @Model.IdentityAccountDetails.Email</p>
+<p>Name: @Model.IdentityAccountDetails.Name</p>

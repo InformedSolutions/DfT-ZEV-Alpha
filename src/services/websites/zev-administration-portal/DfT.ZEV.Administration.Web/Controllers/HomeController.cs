@@ -1,16 +1,14 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace DfT.ZEV.Administration.Web.Controllers;
 
 [Route("")]
 public class HomeController : Controller
 {
-    public HomeController()
-    {
-    }
-
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         return View();
     }

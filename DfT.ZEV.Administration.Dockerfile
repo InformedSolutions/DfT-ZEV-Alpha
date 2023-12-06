@@ -21,8 +21,9 @@ COPY ["src/common/DfT.ZEV.Common.MVC.Authentication/DfT.ZEV.Common.MVC.Authentic
 RUN dotnet restore "DfT.ZEV.Administration.Web/DfT.ZEV.Administration.Web.csproj"  -r alpine-x64 /p:PublishReadyToRun=true
 
 COPY ["src/services/websites/zev-administration-portal/", "."]
+COPY ["src/core/", "../../../../core/"]
 COPY ["src/common/", "../../../../common/"]
-COPY stylecop.ruleset stylecop.ruleset
+COPY ["stylecop.ruleset", "../../stylecop.ruleset"]
 
 WORKDIR "/src/DfT.ZEV.Administration.Web/frontend"
 RUN npm install -g pnpm
@@ -33,7 +34,7 @@ WORKDIR "/src/DfT.ZEV.Administration.Web"
 RUN dotnet build "DfT.ZEV.Administration.Web.csproj" -c Release -o /app/build -r alpine-x64 /p:PublishReadyToRun=true
 
 FROM build AS publish
-RUN dotnet publish "DfT.ZEV.Administration.Web.csproj" -c Release -o /app/publish --framework net6.0 -r alpine-x64 --self-contained true /p:PublishTrimmed=true /p:PublishReadyToRun=true /p:PublishSingleFile=true
+RUN dotnet publish "DfT.ZEV.Administration.Web.csproj" -c Release -o /app/publish -r alpine-x64 --self-contained true /p:PublishReadyToRun=true /p:PublishSingleFile=true
 
 FROM base AS final
 RUN apk add --no-cache tzdata

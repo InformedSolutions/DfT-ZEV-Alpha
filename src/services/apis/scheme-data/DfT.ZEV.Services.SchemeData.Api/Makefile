@@ -12,6 +12,15 @@ clean:
 clean-build:
 	clean build
 
+docker-build:
+	cd ../../../../.. && docker build -f DfT.ZEV.SchemeData.API.Dockerfile -t zev-scheme-data-api .
+
+docker-push:
+	docker tag zev-scheme-data-api ${REGISTRY_URL}/zev-scheme-data-api:${SOURCE_COMMIT_HASH}
+	docker push ${REGISTRY_URL}/zev-scheme-data-api:${SOURCE_COMMIT_HASH}
+	docker tag zev-scheme-data-api ${REGISTRY_URL}/zev-scheme-data-api:latest
+	docker push ${REGISTRY_URL}/zev-scheme-data-api:latest
+
 restore:
 	dotnet restore
 

@@ -13,7 +13,7 @@
            || User.Identity.AuthenticationType == idunno.Authentication.Basic.BasicAuthenticationDefaults.AuthenticationScheme)
         {
             <li class="govuk-header__navigation-item @(page == "SignIn" ? "govuk-header__navigation-item--active" : string.Empty)">
-                <a asp-action="SignIn" class="govuk-header__link">
+                <a asp-action="SignIn" asp-controller="Account" asp-area="Authentication" class="govuk-header__link">
                     Sign In
                 </a>
             </li>
@@ -26,12 +26,12 @@
                 </a>
             </li>
             <li class="govuk-header__navigation-item @(page == "Details" ? "govuk-header__navigation-item--active" : string.Empty)">
-                <a asp-area="Auth" asp-action="Details" asp-controller="Account" class="govuk-header__link">
+                <a asp-area="Authentication" asp-action="Details" asp-controller="Account" class="govuk-header__link">
                     Account details
                 </a>
             </li>
             <li class="govuk-header__navigation-item">
-                @using (Html.BeginForm("Logout", "Account", new { area = "Auth"}))
+                @using (Html.BeginForm("Logout", "Account", new { area = "Authentication"}))
                 {
                     <button class="govuk-header__link sign-out" type="submit">Sign out</button>
                 }

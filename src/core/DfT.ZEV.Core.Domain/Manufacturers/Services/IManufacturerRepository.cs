@@ -31,6 +31,14 @@ public interface IManufacturerRepository
     public ValueTask<IEnumerable<Manufacturer>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Searches all manufacturers asynchronously.
+    /// </summary>
+    /// <param name="term">Search term</param>
+    /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation with a collection of all manufacturers.</returns>
+    public ValueTask<IEnumerable<Manufacturer>> SearchAsync(string term,CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Retrieves a paged collection of manufacturers asynchronously.
     /// </summary>
     /// <param name="page">The page number.</param>

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using DfT.ZEV.Common.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -24,10 +23,10 @@ public class RestServiceHealthCheck : IHealthCheck
 
         if (string.IsNullOrEmpty(apiBaseUrl))
             return HealthCheckResult.Degraded("Service url not specified.");
-        
-        var url = apiBaseUrl + "/health";        
-        
-        
+
+        var url = apiBaseUrl + "/health";
+
+
         var client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         var response = await client.SendAsync(request, cancellationToken);

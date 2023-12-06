@@ -1,9 +1,13 @@
-using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
-using idunno.Authentication.Basic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using DfT.ZEV.Common.Configuration;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -11,19 +15,15 @@ namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 [Route("account")]
 public partial class AccountController : Controller
 {
-    private readonly ISignInService _signInService;
-    private readonly ISignOutService _signOutService;
-    private readonly IForgottenPasswordService _resetPasswordService;
+    private readonly ILogger<AccountController> _logger;
+    private readonly IIdentityPlatform _identityPlatform;
+    private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
 
-
-    public AccountController(
-        ISignInService signInService,
-        ISignOutService signOutService,
-        IForgottenPasswordService resetPasswordService)
+    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options)
     {
-        _signInService = signInService;
-        _signOutService = signOutService;
-        _resetPasswordService = resetPasswordService;
+        _logger = logger;
+        _identityPlatform = identityPlatform;
+        _googleOptions = options;
     }
 
     public IActionResult Index()
@@ -31,15 +31,24 @@ public partial class AccountController : Controller
         return RedirectToAction(nameof(SignIn));
     }
 
+    [HttpGet("details")]
+    public IActionResult Details()
+    {
+        var claims = User.Claims.ToList();
+        if (claims.Any())
+        {
+            return View(new AccountDetails()
+            {
+                IdentityAccountDetails = User.GetAccountDetails()
+            });
+        }
+
+        return Redirect("~/");
+    }
+
     [HttpGet("sign-in")]
     public IActionResult SignIn([FromQuery] string message)
     {
-        if (User.Identity.IsAuthenticated
-            && User.Identity.AuthenticationType != BasicAuthenticationDefaults.AuthenticationScheme)
-        {
-            return Redirect("/");
-        }
-
         if (!string.IsNullOrEmpty(message))
         {
             ViewData["message"] = message;
@@ -57,45 +66,40 @@ public partial class AccountController : Controller
             return View(viewModel);
         }
 
-        var result = await _signInService.SignIn(viewModel);
-
-        if (result.ForceInitialPasswordSet)
+        try
         {
-            TempData["UserEmailSignInAttempt"] = viewModel.Email;
-            return RedirectToAction(nameof(SetInitialPassword));
+            var authenticationRequest = new AuthenticationRequest(viewModel.Email, viewModel.Password);
+            var result = await _identityPlatform.AuthenticateUser(authenticationRequest);
+
+            HttpContext.Session.SetString("Token", result.IdToken);
+            HttpContext.Session.SetString("RefreshToken", result.RefreshToken);
+
+            return RedirectToAction("Index", "Home");
         }
-
-        if (result.ForcePasswordChange)
+        catch (Exception ex)
         {
-            TempData["UserEmailSignInAttempt"] = viewModel.Email;
-            return RedirectToAction(nameof(ChangeExpiredPassword));
-        }
-
-        if (!result.Succeeded)
-        {
-            foreach (var (key, value) in result.Errors)
-            {
-                ModelState.AddModelError(key, value);
-            }
-
+            _logger.LogError(ex, "Error signing in user {Email}", viewModel.Email);
             viewModel.CleanPassword();
-            return View(viewModel);
+            ModelState.AddModelError(string.Empty, "The email or password you entered is incorrect");
+            return View();
         }
-
-        return !string.IsNullOrEmpty(returnUrl) ? LocalRedirect(returnUrl) : RedirectToAction("Index", "Home");
     }
 
     [HttpGet("sign-out")]
     public IActionResult SignOutPage()
     {
+        HttpContext.Session.Remove("Token");
+        HttpContext.Session.Remove("RefreshToken");
+
         return View();
     }
 
     [HttpPost("sign-out")]
     public async Task<IActionResult> Logout()
     {
-        await _signOutService.SignOut();
-
+        //await _signOutService.SignOut();
+        HttpContext.Session.Remove("Token");
+        HttpContext.Session.Remove("RefreshToken");
         return RedirectToAction(nameof(SignOutPage));
     }
 

@@ -1,0 +1,41 @@
+@using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById
+@using DfT.ZEV.Core.Domain.Manufacturers.Models
+@model DfT.ZEV.Administration.Web.Models.ManageOrganisationViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-s">
+            <a class="govuk-link" asp-action="Index" asp-controller="Organisations">Organisations</a>
+            </h2>
+        <p class="govuk-body-s">
+           
+        </p>
+        <h2 class="govuk-heading-s">
+            @Model.Dto.Name
+        </h2>
+        <p class="govuk-heading-s">
+            @Model.Id</p>
+        
+                <a class="govuk-link" asp-action="ManageAddUser" asp-route-id=@Model.Id asp-controller="Organisations">Add user</a>
+
+        <table>
+            <tr>
+                <th>Account id</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var manufacturer in Model.Dto.Users)
+            {
+                <tr>
+                    <td>@manufacturer.Id</td>
+                    <td>
+                        ACTION
+                    </td>
+                </tr>
+            }
+        </table>
+        
+        
+        <a class="govuk-link" asp-action="Index" asp-controller="Organisations">Back to Organisations</a>
+        
+    </div>
+</div>

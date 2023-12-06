@@ -429,3 +429,6 @@ bin/
 obj/
 
 .vscode
+
+.env
+appsettings.development.json

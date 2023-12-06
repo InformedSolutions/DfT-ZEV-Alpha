@@ -5,6 +5,8 @@ using DfT.ZEV.Core.Infrastructure;
 using Microsoft.AspNetCore.Http.Json;
 
 using DfT.ZEV.Services.SchemeData.Api.Features.Processes;
+using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace DfT.ZEV.Services.SchemeData.Api;
 
@@ -14,17 +16,21 @@ public static class Setup
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddHealthCheckServices();
+
+        builder.Services.AddHealthChecks()
+                 .AddCheck<PostgresHealthCheck>("postgres", HealthStatus.Unhealthy)
+                 .AddCheck<RestServiceHealthCheck>("organization-api-service", HealthStatus.Unhealthy);
+
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.ConfigureServicesSettings(builder.Configuration);
         var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
-        
+
         builder.Services.AddDbContext(postgresSettings);
-        
+
         //to-do: add serilog from commons
         //builder.Services.AddSerilog(builder.Configuration);
         builder.Services.AddLogging();
-        
+
         builder.Services.AddRepositories();
         return builder;
     }
@@ -33,7 +39,7 @@ public static class Setup
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-        
+
         app.MapProcessesEndpoints();
 
 

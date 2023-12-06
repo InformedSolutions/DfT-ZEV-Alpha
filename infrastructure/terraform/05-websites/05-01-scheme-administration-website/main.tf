@@ -43,12 +43,17 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       # TODO: setup users
       env {
         name  = "BasicAuth__IsEnabled"
-        value = true
+        value = var.enable_basic_auth
       }
 
       env {
         name  = "Services__OrganisationApiBaseUrl"
         value = data.terraform_remote_state.organisation_api.outputs.service_url
+      }
+
+      env {
+        name  = "Services__SchemeDataApiBaseUrl"
+        value = data.terraform_remote_state.scheme_data_api.outputs.service_url
       }
 
       env {
