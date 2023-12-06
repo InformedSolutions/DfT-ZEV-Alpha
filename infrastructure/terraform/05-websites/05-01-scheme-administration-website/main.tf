@@ -43,7 +43,7 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       # TODO: setup users
       env {
         name  = "BasicAuth__IsEnabled"
-        value = true
+        value = var.enable_basic_auth
       }
 
       env {

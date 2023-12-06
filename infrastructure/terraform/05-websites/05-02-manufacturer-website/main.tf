@@ -41,7 +41,7 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
       # TODO: setup users
       env {
         name  = "BasicAuth__IsEnabled"
-        value = true
+        value = var.enable_basic_auth
       }
 
       env {
