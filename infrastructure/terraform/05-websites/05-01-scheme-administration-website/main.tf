@@ -63,27 +63,27 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
 
       env {
         name  = "GoogleCloud__ApiKey"
-        value = "TODO" # TODO: fill or switch to IAM
+        value = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token
       }
 
       env {
         name  = "GoogleCloud__Tenancy__Admin"
-        value = "TODO" # TODO: use valid value
+        value = data.terraform_remote_state.backends.outputs.identity_platform_config.administration_tenant_name
       }
 
       env {
         name  = "GoogleCloud__Tenancy__Manufacturers"
-        value = "TODO" # TODO: use valid value
+        value = data.terraform_remote_state.backends.outputs.identity_platform_config.manufacturers_tenant_name
       }
 
       env {
         name  = "GoogleCloud__Token__Issuer"
-        value = "TODO" # TODO: use valid value
+        value = data.terraform_remote_state.backends.outputs.identity_platform_config.token_issuer
       }
 
       env {
         name  = "GoogleCloud__Token__Audience"
-        value = "TODO" # TODO: use valid value
+        value = var.project
       }
     }
   }
