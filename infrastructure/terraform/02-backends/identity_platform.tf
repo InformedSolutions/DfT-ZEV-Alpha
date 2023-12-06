@@ -36,18 +36,3 @@ resource "google_apikeys_key" "identity_platform" {
     }
   }
 }
-
-import {
-  id = "projects/${var.project}/config"
-  to = google_identity_platform_config.default
-}
-
-import {
-  id = "projects/${var.project}/tenants/administration-orudw"
-  to = google_identity_platform_tenant.administration
-}
-
-import {
-  id = "projects/${var.project}/tenants/manufacturers-k624k"
-  to = google_identity_platform_tenant.manufacturers
-}

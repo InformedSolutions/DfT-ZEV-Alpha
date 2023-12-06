@@ -78,7 +78,7 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
 
       env {
         name  = "GoogleCloud__Token__Issuer"
-        value = "https://securetoken.google.com/${var.project}"
+        value = data.terraform_remote_state.backends.outputs.identity_platform_config.token_issuer
       }
 
       env {
