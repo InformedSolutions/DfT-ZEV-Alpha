@@ -6,7 +6,7 @@ using Npgsql;
 
 namespace DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 
-internal class PostgresHealthCheck : IHealthCheck
+public class PostgresHealthCheck : IHealthCheck
 {
     private readonly IOptions<PostgresConfiguration> _postgresConfiguration;
     private readonly ILogger<PostgresHealthCheck> _logger;
@@ -31,7 +31,7 @@ internal class PostgresHealthCheck : IHealthCheck
 
             return HealthCheckResult.Healthy("Successfully connected to the database.");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error while checking the database health.");
             return HealthCheckResult.Unhealthy(
