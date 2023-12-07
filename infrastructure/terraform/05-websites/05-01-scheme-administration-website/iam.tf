@@ -20,3 +20,9 @@ resource "google_cloud_run_service_iam_policy" "service_noauth" {
 
   policy_data = data.google_iam_policy.noauth.policy_data
 }
+
+resource "google_secret_manager_secret_iam_member" "identity_platform_admin_member" {
+  project   = var.project
+  role      = "roles/firebaseauth.admin"
+  member    = "serviceAccount:${google_service_account.scheme_administration_portal.email}"
+}

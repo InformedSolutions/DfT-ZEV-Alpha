@@ -17,6 +17,12 @@ resource "google_secret_manager_secret_iam_member" "organisation_api_secrets" {
   member    = "serviceAccount:${google_service_account.organisation_api.email}"
 }
 
+resource "google_secret_manager_secret_iam_member" "identity_platform_admin_member" {
+  project   = var.project
+  role      = "roles/firebaseauth.admin"
+  member    = "serviceAccount:${google_service_account.organisation_api.email}"
+}
+
 data "google_iam_policy" "noauth" {
   binding {
     role = "roles/run.invoker"
