@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Logging;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -18,32 +19,20 @@ public partial class AccountController : Controller
     private readonly ILogger<AccountController> _logger;
     private readonly IIdentityPlatform _identityPlatform;
     private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
+    private readonly IBusinessEventLogger _businessLogger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options)
+    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor)
     {
         _logger = logger;
         _identityPlatform = identityPlatform;
         _googleOptions = options;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public IActionResult Index()
     {
         return RedirectToAction(nameof(SignIn));
-    }
-
-    [HttpGet("details")]
-    public IActionResult Details()
-    {
-        var claims = User.Claims.ToList();
-        if (claims.Any())
-        {
-            return View(new AccountDetails()
-            {
-                IdentityAccountDetails = User.GetAccountDetails()
-            });
-        }
-
-        return Redirect("~/");
     }
 
     [HttpGet("sign-in")]
@@ -74,6 +63,7 @@ public partial class AccountController : Controller
             HttpContext.Session.SetString("Token", result.IdToken);
             HttpContext.Session.SetString("RefreshToken", result.RefreshToken);
 
+            _businessLogger.LogBusiness("User successfully signed in");
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)
@@ -83,6 +73,21 @@ public partial class AccountController : Controller
             ModelState.AddModelError(string.Empty, "The email or password you entered is incorrect");
             return View();
         }
+    }
+
+    [HttpGet("details")]
+    public IActionResult Details()
+    {
+        var claims = User.Claims.ToList();
+        if (claims.Any())
+        {
+            return View(new AccountDetails()
+            {
+                IdentityAccountDetails = User.GetAccountDetails()
+            });
+        }
+
+        return Redirect("~/");
     }
 
     [HttpGet("sign-out")]
@@ -100,15 +105,6 @@ public partial class AccountController : Controller
         HttpContext.Session.Remove("Token");
         HttpContext.Session.Remove("RefreshToken");
         return RedirectToAction(nameof(SignOutPage));
-    }
-
-    [Authorize]
-    [HttpPost("save-return-url")]
-    public IActionResult SaveReturnUrl([FromBody] SessionReturnUrlViewModel viewModel)
-    {
-        HttpContext.Session.Set("SessionTimeoutReturnUrl", Encoding.UTF8.GetBytes(viewModel.ReturnUrl));
-
-        return Ok();
     }
 
     [Authorize]

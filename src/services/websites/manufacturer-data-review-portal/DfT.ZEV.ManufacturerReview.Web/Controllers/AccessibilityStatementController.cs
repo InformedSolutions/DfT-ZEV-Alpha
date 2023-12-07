@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfT.ZEV.ManufacturerReview.Web.Controllers;
 
-[Route("")]
-[Authorize]
-public class HomeController : Controller
+[Route("accessibility-statement")]
+public class AccessibilityStatementController : Controller
 {
     [HttpGet]
     public IActionResult Index()

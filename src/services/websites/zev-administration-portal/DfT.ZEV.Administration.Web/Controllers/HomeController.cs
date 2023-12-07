@@ -14,11 +14,4 @@ public class HomeController : Controller
     {
         return View();
     }
-
-    [Route("accessibility-statement")]
-    [HttpGet]
-    public IActionResult AccessibilityStatement()
-    {
-        return View();
-    }
 }

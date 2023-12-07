@@ -28,7 +28,8 @@ public partial class AccountController : Controller
         try
         {
             var resetToken = await _identityPlatform.GetPasswordResetToken(viewModel.Email, _googleOptions.Value.Tenancy.AppTenant);
-            _logger.LogInformation($"Reset Token: {resetToken}");
+            string host = _httpContextAccessor.HttpContext.Request.Host.Value;
+            _logger.LogInformation($"DEMO LINK FOR EMAIL: {host}/account/change-forgotten-password/{resetToken}");
         }
         catch(Exception ex)
         {
