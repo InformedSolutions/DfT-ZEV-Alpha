@@ -17,7 +17,7 @@ locals {
       DEPLOYED_AT = local.deployed_at
       BUILDID     = var.source_commit_hash
 
-      GoogleCloud__ProjectId              = var.project
+      GoogleCloud__ProjectId = var.project
   })
 
   db_connection_secret_files = {
