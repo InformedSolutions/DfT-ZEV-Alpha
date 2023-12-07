@@ -14,4 +14,6 @@ public interface IVehicleRepository
     /// <param name="ct">The cancellation token (optional).</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task BulkInsertAsync(IList<Vehicle> vehicles, CancellationToken ct = default);
+
+    public Task<IEnumerable<Vehicle>> GetVehiclesByManufacturerNameAsync(string manufacturerName, int pageNumber, int pageSize, CancellationToken ct = default);
 }

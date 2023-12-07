@@ -15,25 +15,25 @@ public static class MapManufacturerEndpointsExtensions
     {
         app.MapGet("/manufacturers/{id}", GetManufacturerById)
             .WithTags("Manufacturers");
-        
+
         app.MapGet("/manufacturers/", GetAllManufacturers)
             .WithTags("Manufacturers");
 
         app.MapPost("/manufacturers/", CreateManufacturer)
             .WithTags("Manufacturers");
-        
+
         app.MapPut("/manufacturers/{id}", UpdateManufacturer)
             .WithTags("Manufacturers");
-        
+
         app.MapDelete("/manufacturers/{id}", DeleteManufacturer)
              .WithTags("Manufacturers");
     }
-    
-    private static async Task<IResult> CreateManufacturer([FromBody] CreateManufacturerCommand request, [FromServices] IMediator mediator, 
+
+    private static async Task<IResult> CreateManufacturer([FromBody] CreateManufacturerCommand request, [FromServices] IMediator mediator,
         CancellationToken cancellationToken = default)
         => Results.Ok(await mediator.Send(request, cancellationToken));
 
-    private static async Task<IResult> GetAllManufacturers([FromQuery] string? search, [FromServices] IMediator mediator, CancellationToken ct)
+    private static async Task<IResult> GetAllManufacturers([FromServices] IMediator mediator, CancellationToken ct, [FromQuery] string search = "")
     {
         var stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -43,13 +43,13 @@ public static class MapManufacturerEndpointsExtensions
         Console.WriteLine("GetAllManufacturers took {0}ms", stopwatch.ElapsedMilliseconds);
         return Results.Ok(res);
     }
-    
-    private static async Task<IResult> GetManufacturerById([FromRoute] Guid id,[FromServices] IMediator mediator, CancellationToken ct)
+
+    private static async Task<IResult> GetManufacturerById([FromRoute] Guid id, [FromServices] IMediator mediator, CancellationToken ct)
         => Results.Ok(await mediator.Send(new GetManufacturerByIdQuery(id), ct));
-    
-    private static async Task<IResult> DeleteManufacturer([FromRoute] Guid id,[FromServices] IMediator mediator, CancellationToken ct)
+
+    private static async Task<IResult> DeleteManufacturer([FromRoute] Guid id, [FromServices] IMediator mediator, CancellationToken ct)
         => Results.Ok(await mediator.Send(new DeleteManufacturerCommand(id), ct));
-    
-    private static async Task<IResult> UpdateManufacturer([FromRoute] Guid id,[FromBody] UpdateManufacturerData data,[FromServices] IMediator mediator, CancellationToken ct)
-        => Results.Ok(await mediator.Send(new UpdateManufacturerCommand(id,data), ct));
+
+    private static async Task<IResult> UpdateManufacturer([FromRoute] Guid id, [FromBody] UpdateManufacturerData data, [FromServices] IMediator mediator, CancellationToken ct)
+        => Results.Ok(await mediator.Send(new UpdateManufacturerCommand(id, data), ct));
 }

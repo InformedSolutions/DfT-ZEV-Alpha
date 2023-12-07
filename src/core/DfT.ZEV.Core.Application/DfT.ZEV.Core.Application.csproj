@@ -14,7 +14,7 @@
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
         <PackageReference Include="MediatR" Version="11.1.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.0" />
     </ItemGroup>
@@ -22,7 +22,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\common\DfT.ZEV.Common.MVC.Authentication\DfT.ZEV.Common.MVC.Authentication.csproj" />
         <ProjectReference Include="..\..\common\DfT.ZEV.Common\DfT.ZEV.Common.csproj" />
-        <ProjectReference Include="..\DfT.ZEV.Core.Domain\DfT.ZEV.Core.Domain.csproj"/>
+        <ProjectReference Include="..\DfT.ZEV.Core.Domain\DfT.ZEV.Core.Domain.csproj" />
         <ProjectReference Include="..\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj" />
     </ItemGroup>
     <ItemGroup>
