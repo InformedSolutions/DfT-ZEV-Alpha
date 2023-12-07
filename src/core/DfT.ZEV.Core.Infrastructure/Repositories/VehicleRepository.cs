@@ -2,6 +2,7 @@ using EFCore.BulkExtensions;
 using DfT.ZEV.Core.Domain.Vehicles.Models;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using DfT.ZEV.Core.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace DfT.ZEV.Core.Infrastructure.Repositories;
 
@@ -26,4 +27,11 @@ internal sealed class VehicleRepository : IVehicleRepository
         await _context.BulkInsertAsync(vehicles, cancellationToken: ct);
         await _context.BulkInsertAsync(vehicles.Select(x => x.Summary).ToList(), cancellationToken: ct);
     }
+
+    public async Task<IEnumerable<Vehicle>> GetVehiclesByManufacturerNameAsync(string manufacturerName, int pageNumber, int pageSize, CancellationToken ct = default)
+        => await _context.Vehicles
+            .Where(x => x.Mh == manufacturerName)
+            .Skip(pageNumber * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
 }
