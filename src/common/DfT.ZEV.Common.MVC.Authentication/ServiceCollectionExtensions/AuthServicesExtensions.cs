@@ -14,7 +14,6 @@ public static class AuthServicesExtensions
     {
         services.AddScoped<ISignInService, SignInService>();
         services.AddScoped<ISignOutService, SignOutService>();
-        services.AddScoped<IForgottenPasswordService, ForgottenPasswordService>();
     }
 
     public static void AddBasicAuthentication(this IServiceCollection services)
