@@ -48,6 +48,24 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             .SetCustomUserClaimsAsync(user.Uid, claims);
     }
 
+    public async Task<string> GetPasswordResetToken(string email, string tenantId)
+    {
+        var user = await FirebaseAuth.DefaultInstance.TenantManager
+             .AuthForTenant(tenantId)
+             .GetUserByEmailAsync(email);
+
+        var rq = new PasswordResetTokenRequest
+        {
+            UserIp = "127.0.0.1",
+            TenantId = tenantId,
+            TargetProjectId = _googleCloudConfiguration.Value.ProjectId,
+            Email = user.Email
+        };
+
+        var res = await _googleIdentityApiClient.GetPasswordResetToken(rq);
+        return res.PasswordResetToken;
+    }
+
     public async Task<string> GetPasswordResetToken(Guid userId, string tenantId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
