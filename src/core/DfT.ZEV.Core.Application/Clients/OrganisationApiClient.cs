@@ -19,12 +19,15 @@ public class OrganisationApiClient : BaseHttpClient
 
     public async Task<GetAllManufacturersQueryResponse?> GetManufacturersAsync(string search)
         => await GetAsync<GetAllManufacturersQueryResponse>($"manufacturers?search={search}");
-    
-    
+
+
     public async Task<GetManufacturerByIdQueryDto?> GetManufacturerByIdAsync(Guid id)
         => await GetAsync<GetManufacturerByIdQueryDto?>($"manufacturers/{id}");
-    
-    
+
+
     public async Task<CreateManufacturerUserCommandResponse?> CreateUserAsync(CreateManufacturerUserCommand request)
-        => await PostAsync<CreateManufacturerUserCommandResponse?, CreateManufacturerUserCommand>("accounts", request);        
+        => await PostAsync<CreateManufacturerUserCommandResponse?, CreateManufacturerUserCommand>("accounts", request);
+
+    public async Task<GetUserPermissionsQueryDto> GetUserPermissionsAsync(Guid userId, Guid manufacturerId)
+        => await GetAsync<GetUserPermissionsQueryDto>($"accounts/{userId}/permissions?manufacturerId={manufacturerId}");
 }

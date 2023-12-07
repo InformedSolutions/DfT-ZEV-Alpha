@@ -13,8 +13,8 @@ public interface IPermissionRepository
     /// </summary>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the work.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the list of permissions.</returns>
-    public Task<IEnumerable<Permission> > GetAllAsync(CancellationToken cancellationToken = default);
-    
+    public Task<IEnumerable<Permission>> GetAllAsync(CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Retrieves permissions by their unique identifiers.
     /// </summary>

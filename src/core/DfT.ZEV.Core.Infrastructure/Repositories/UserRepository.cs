@@ -15,6 +15,11 @@ internal sealed class UserRepository : IUserRepository
     /// <inheritdoc/>
     public async ValueTask<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _dbContext.Users
+            .Include(x => x.ManufacturerBridges)
+                .ThenInclude(x => x.Manufacturer)
+            .Include(x => x.ManufacturerBridges)
+                .ThenInclude(x => x.Permissions)
+            .OrderByDescending(x => x.CreatedAt)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     /// <inheritdoc/>
@@ -41,5 +46,5 @@ internal sealed class UserRepository : IUserRepository
 
     /// <inheritdoc/>
     public void Delete(User user)
-        =>  _dbContext.Remove(user);
+        => _dbContext.Remove(user);
 }
