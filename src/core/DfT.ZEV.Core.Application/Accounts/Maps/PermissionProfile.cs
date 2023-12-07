@@ -9,5 +9,9 @@ public class PermissionProfile : Profile
     public PermissionProfile()
     {
         CreateMap<Permission, PermissionDto>();
+        CreateMap<Permission, ManufacturerPermission>()
+            .ForMember(x => x.Name, opt => opt
+                .MapFrom(src => src.PermissionName));
+
     }
 }

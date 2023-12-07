@@ -61,6 +61,9 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
         if (nonExistentPermissionIds.Any())
             throw UserHandlerExceptions.PermissionsNotFound(nonExistentPermissionIds);
 
+        if (request.PermissionIds.Length == 0)
+            permissions = (await _unitOfWork.Permissions.GetAllAsync(cancellationToken)).ToList();
+
         var id = Guid.NewGuid();
         var password = CreateSecureRandomString();
         _logger.LogInformation("Password for user with email {Email} is {Password}", request.Email, password);
