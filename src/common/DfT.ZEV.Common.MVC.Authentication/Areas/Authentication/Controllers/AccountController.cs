@@ -22,12 +22,13 @@ public partial class AccountController : Controller
     private readonly IBusinessEventLogger _businessLogger;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor)
+    public AccountController(IBusinessEventLogger businessLogger, ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor)
     {
         _logger = logger;
         _identityPlatform = identityPlatform;
         _googleOptions = options;
         _httpContextAccessor = httpContextAccessor;
+        _businessLogger = businessLogger;
     }
 
     public IActionResult Index()
