@@ -14,34 +14,34 @@
 
 @if (ViewData["message"] as string == "LogoutDueToSecurity")
 {
-    <NotificationBannerViewComponent
+    <vc:notification-banner
         banner-type="Information"
         body="We have signed you out of your account to keep it secure.">
-    </NotificationBannerViewComponent>
+    </vc:notification-banner>
 }
 
 @if (ViewData["message"] as string == "VerificationSuccess")
 {
-    <NotificationBannerViewComponent
+    <vc:notification-banner
         banner-type="Success"
         body="Your email address has been verified and your account has been activated. Enter your email address and password to sign in.">
-    </NotificationBannerViewComponent>
+    </vc:notification-banner>
 }
 
 @if (ViewData["message"] as string == "PasswordChangedSuccess")
 {
-    <NotificationBannerViewComponent
+    <vc:notification-banner
         banner-type="Success"
         body="Your password has been changed. Enter your email address and password to sign in.">
-    </NotificationBannerViewComponent>
+    </vc:notification-banner>
 }
 
 @if (ViewData["message"] as string == "EmailChangedSuccess")
 {
-    <NotificationBannerViewComponent
+    <vc:notification-banner
         banner-type="Success"
         body="Your email has been changed. Enter your new email address and password to sign in.">
-    </NotificationBannerViewComponent>
+    </vc:notification-banner>
 }
 
 

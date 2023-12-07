@@ -25,9 +25,17 @@ public partial class AccountController : Controller
             return View("ForgottenPassword/ForgottenPassword", viewModel);
         }
 
-        //await _resetPasswordService.RequestForgottenPasswordChange(viewModel);
+        try
+        {
+            var resetToken = await _identityPlatform.GetPasswordResetToken(viewModel.Email, _googleOptions.Value.Tenancy.AppTenant);
+            _logger.LogInformation($"Reset Token: {resetToken}");
+        }
+        catch(Exception ex)
+        {
+            // ignore failed operation result not to reveal user existence in db.
+            _logger.LogError(ex, ex.Message);
+        }
 
-        // ignore failed operation result not to reveal user existence in db.
         return View("ForgottenPassword/ForgottenPasswordEmailSent", viewModel.Email);
     }
 
@@ -39,19 +47,14 @@ public partial class AccountController : Controller
     }
 
     [UserPasswordManagement]
-    [HttpGet("change-forgotten-password")]
-    public async Task<IActionResult> ChangeForgottenPassword([FromQuery] string token)
+    [HttpGet("change-forgotten-password/{passwordResetToken}")]
+    public async Task<IActionResult> ChangeForgottenPassword(string passwordResetToken)
     {
-        //var result = await _resetPasswordService.VerifyForgottenPasswordToken(token);
-        //return result.FailedWithRedirect
-        //    ? RedirectToAction(nameof(ForgottenPasswordFailed))
-        //    : View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(token));
-
-        return View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(token));
+        return View("ForgottenPassword/ChangeForgottenPassword", new ForgottenPasswordChangeViewModel(passwordResetToken));
     }
 
     [UserPasswordManagement]
-    [HttpPost("change-forgotten-password")]
+    [HttpPost("change-forgotten-password/{passwordResetToken}")]
     public async Task<IActionResult> ChangeForgottenPassword(ForgottenPasswordChangeViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -59,21 +62,7 @@ public partial class AccountController : Controller
             return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
         }
 
-        // var result = await _resetPasswordService.ChangeForgottenPassword(viewModel);
-        // if (result.FailedWithRedirect)
-        // {
-        //     return RedirectToAction(nameof(ForgottenPasswordFailed));
-        // }
-        //
-        // if (!result.Succeeded)
-        // {
-        //     foreach (var (key, value) in result.Errors)
-        //     {
-        //         ModelState.AddModelError(key, value);
-        //     }
-        //
-        //     return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
-        // }
+        await _identityPlatform.ChangePasswordAsync(viewModel.Token, viewModel.Password, _googleOptions.Value.Tenancy.AppTenant);
 
         return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }
@@ -81,12 +70,12 @@ public partial class AccountController : Controller
 
     #region SetInitialPassword
     [UserPasswordManagement]
-    [HttpGet("set-initial-password/{oobCode}")]
-    public IActionResult SetInitialPassword(string oobCode)
+    [HttpGet("set-initial-password/{passwordResetToken}")]
+    public IActionResult SetInitialPassword(string passwordResetToken)
     {
         var email = TempData["UserEmailSignInAttempt"]?.ToString();
 
-        return View(new SetInitialPasswordViewModel() { OobCode = oobCode });
+        return View(new SetInitialPasswordViewModel() { OobCode = passwordResetToken });
     }
 
     [UserPasswordManagement]
