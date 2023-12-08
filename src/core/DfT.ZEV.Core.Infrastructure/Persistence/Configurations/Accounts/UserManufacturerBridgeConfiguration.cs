@@ -9,6 +9,10 @@ internal sealed class UserManufacturerBridgeConfiguration : IEntityTypeConfigura
     public void Configure(EntityTypeBuilder<UserManufacturerBridge> builder)
     {
         builder.HasKey(x => x.Id);
+        
+        builder.HasOne(x => x.User)
+            .WithMany(x => x.ManufacturerBridges)
+            .HasForeignKey(x => x.UserId);
 
         builder.HasOne(x => x.Manufacturer)
             .WithMany(x => x.UserBridges)
@@ -16,10 +20,10 @@ internal sealed class UserManufacturerBridgeConfiguration : IEntityTypeConfigura
 
         builder.Navigation(x => x.Manufacturer)
             .AutoInclude();
-
+        
         builder.HasMany(x => x.Permissions)
             .WithMany(x => x.UserManufacturerBridges);
-
+        
         builder.Navigation(x => x.Permissions)
             .AutoInclude();
     }
