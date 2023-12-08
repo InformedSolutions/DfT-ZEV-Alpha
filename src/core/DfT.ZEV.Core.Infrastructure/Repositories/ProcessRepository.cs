@@ -17,33 +17,33 @@ internal sealed class ProcessRepository : IProcessRepository
 
     /// <inheritdoc/>
     public async Task<Process?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        return await _context.Processes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-    }
+        => await _context.Processes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
 
     /// <inheritdoc/>
     public async Task<IEnumerable<Process>> GetPagedAsync(int page, int pageSize,
         CancellationToken cancellationToken = default)
-    {
-        return await _context.Processes.OrderByDescending(x => x.LastUpdated).Skip(page * pageSize).Take(pageSize)
-            .ToListAsync(cancellationToken);
-    }
+        => await _context.Processes
+                .AsNoTracking()
+                .OrderByDescending(x => x.LastUpdated)
+                .Skip(page * pageSize).Take(pageSize)
+                .ToListAsync(cancellationToken);
+
 
     /// <inheritdoc/>
     public async Task AddAsync(Process process, CancellationToken cancellationToken = default)
-    {
-        await _context.Processes.AddAsync(process, cancellationToken);
-    }
+        => await _context.Processes.AddAsync(process, cancellationToken);
+
 
     /// <inheritdoc/>
     public void Update(Process process)
-    {
-        _context.Processes.Update(process);
-    }
+        => _context.Processes.Update(process);
+
 
     /// <inheritdoc/>
     public void Delete(Process process)
-    {
-        _context.Processes.Remove(process);
-    }
+        => _context.Processes.Remove(process);
+
 }
