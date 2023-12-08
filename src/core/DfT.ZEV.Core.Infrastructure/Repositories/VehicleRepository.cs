@@ -30,8 +30,9 @@ internal sealed class VehicleRepository : IVehicleRepository
 
     public async Task<IEnumerable<Vehicle>> GetVehiclesByManufacturerNameAsync(string manufacturerName, int pageNumber, int pageSize, CancellationToken ct = default)
         => await _context.Vehicles
-            .Where(x => x.Mh == manufacturerName)
-            .Skip(pageNumber * pageSize)
-            .Take(pageSize)
-            .ToListAsync(ct);
+                .AsNoTracking()
+                .Where(x => x.Mh == manufacturerName)
+                .Skip(pageNumber * pageSize)
+                .Take(pageSize)
+                .ToListAsync(ct);
 }
