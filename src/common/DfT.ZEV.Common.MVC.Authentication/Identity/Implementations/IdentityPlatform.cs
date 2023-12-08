@@ -114,6 +114,7 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         await _googleIdentityApiClient.ChangePasswordWithToken(request);
     }
 
+    /// <inheritdocs/>
     public async Task DeleteUserAsync(Guid userId, string tenantId)
     {
         await FirebaseAuth.DefaultInstance.TenantManager
