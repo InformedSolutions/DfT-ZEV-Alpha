@@ -432,3 +432,5 @@ obj/
 
 .env
 appsettings.development.json
+
+.DS_Store

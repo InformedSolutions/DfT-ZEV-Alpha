@@ -32,11 +32,13 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         }
     }
 
+    /// <inheritdoc/>
     public async ValueTask<UserRecord> CreateUser(UserRecordArgs userRecordArgs, string tenantId)
         => await FirebaseAuth.DefaultInstance.TenantManager
             .AuthForTenant(tenantId)
             .CreateUserAsync(userRecordArgs);
 
+    /// <inheritdoc/>
     public async Task SetUserClaimsAsync(Guid userId, IReadOnlyDictionary<string, object> claims, string tenantId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
@@ -48,6 +50,7 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             .SetCustomUserClaimsAsync(user.Uid, claims);
     }
 
+    /// <inheritdoc/>
     public async Task<string> GetPasswordResetToken(string email, string tenantId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
@@ -66,6 +69,7 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         return res.PasswordResetToken;
     }
 
+    /// <inheritdoc/>
     public async Task<string> GetPasswordResetToken(Guid userId, string tenantId)
     {
         var user = await FirebaseAuth.DefaultInstance.TenantManager
@@ -84,6 +88,7 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         return res.PasswordResetToken;
     }
 
+    /// <inheritdoc/>
     public async Task<AuthorisationResponse> AuthenticateUser(AuthenticationRequest authorizationRequest, string tenantId)
     {
         _logger.LogDebug($"Authenticating user {authorizationRequest.Email} in tenant {tenantId}");
@@ -91,10 +96,11 @@ internal sealed class IdentityPlatform : IIdentityPlatform
                     tenantId);
     }
 
+    /// <inheritdoc/>
     public async Task<RefreshTokenResponse> RefreshUser(string refreshToken)
         => await _googleIdentityApiClient.RefreshToken(refreshToken);
 
-
+    /// <inheritdoc/>
     public async Task ChangePasswordAsync(string passwordResetToken, string newPassword, string tenantId)
     {
         _logger.LogDebug($"Initiating password change request using token in tenant {tenantId}");

@@ -25,6 +25,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
         _httpClient = httpClient;
     }
 
+    /// <inheritdoc/>
     public async Task<AuthorisationResponse> Authorise(string mail, string password, string tenantId)
     {
         var apiUrl = string.Format(VerifyPasswordApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
@@ -45,6 +46,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
             : JsonConvert.DeserializeObject<AuthorisationResponse>(await result.Content.ReadAsStringAsync());
     }
 
+    /// <inheritdoc/>
     public async Task<RefreshTokenResponse> RefreshToken(string token)
     {
         var apiUrl = string.Format(RefreshTokenApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
@@ -68,6 +70,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
             });
     }
 
+    /// <inheritdoc/>
     public async Task<PasswordResetTokenResponse> GetPasswordResetToken(PasswordResetTokenRequest passwordResetCodeRequest)
     {
         await ConfigureHttpClient();
@@ -79,6 +82,8 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
             : JsonConvert.DeserializeObject<PasswordResetTokenResponse>(await result.Content.ReadAsStringAsync());
     }
 
+
+    /// <inheritdoc/>
     public async Task ChangePasswordWithToken(PasswordChangeWithTokenRequest passwordChangeRequest)
     {
         await ConfigureHttpClient();
