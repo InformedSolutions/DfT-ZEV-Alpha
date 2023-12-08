@@ -6,6 +6,7 @@ namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 public interface IIdentityPlatform
 {
     public ValueTask<UserRecord> CreateUser(UserRecordArgs userRecordArgs, string tenantId);
+    public Task DeleteUserAsync(Guid userId, string tenantId);
     public Task SetUserClaimsAsync(Guid userId, IReadOnlyDictionary<string, object> claims, string tenantId);
     public Task<string> GetPasswordResetToken(Guid userId, string tenantId);
     public Task<string> GetPasswordResetToken(string email, string tenantId);
