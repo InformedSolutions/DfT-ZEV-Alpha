@@ -16,8 +16,8 @@ public static class MapAccountsEndpointsExtension
         app.MapPost("/accounts/", CreateManufacturerAccount)
             .WithTags("Accounts");
 
-        app.MapPost("/accounts/{id}/permissions", GetUserPermissionsForManufacturer)
-       .WithTags("Accounts");
+        app.MapGet("/accounts/{id}/permissions", GetUserPermissionsForManufacturer)
+            .WithTags("Accounts");
 
         return app;
     }
