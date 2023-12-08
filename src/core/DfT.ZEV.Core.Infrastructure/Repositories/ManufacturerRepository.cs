@@ -16,7 +16,6 @@ internal sealed class ManufacturerRepository : IManufacturerRepository
     /// <inheritdoc/>
     public async ValueTask<Manufacturer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _context.Manufacturers
-                .AsNoTracking()
                 .Include(x => x.UserBridges)
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -29,14 +28,12 @@ internal sealed class ManufacturerRepository : IManufacturerRepository
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<Manufacturer>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _context.Manufacturers
-                .AsNoTracking()
                 .Include(x => x.UserBridges).ToListAsync(cancellationToken);
 
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<Manufacturer>> SearchAsync(string term, CancellationToken cancellationToken = default)
         => await _context.Manufacturers
                 .AsNoTracking()
-                .Include(x => x.UserBridges)
                 .Where(x => x.Name.ToLower().Contains(term.ToLower()))
                 .ToListAsync(cancellationToken);
 
