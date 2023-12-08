@@ -14,6 +14,13 @@ public interface IIdentityPlatform
     public ValueTask<UserRecord> CreateUser(UserRecordArgs userRecordArgs, string tenantId);
 
     /// <summary>
+    /// Deletes a user asynchronously.
+    /// </summary>
+    /// <param name="userId">The identifier of the user to delete.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public Task DeleteUserAsync(Guid userId, string tenantId);
+
+    /// <summary>
     /// Sets the user claims for the specified user ID and tenant ID.
     /// </summary>
     /// <param name="userId">The user's identifier.</param>

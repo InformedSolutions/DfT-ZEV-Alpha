@@ -15,26 +15,31 @@ internal sealed class UserRepository : IUserRepository
     /// <inheritdoc/>
     public async ValueTask<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _dbContext.Users
-            .Include(x => x.ManufacturerBridges)
-                .ThenInclude(x => x.Manufacturer)
-            .Include(x => x.ManufacturerBridges)
-                .ThenInclude(x => x.Permissions)
-            .OrderByDescending(x => x.CreatedAt)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+                .Include(x => x.ManufacturerBridges)
+                    .ThenInclude(x => x.Manufacturer)
+                .Include(x => x.ManufacturerBridges)
+                    .ThenInclude(x => x.Permissions)
+                .OrderByDescending(x => x.CreatedAt)
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Users
-            .Include(x => x.ManufacturerBridges)
-                .ThenInclude(x => x.Manufacturer)
-            .Include(x => x.ManufacturerBridges)
-                .ThenInclude(x => x.Permissions)
-            .OrderByDescending(x => x.CreatedAt)
-            .ToListAsync(cancellationToken);
+                .Include(x => x.ManufacturerBridges)
+                    .ThenInclude(x => x.Manufacturer)
+                .Include(x => x.ManufacturerBridges)
+                    .ThenInclude(x => x.Permissions)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
 
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<User>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
-        => await _dbContext.Users.OrderByDescending(x => x.CreatedAt).Skip(page * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        => await _dbContext.Users
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
 
     /// <inheritdoc/>
     public async Task InsertAsync(User user, CancellationToken cancellationToken = default)
