@@ -6,6 +6,7 @@ using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Domain.Manufacturers.Models;
 using FirebaseAdmin.Auth;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -36,7 +37,6 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
         _identityPlatform = identityPlatform;
         _logger = logger;
         _usersService = usersService;
-
         _googleCloudConfiguration = googleCloudConfiguration;
         _serviceConfiguration = serviceConfiguration;
     }
@@ -66,7 +66,7 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
 
         var id = Guid.NewGuid();
         var password = CreateSecureRandomString();
-        _logger.LogInformation("Password for user with email {Email} is {Password}", request.Email, password);
+        var tenant = _googleCloudConfiguration.Value.Tenancy.Manufacturers;
         var args = new UserRecordArgs
         {
             Email = request.Email,
@@ -78,17 +78,8 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
 
         try
         {
-            await _identityPlatform.CreateUser(args, _googleCloudConfiguration.Value.Tenancy.Manufacturers);
-            var user = new User(id);
-            user.UpdatePermissions(manufacturer, permissions);
-
-            await _unitOfWork.Users.InsertAsync(user, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            await _usersService.UpdateUserClaimsAsync(user, _googleCloudConfiguration.Value.Tenancy.Manufacturers);
-
-            _logger.LogInformation("Created user with email {Email}", request.Email);
-            await _usersService.RequestPasswordResetAsync(user, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, _googleCloudConfiguration.Value.Tenancy.Manufacturers);
-            _logger.LogInformation("Requested password reset for user with email {Email}", request.Email);
+            await _identityPlatform.CreateUser(args, tenant);
+            await CreateUser(args, tenant, id, manufacturer, permissions, cancellationToken);
         }
         catch (Exception e)
         {
@@ -98,8 +89,30 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
 
         _logger.LogInformation("Created user with email {Email}", request.Email);
 
-
         return new CreateManufacturerUserCommandResponse(id);
+    }
+
+    private async Task CreateUser(UserRecordArgs args, string tenant, Guid id, Manufacturer manufacturer, List<Permission> permissions, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var user = new User(id);
+            user.UpdatePermissions(manufacturer, permissions);
+
+            await _unitOfWork.Users.InsertAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _usersService.UpdateUserClaimsAsync(user, tenant);
+
+            _logger.LogInformation("Created user with email {Email}", args.Email);
+            await _usersService.RequestPasswordResetAsync(user, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, tenant);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to create user: {Message}", ex.Message);
+            await _identityPlatform.DeleteUserAsync(id, tenant);
+            throw UserHandlerExceptions.CouldNotCreateUser(ex.Message);
+
+        }
     }
 
     private static string CreateSecureRandomString(int count = 64) =>
