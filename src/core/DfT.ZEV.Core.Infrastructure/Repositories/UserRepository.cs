@@ -15,7 +15,6 @@ internal sealed class UserRepository : IUserRepository
     /// <inheritdoc/>
     public async ValueTask<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _dbContext.Users
-                .AsNoTracking()
                 .Include(x => x.ManufacturerBridges)
                     .ThenInclude(x => x.Manufacturer)
                 .Include(x => x.ManufacturerBridges)
@@ -26,7 +25,6 @@ internal sealed class UserRepository : IUserRepository
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Users
-                .AsNoTracking()
                 .Include(x => x.ManufacturerBridges)
                     .ThenInclude(x => x.Manufacturer)
                 .Include(x => x.ManufacturerBridges)
