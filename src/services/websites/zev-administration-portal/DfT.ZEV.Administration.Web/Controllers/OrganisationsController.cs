@@ -71,7 +71,7 @@ public class OrganisationsController : Controller
         };
 
         //var res = await _mediator.Send(command);
-        var res = await _organisationApi.CreateUserAsync(command);
+        var res = await _organisationApi.CreateManufacturerUserAsync(command);
         return RedirectToAction("Manage", new { id = id });
     }
 }
