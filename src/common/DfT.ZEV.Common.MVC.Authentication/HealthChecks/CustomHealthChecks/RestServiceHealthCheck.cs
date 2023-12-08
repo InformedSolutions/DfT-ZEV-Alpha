@@ -4,15 +4,29 @@ using Microsoft.Extensions.Options;
 
 namespace DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 
+/// <summary>
+/// Represents a health check for a REST service.
+/// </summary>
 public class RestServiceHealthCheck : IHealthCheck
 {
     private readonly IOptions<ServicesConfiguration> _servicesConfiguration;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RestServiceHealthCheck"/> class.
+    /// </summary>
+    /// <param name="servicesConfiguration">The services configuration.</param>
     public RestServiceHealthCheck(IOptions<ServicesConfiguration> servicesConfiguration)
     {
         _servicesConfiguration = servicesConfiguration;
     }
 
+
+    /// <summary>
+    /// Checks the health of the REST service.
+    /// </summary>
+    /// <param name="context">A context object associated with the current execution.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> that can be used to cancel the health check.</param>
+    /// <returns>A <see cref="Task"/> that completes when the health check has finished, yielding the status of the component being checked.</returns>
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
     {
         var apiBaseUrl = context.Registration.Name switch
