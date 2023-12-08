@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using DfT.ZEV.Common.Logging;
 
 namespace DfT.ZEV.ManufacturerReview.Web;
 
@@ -24,6 +25,8 @@ public class Program
             {
                 webBuilder.UseStartup<Startup>()
                 .UseKestrel(options => options.AddServerHeader = false);
-            });
+            })
+            .UseSerilog()
+            ;
     }
 }

@@ -1,4 +1,3 @@
-using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -10,14 +9,12 @@ public class SignInService : ISignInService
     private const bool _isPersistent = true;
 
     private readonly ILogger<SignInService> _logger;
-    private readonly IBusinessEventLogger _businessEventLogger;
 
     public SignInService(
-        ILogger<SignInService> logger,
-        IBusinessEventLogger businessEventLogger)
+        ILogger<SignInService> logger
+       )
     {
         _logger = logger;
-        _businessEventLogger = businessEventLogger;
     }
 
     public bool IsPersistent() => _isPersistent;
@@ -27,7 +24,6 @@ public class SignInService : ISignInService
         if (!string.IsNullOrEmpty(viewModel.UserId))
         {
             // UserId works as honeypot captcha. If filled, there may have been hack trial.
-            _businessEventLogger.LogBusiness("Honeypot captcha has been filled.");
             return AuthResult.Failed(AuthErrorMessages.SignInErrorMessage);
         }
 
