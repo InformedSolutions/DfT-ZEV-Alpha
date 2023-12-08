@@ -8,16 +8,19 @@ namespace DfT.ZEV.Services.Organisations.Api.Features.Accounts;
 
 public static class MapAccountsEndpointsExtension
 {
+    private const string AccountsPath = "/accounts/";
+    private const string AccountsPermissionsPath = "/accounts/{id}/permissions";
+
     public static WebApplication MapAccountsEndpoints(this WebApplication app)
     {
-        app.MapGet("/accounts/", GetAllAccounts)
+        app.MapGet(AccountsPath, GetAllAccounts)
             .WithTags("Accounts");
 
-        app.MapPost("/accounts/", CreateManufacturerAccount)
+        app.MapPost(AccountsPath, CreateManufacturerAccount)
             .WithTags("Accounts");
 
-        app.MapPost("/accounts/{id}/permissions", GetUserPermissionsForManufacturer)
-       .WithTags("Accounts");
+        app.MapPost(AccountsPermissionsPath, GetUserPermissionsForManufacturer)
+            .WithTags("Accounts");
 
         return app;
     }
@@ -29,5 +32,5 @@ public static class MapAccountsEndpointsExtension
         => Results.Ok(await mediator.Send(req, cancellationToken));
 
     private static async Task<IResult> GetUserPermissionsForManufacturer([FromRoute] Guid id, [FromQuery] Guid manufacturerId, [FromServices] IMediator mediator, CancellationToken cancellationToken = default)
-    => Results.Ok(await mediator.Send(new GetUserPermissionsQuery(id, manufacturerId), cancellationToken));
+        => Results.Ok(await mediator.Send(new GetUserPermissionsQuery(id, manufacturerId), cancellationToken));
 }
