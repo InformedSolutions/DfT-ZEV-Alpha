@@ -35,7 +35,7 @@ RUN pnpm install
 RUN npm run build
 
 FROM build AS publish
-WORKDIR /src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Web/frontend
+WORKDIR /src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Web
 RUN dotnet publish -c Release -o /app/publish
 
 FROM base AS final
