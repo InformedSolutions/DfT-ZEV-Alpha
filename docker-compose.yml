@@ -1,0 +1,55 @@
+
+version: '3.8'
+
+services:
+    postgres:
+      image: postgres:15
+      restart: always
+      container_name: local-zev-postgres
+      environment:
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_DB: ${POSTGRES_DB}
+      volumes:
+        - db-data:/var/lib/postgresql/data
+      ports:
+        - "5432:5432"
+      networks:
+        - local
+
+    organisation_api:
+      container_name: organisation_api
+      build:
+        context: .
+        dockerfile: DfT.ZEV.Organisations.API.Dockerfile
+      environment:
+        POSTGRES__USER: ${POSTGRES_USER}
+        POSTGRES__PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES__DB: ${POSTGRES_DB} 
+        POSTGRES__HOST: "postgres"
+      ports:
+        - "8081:80"
+      networks:
+        - local
+
+    scheme_data_api:
+      container_name: scheme_data_api
+      build:
+        context: .
+        dockerfile: DfT.ZEV.SchemeData.API.Dockerfile
+      environment:
+        POSTGRES__USER: ${POSTGRES_USER}
+        POSTGRES__PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES__DB: ${POSTGRES_DB} 
+        POSTGRES__HOST: "postgres"
+      ports:
+        - "8082:80"
+      networks:
+        - local
+
+volumes:
+  db-data:
+
+networks:
+  local:
+    name: local

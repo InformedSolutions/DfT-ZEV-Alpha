@@ -28,7 +28,7 @@ jobs:
         dotnet-version: '6.0.x'
 
     - name: Build
-      run: make build
+      run: make docker-build
 
     - name: Test with coverage
       run: make test-coverage

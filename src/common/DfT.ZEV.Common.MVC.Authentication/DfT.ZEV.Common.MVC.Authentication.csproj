@@ -26,28 +26,10 @@
     <PackageReference Include="Serilog.Settings.Configuration" />
     <PackageReference Include="System.Diagnostics.Tracing" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-    <PackageReference Include="System.Collections" />
-    <PackageReference Include="System.Diagnostics.Debug" />
-    <PackageReference Include="System.IO.FileSystem" />
-    <PackageReference Include="System.IO.FileSystem.Primitives" />
-    <PackageReference Include="System.Net.Primitives" />
-    <PackageReference Include="System.Reflection" />
-    <PackageReference Include="System.Resources.ResourceManager" />
-    <PackageReference Include="System.Runtime.Extensions" />
-    <PackageReference Include="System.Runtime.Handles" />
-    <PackageReference Include="System.Runtime.InteropServices" />
-    <PackageReference Include="System.Text.Encoding.Extensions" />
-    <PackageReference Include="System.Threading" />
-    <PackageReference Include="System.Threading.Tasks" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DfT.ZEV.Common\DfT.ZEV.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="Areas\Authentication\Views\Account\AccountActivationSetInitialPassword.cshtml" />
-    <AdditionalFiles Include="Areas\Authentication\Views\Shared\Components\NotificationBanner\NotificationBanner.cshtml" />
   </ItemGroup>
 
 </Project>
