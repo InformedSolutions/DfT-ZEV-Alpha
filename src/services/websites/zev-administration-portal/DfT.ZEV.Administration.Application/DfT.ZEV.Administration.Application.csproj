@@ -22,7 +22,6 @@
     <PackageReference Include="System.Runtime.Handles" />
     <PackageReference Include="System.Runtime.InteropServices" />
     <PackageReference Include="System.Text.Encoding.Extensions" />
-    <PackageReference Include="System.Threading.Tasks" />
   </ItemGroup>
 
   <ItemGroup>
