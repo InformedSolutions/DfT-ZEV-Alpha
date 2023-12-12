@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Logging;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -61,7 +62,7 @@ public partial class AccountController : Controller
             HttpContext.Session.SetString("Token", result.IdToken);
             HttpContext.Session.SetString("RefreshToken", result.RefreshToken);
 
-            //_businessLogger.LogBusiness("User successfully signed in");
+            _logger.LogBusinessEvent("User successfully signed in");
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)
