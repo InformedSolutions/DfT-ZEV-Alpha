@@ -17,7 +17,8 @@ public static class SerilogExtensions
       loggerConfiguration
               .ReadFrom.Configuration(hostingContext.Configuration)
               .Enrich.WithEnvironmentName()
-              .Enrich.WithCorrelationId();
+              .Enrich.WithCorrelationId()
+              .Enrich.WithBuildId();
     });
   }
 
@@ -28,7 +29,8 @@ public static class SerilogExtensions
       loggerConfiguration
               .ReadFrom.Configuration(hostingContext.Configuration)
               .Enrich.WithEnvironmentName()
-              .Enrich.WithCorrelationId();
+              .Enrich.WithCorrelationId()
+              .Enrich.WithBuildId();
     });
   }
 
