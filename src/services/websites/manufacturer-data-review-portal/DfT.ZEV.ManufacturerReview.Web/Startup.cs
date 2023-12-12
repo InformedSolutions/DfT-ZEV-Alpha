@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
-using Serilog;
 using System.Collections.Generic;
 using System.Web;
 using DfT.ZEV.Common.Configuration;
@@ -90,14 +89,7 @@ public class Startup
         });
 
         services.AddHttpContextAccessor();
-
-        Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration)
-            .Enrich.WithCorrelationIdLogging()
-            .Enrich.WithAssemblyCompilationModeLogging()
-            .Enrich.WithBuildIdLogging()
-            .Enrich.WithEnvironmentNameLogging()
-            .CreateLogger();
-
+        services.ForwardHeaders();
         var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
         services.ConfigureGoogleCloudSettings(this.Configuration);
         services.AddIdentityPlatform(Configuration);
@@ -112,9 +104,7 @@ public class Startup
         services.AddRepositories();
 
         services.AddApiServiceClients(Configuration);
-        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
 
-        services.AddScoped<IBusinessEventLogger, BusinessEventLogger>();
 
         services.AddOptions();
         services.ConfigureServicesSettings(Configuration);
@@ -200,7 +190,6 @@ public class Startup
         app.UseAuthorization();
 
         app.UseSession();
-
         app.UseMiddleware<PageViewLoggerMiddleware>();
 
         app.UseEndpoints(endpoints =>

@@ -1,6 +1,7 @@
-﻿using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace DfT.ZEV.Common.Middlewares;
 
@@ -21,11 +22,11 @@ public class PageViewLoggerMiddleware
         _enableAuditLogging = configuration.GetValue<bool>("EnableAuditLogging");
     }
 
-    public async Task Invoke(HttpContext httpContext, IBusinessEventLogger logger)
+    public async Task Invoke(HttpContext httpContext, ILogger<PageViewLoggerMiddleware> logger)
     {
         if (_enableAuditLogging && httpContext.Request.Method == "GET")
         {
-            logger.LogBusiness("Page viewed: {path}", httpContext.Request.Path);
+            logger.LogBusinessEvent("Page viewed: {path}", httpContext.Request.Path);
         }
 
         await _next.Invoke(httpContext);

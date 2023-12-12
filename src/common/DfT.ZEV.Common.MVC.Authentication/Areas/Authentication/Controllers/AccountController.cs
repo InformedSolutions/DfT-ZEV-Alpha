@@ -19,16 +19,14 @@ public partial class AccountController : Controller
     private readonly ILogger<AccountController> _logger;
     private readonly IIdentityPlatform _identityPlatform;
     private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
-    private readonly IBusinessEventLogger _businessLogger;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AccountController(IBusinessEventLogger businessLogger, ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor)
+    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor)
     {
         _logger = logger;
         _identityPlatform = identityPlatform;
         _googleOptions = options;
         _httpContextAccessor = httpContextAccessor;
-        _businessLogger = businessLogger;
     }
 
     public IActionResult Index()
@@ -64,7 +62,7 @@ public partial class AccountController : Controller
             HttpContext.Session.SetString("Token", result.IdToken);
             HttpContext.Session.SetString("RefreshToken", result.RefreshToken);
 
-            _businessLogger.LogBusiness("User successfully signed in");
+            _logger.LogBusinessEvent("User successfully signed in");
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)

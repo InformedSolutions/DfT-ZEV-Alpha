@@ -95,10 +95,6 @@ public class Startup
         services.AddHttpContextAccessor();
 
         Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration)
-            .Enrich.WithCorrelationIdLogging()
-            .Enrich.WithAssemblyCompilationModeLogging()
-            .Enrich.WithBuildIdLogging()
-            .Enrich.WithEnvironmentNameLogging()
             .CreateLogger();
 
         var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
@@ -115,9 +111,7 @@ public class Startup
         services.AddRepositories();
 
         services.AddApiServiceClients(Configuration);
-        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
-
-        services.AddScoped<IBusinessEventLogger, BusinessEventLogger>();
+        services.ForwardHeaders();
 
         services.AddOptions();
         services.ConfigureServicesSettings(Configuration);
@@ -203,8 +197,8 @@ public class Startup
         app.UseAuthorization();
 
         app.UseSession();
-
         app.UseMiddleware<PageViewLoggerMiddleware>();
+
 
         app.UseEndpoints(endpoints =>
         {

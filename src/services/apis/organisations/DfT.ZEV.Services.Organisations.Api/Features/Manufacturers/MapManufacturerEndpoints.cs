@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using DfT.ZEV.Core.Application.Manufacturers.Commands.CreateManufacturer;
 using DfT.ZEV.Core.Application.Manufacturers.Commands.DeleteManufacturer;
 using DfT.ZEV.Core.Application.Manufacturers.Commands.UpdateManufacturer;
@@ -9,24 +8,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfT.ZEV.Services.Organisations.Api.Features.Manufacturers;
 
-public static class MapManufacturerEndpointsExtensions
+public static class MapManufacturerEndpointsExtension
 {
-    public static void MapManufacturerEndpoints(this WebApplication app)
+    private const string ManufacturersPath = "/manufacturers/";
+    private const string ManufacturerByIdPath = "/manufacturers/{id}";
+
+    public static WebApplication MapManufacturerEndpoints(this WebApplication app)
     {
-        app.MapGet("/manufacturers/{id}", GetManufacturerById)
+        app.MapGet(ManufacturersPath, GetAllManufacturers)
             .WithTags("Manufacturers");
 
-        app.MapGet("/manufacturers/", GetAllManufacturers)
+        app.MapPost(ManufacturersPath, CreateManufacturer)
             .WithTags("Manufacturers");
 
-        app.MapPost("/manufacturers/", CreateManufacturer)
+        app.MapGet(ManufacturerByIdPath, GetManufacturerById);
+
+        app.MapPut(ManufacturerByIdPath, UpdateManufacturer)
             .WithTags("Manufacturers");
 
-        app.MapPut("/manufacturers/{id}", UpdateManufacturer)
-            .WithTags("Manufacturers");
-
-        app.MapDelete("/manufacturers/{id}", DeleteManufacturer)
+        app.MapDelete(ManufacturerByIdPath, DeleteManufacturer)
              .WithTags("Manufacturers");
+
+        return app;
     }
 
     private static async Task<IResult> CreateManufacturer([FromBody] CreateManufacturerCommand request, [FromServices] IMediator mediator,
@@ -34,15 +37,7 @@ public static class MapManufacturerEndpointsExtensions
         => Results.Ok(await mediator.Send(request, cancellationToken));
 
     private static async Task<IResult> GetAllManufacturers([FromServices] IMediator mediator, CancellationToken ct, [FromQuery] string search = "")
-    {
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
-        var res = await mediator.Send(new GetAllManufacturersQuery(search), ct);
-        stopwatch.Stop();
-        //logger.LogInformation("GetAllManufacturers took {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
-        Console.WriteLine("GetAllManufacturers took {0}ms", stopwatch.ElapsedMilliseconds);
-        return Results.Ok(res);
-    }
+        => Results.Ok(await mediator.Send(new GetAllManufacturersQuery(search), ct));
 
     private static async Task<IResult> GetManufacturerById([FromRoute] Guid id, [FromServices] IMediator mediator, CancellationToken ct)
         => Results.Ok(await mediator.Send(new GetManufacturerByIdQuery(id), ct));

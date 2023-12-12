@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Middlewares.ErrorHandling;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
@@ -37,8 +38,8 @@ public static class Setup
 
         //to-do: add serilog from commons
         //builder.Services.AddSerilog(builder.Configuration);
-        builder.Services.AddLogging();
-
+        //builder.Services.AddLogging();
+        builder.UseCustomSerilog();
         builder.Services.AddRepositories();
         return builder;
     }
