@@ -7,7 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 
+COPY stylecop.ruleset stylecop.ruleset
+
 WORKDIR /src
+COPY src/Directory.Packages.props .
 COPY ["src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Web/DfT.ZEV.ManufacturerReview.Web.csproj", "./services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Web/"]
 COPY ["src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Domain/DfT.ZEV.ManufacturerReview.Domain.csproj", ".services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Domain/"]
 COPY ["src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Application/DfT.ZEV.ManufacturerReview.Application.csproj", "./services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Application/"]
@@ -21,7 +24,6 @@ COPY ["src/common/DfT.ZEV.Common/DfT.ZEV.Common.csproj", "./common/DfT.ZEV.Commo
 COPY ["src/common/DfT.ZEV.Common.MVC.Authentication/DfT.ZEV.Common.MVC.Authentication.csproj", "./common/DfT.ZEV.Common.MVC.Authentication/"]
 
 WORKDIR /src/services/websites/manufacturer-data-review-portal/DfT.ZEV.ManufacturerReview.Web
-COPY src/Directory.Packages.props .
 RUN dotnet restore
 
 WORKDIR /src

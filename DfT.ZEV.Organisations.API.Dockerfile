@@ -10,6 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 COPY stylecop.ruleset stylecop.ruleset
 
 WORKDIR /src
+COPY src/Directory.Packages.props .
 COPY ["src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api/DfT.ZEV.Services.Organisations.Api.csproj", "./services/apis/organisations/DfT.ZEV.Services.Organisations.Api/"]
 
 COPY ["src/core/DfT.ZEV.Core.Application/DfT.ZEV.Core.Application.csproj", "./core/DfT.ZEV.Core.Application/"]
@@ -20,7 +21,6 @@ COPY ["src/common/DfT.ZEV.Common/DfT.ZEV.Common.csproj", "./common/DfT.ZEV.Commo
 COPY ["src/common/DfT.ZEV.Common.MVC.Authentication/DfT.ZEV.Common.MVC.Authentication.csproj", "./common/DfT.ZEV.Common.MVC.Authentication/"]
 
 WORKDIR /src/services/apis/organisations/DfT.ZEV.Services.Organisations.Api
-COPY src/Directory.Packages.props .
 RUN dotnet restore
 
 WORKDIR /src

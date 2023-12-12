@@ -7,7 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 
+COPY stylecop.ruleset stylecop.ruleset
+
 WORKDIR /src
+COPY src/Directory.Packages.props .
 COPY ["src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Web/DfT.ZEV.Administration.Web.csproj", "./services/websites/zev-administration-portal/DfT.ZEV.Administration.Web/"]
 COPY ["src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Domain/DfT.ZEV.Administration.Domain.csproj", "./services/websites/zev-administration-portal/DfT.ZEV.Administration.Domain/"]
 COPY ["src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Application/DfT.ZEV.Administration.Application.csproj", "./services/websites/zev-administration-portal/DfT.ZEV.Administration.Application/"]
@@ -21,7 +24,6 @@ COPY ["src/common/DfT.ZEV.Common/DfT.ZEV.Common.csproj", "./common/DfT.ZEV.Commo
 COPY ["src/common/DfT.ZEV.Common.MVC.Authentication/DfT.ZEV.Common.MVC.Authentication.csproj", "./common/DfT.ZEV.Common.MVC.Authentication/"]
 
 WORKDIR /src/services/websites/zev-administration-portal/DfT.ZEV.Administration.Web
-COPY src/Directory.Packages.props .
 RUN dotnet restore
 
 WORKDIR /src
