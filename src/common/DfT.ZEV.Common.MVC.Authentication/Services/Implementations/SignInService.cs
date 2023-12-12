@@ -1,3 +1,4 @@
+using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.MVC.Authentication.Services.Interfaces;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ public class SignInService : ISignInService
         if (!string.IsNullOrEmpty(viewModel.UserId))
         {
             // UserId works as honeypot captcha. If filled, there may have been hack trial.
+            _logger.LogBusinessEvent("Honeypot captcha has been filled.");
             return AuthResult.Failed(AuthErrorMessages.SignInErrorMessage);
         }
 

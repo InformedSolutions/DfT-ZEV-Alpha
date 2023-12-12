@@ -190,6 +190,7 @@ public class Startup
         app.UseAuthorization();
 
         app.UseSession();
+        app.UseMiddleware<PageViewLoggerMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {
