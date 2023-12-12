@@ -26,7 +26,7 @@ public class Program
                 webBuilder.UseStartup<Startup>()
                 .UseKestrel(options => options.AddServerHeader = false);
             })
-            .UseSerilog()
+            .UseCustomSerilog()
             ;
     }
 }

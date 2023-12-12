@@ -10,10 +10,11 @@ namespace DfT.ZEV.Common.Logging;
 
 public static class SerilogExtensions
 {
-  public static void UseSerilog(this WebApplicationBuilder builder)
+  public static void UseCustomSerilog(this WebApplicationBuilder builder)
   {
+      
     builder.Services.ForwardHeaders();
-    builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+    builder.Host.UseSerilog((hostingContext, services, loggerConfiguration) =>
     {
       loggerConfiguration
               .ReadFrom.Configuration(hostingContext.Configuration)
@@ -23,7 +24,7 @@ public static class SerilogExtensions
     });
   }
 
-  public static IHostBuilder UseSerilog(this IHostBuilder builder)
+  public static IHostBuilder UseCustomSerilog(this IHostBuilder builder)
   {
     return builder.UseSerilog((hostingContext, loggerConfiguration) =>
     {

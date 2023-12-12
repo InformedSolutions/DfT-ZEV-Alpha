@@ -31,7 +31,7 @@ public static class Setup
         builder.Services.AddDbContext(postgresSettings);
 
 
-        builder.UseSerilog();
+        builder.UseCustomSerilog();
 
         builder.Services.AddApplication();
 
