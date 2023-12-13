@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.ResetPassword;
@@ -21,6 +22,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     private const string RefreshTokenApiUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
     private const string GetOobCodeApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode";
     private const string ResetPasswordApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword";
+    private const string MfaEnrollStartUrl = "https://identitytoolkit.googleapis.com/v2/accounts/mfaEnrollment:start";
     private static readonly string[] Scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
 
     public GoogleIdentityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
@@ -98,6 +100,20 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
         {
             throw new ApplicationException($"Google API returned status code {result.StatusCode}");
         }
+    }
+
+    public async Task<StartEnrollmentResponse> EnrollMfa(StartEnrollmentRequest request)
+    {
+        await ConfigureHttpClient();
+        var requestJson = SerialiseToCamelCaseJson(request);
+        var result = await _httpClient.PostAsync(MfaEnrollStartUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+        
+        if (result.StatusCode != HttpStatusCode.OK)
+        {
+            throw new ApplicationException($"Google API returned status code {result.StatusCode}");
+        }
+
+        return JsonConvert.DeserializeObject<StartEnrollmentResponse>(await result.Content.ReadAsStringAsync());
     }
 
     /// <summary>

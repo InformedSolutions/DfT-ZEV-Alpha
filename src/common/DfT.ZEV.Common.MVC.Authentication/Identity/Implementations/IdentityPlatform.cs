@@ -1,6 +1,7 @@
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.ResetPassword;
@@ -119,6 +120,9 @@ internal sealed class IdentityPlatform : IIdentityPlatform
 
         await _googleIdentityApiClient.ChangePasswordWithToken(request);
     }
+
+    public async Task<StartEnrollmentResponse> EnrollMfa(StartEnrollmentRequest request)
+        => await _googleIdentityApiClient.EnrollMfa(request);
 
     /// <inheritdocs/>
     public async Task DeleteUserAsync(Guid userId, string tenantId)

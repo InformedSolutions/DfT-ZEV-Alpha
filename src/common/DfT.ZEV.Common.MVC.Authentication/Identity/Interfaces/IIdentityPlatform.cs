@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Requests;
 using FirebaseAdmin.Auth;
@@ -70,4 +71,6 @@ public interface IIdentityPlatform
     /// <param name="tenantId">The tenant's identifier.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ChangePasswordAsync(string oobCode, string newPassword, string tenantId);
+
+    public Task<StartEnrollmentResponse> EnrollMfa(StartEnrollmentRequest request);
 }

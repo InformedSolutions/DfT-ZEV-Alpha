@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.ResetPassword;
@@ -36,4 +37,6 @@ public interface IGoogleIdentityApiClient
     /// <param name="passwordChangeRequest">The password change request.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task ChangePasswordWithToken(PasswordChangeWithTokenRequest passwordChangeRequest);
+
+    Task<StartEnrollmentResponse> EnrollMfa(StartEnrollmentRequest request);
 }
