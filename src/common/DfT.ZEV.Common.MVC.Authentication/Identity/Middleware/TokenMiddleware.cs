@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace DfT.ZEV.Common.MVC.Authentication.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.Middleware;
 
 public class TokenMiddleware : IMiddleware
 {

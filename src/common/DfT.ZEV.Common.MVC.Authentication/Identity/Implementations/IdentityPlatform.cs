@@ -1,12 +1,18 @@
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.ResetPassword;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Requests;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace DfT.ZEV.Common.MVC.Authentication.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.Implementations;
 
 internal sealed class IdentityPlatform : IIdentityPlatform
 {

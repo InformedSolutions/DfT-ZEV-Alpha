@@ -17,6 +17,7 @@ using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 using DfT.ZEV.Core.Application;

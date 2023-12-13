@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
 using DfT.ZEV.Core.Application.Accounts.Exceptions;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;

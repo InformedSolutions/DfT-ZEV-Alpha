@@ -5,6 +5,7 @@ using DfT.ZEV.Common.Middlewares.ErrorHandling;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisations.Api.Features.Accounts;

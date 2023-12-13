@@ -1,7 +1,9 @@
-using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Requests;
 using FirebaseAdmin.Auth;
 
-namespace DfT.ZEV.Common.MVC.Authentication.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
 
 public interface IIdentityPlatform
 {

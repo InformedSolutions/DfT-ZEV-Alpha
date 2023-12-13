@@ -9,6 +9,7 @@ using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 
 namespace DfT.ZEV.Services.SchemeData.Api;
 

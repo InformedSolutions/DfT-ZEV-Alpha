@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace DfT.ZEV.Common.MVC.Authentication.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 
 public static class ClaimsPrincipalExtension
 {

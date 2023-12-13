@@ -1,6 +1,9 @@
 using System.Net;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Implementations;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Middleware;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DfT.ZEV.Common.MVC.Authentication.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 
 public static class IdentityExtensions
 {

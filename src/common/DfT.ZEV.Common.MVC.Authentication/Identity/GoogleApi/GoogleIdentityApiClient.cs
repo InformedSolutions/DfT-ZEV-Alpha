@@ -2,6 +2,10 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.ResetPassword;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -17,7 +21,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     private const string RefreshTokenApiUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
     private const string GetOobCodeApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode";
     private const string ResetPasswordApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword";
-    private static string[] _scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
+    private static readonly string[] Scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
 
     public GoogleIdentityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
     {
@@ -29,7 +33,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     public async Task<AuthorisationResponse> Authorise(string mail, string password, string tenantId)
     {
         var apiUrl = string.Format(VerifyPasswordApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
-
+        GoogleCredential.GetApplicationDefault().UnderlyingCredential.GetAccessTokenForRequestAsync();
         var request = new AuthorisationRequest
         {
             Email = mail,
@@ -131,7 +135,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     private async Task ConfigureHttpClient()
     {
         var credential = GoogleCredential.GetApplicationDefault()
-            .CreateScoped(_scopes).CreateWithQuotaProject(_googleCloudConfiguration.Value.ProjectId);
+            .CreateScoped(Scopes).CreateWithQuotaProject(_googleCloudConfiguration.Value.ProjectId);
 
         var accessToken = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
 

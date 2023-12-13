@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Requests;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 

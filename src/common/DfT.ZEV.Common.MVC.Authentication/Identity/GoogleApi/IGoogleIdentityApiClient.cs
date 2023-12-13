@@ -1,3 +1,8 @@
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.ResetPassword;
+
 namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 
 public interface IGoogleIdentityApiClient

@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
 
 public class RefreshTokenRequest
 {
