@@ -26,19 +26,6 @@ public class TokenMiddleware : IMiddleware
             var token = ExtractTokenFromHeader(tokenHeader);
 
             var tokenClaims = ExtractClaimsFromToken(token).ToList();
-            var email = tokenClaims.First(c => c.Type == "email").Value;
-            var tenant = ExtractTenantFromClaims(tokenClaims);
-            
-            var userInfo = await _identityPlatform.LookupUser(token, email, tenant);
-            
-            if (userInfo?.Users == null || !userInfo.Users.Any())
-            {
-                context.Response.Redirect("/account/sign-in");
-                return;
-            }
-            
-            var mfaClaim = new Claim("mfaEnabled", userInfo.Users[0].MfaInfo?.Any().ToString() ?? "false");
-            tokenClaims.Add(mfaClaim);
             
             var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(tokenClaims, "Bearer"));
 
@@ -61,16 +48,5 @@ public class TokenMiddleware : IMiddleware
 
         return tokenS.Claims;
     }
-
-    private string ExtractTenantFromClaims(IEnumerable<Claim> claims)
-    {
-        var firebaseClaims = claims
-            .Where(c => c.Type == "firebase")
-            .Select(c => c.Value)
-            .FirstOrDefault();
-
-        var firebaseJson = System.Text.Json.JsonDocument.Parse(firebaseClaims).RootElement;
-
-        return firebaseJson.GetProperty("tenant").GetString();
-    }
+    
 }

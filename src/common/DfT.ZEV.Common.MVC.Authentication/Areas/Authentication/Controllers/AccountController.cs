@@ -129,4 +129,11 @@ public partial class AccountController : Controller
 
         return Redirect(returnUrl);
     }
+
+    [Authorize]
+    [HttpGet("mfa-not-enabled")]
+    public async Task<IActionResult> MfaNotEnabled()
+    {
+        return View();
+    }
 }

@@ -18,6 +18,7 @@ using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Middleware;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 using DfT.ZEV.Core.Application;
@@ -117,7 +118,7 @@ public class Startup
        services.AddResponseCompression();
 
        services.AddHealthChecks();
-
+       services.AddTransient<MfaAlertMiddleware>();
        services.Configure<GoogleAnalyticsOptions>(options =>
             Configuration.GetSection("GoogleAnalytics").Bind(options));
 
@@ -189,6 +190,7 @@ public class Startup
        app.UseIdentity();
        app.UseAuthentication();
        app.UseAuthorization();
+       app.UseMiddleware<MfaAlertMiddleware>();
 
        app.UseMiddleware<PageViewLoggerMiddleware>();
 
