@@ -1,6 +1,7 @@
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Lookup;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
@@ -131,4 +132,12 @@ internal sealed class IdentityPlatform : IIdentityPlatform
             .AuthForTenant(tenantId)
             .DeleteUserAsync(userId.ToString());
     }
+
+    public async Task<UserRecord> GetUserDetails(Guid userId, string tenantId)
+        => await FirebaseAuth.DefaultInstance.TenantManager
+            .AuthForTenant(tenantId)
+            .GetUserAsync(userId.ToString());
+
+    public async Task<LookupUserResponse> LookupUser(string idToken,string userEmail, string tenantId)
+        => await _googleIdentityApiClient.LookupUser(idToken, userEmail, tenantId);
 }

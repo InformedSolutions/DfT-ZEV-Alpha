@@ -101,13 +101,12 @@ public class Startup
         var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
         services.ConfigureGoogleCloudSettings(this.Configuration);
         services.AddIdentityPlatform(Configuration);
+        
         services.AddDbContextPool<AppDbContext>(opt =>
-        {
-            // This causes errors while working in multi-threaded processing, need to deep dive this topic
-            //  opt.UseNpgsql(configuration.ConnectionString,
-            //     conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
+        { 
             opt.UseNpgsql(postgresSettings.ConnectionString);
         });
+        
         services.AddApplication();
         services.AddRepositories();
 
@@ -120,10 +119,9 @@ public class Startup
 
         services.AddResponseCompression();
 
-        //services.AddHealthChecks();
         services.AddHealthChecks()
                  .AddCheck<RestServiceHealthCheck>("organization-api-service", HealthStatus.Unhealthy);
-        // Register the Google Analytics configuration
+
         services.Configure<GoogleAnalyticsOptions>(options =>
             Configuration.GetSection("GoogleAnalytics").Bind(options));
 
@@ -139,7 +137,6 @@ public class Startup
         app.UseExceptionHandler("/Error/500");
         app.UseMiddleware<WebsiteExceptionMiddleware>();
         app.UseMiddleware<CorrelationIdLoggerMiddleware>();
-        app.UseIdentity();
         var allowedHostnames = Configuration.GetValue<string>("AllowedHostnames").Split(",");
 
         app.UseAllowedHostFilteringMiddleware(new HostFilteringOptions
@@ -194,10 +191,11 @@ public class Startup
 
         app.UseRouting();
 
+        app.UseSession();
+        app.UseIdentity();
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseSession();
         app.UseMiddleware<PageViewLoggerMiddleware>();
 
 

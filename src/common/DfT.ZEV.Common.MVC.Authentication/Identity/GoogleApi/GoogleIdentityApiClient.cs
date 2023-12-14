@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Lookup;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.PasswordChange;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
@@ -18,11 +19,6 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
-    private const string VerifyPasswordApiUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
-    private const string RefreshTokenApiUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
-    private const string GetOobCodeApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode";
-    private const string ResetPasswordApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword";
-    private const string MfaEnrollStartUrl = "https://identitytoolkit.googleapis.com/v2/accounts/mfaEnrollment:start";
     private static readonly string[] Scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
 
     public GoogleIdentityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
@@ -34,8 +30,9 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     /// <inheritdoc/>
     public async Task<AuthorisationResponse> Authorise(string mail, string password, string tenantId)
     {
-        var apiUrl = string.Format(VerifyPasswordApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
-        GoogleCredential.GetApplicationDefault().UnderlyingCredential.GetAccessTokenForRequestAsync();
+        const string verifyPasswordApiUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
+        var apiUrl = string.Format(verifyPasswordApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
+        //GoogleCredential.GetApplicationDefault().UnderlyingCredential.GetAccessTokenForRequestAsync();
         var request = new AuthorisationRequest
         {
             Email = mail,
@@ -55,7 +52,9 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     /// <inheritdoc/>
     public async Task<RefreshTokenResponse> RefreshToken(string token)
     {
-        var apiUrl = string.Format(RefreshTokenApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
+        const string refreshTokenApiUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
+
+        var apiUrl = string.Format(refreshTokenApiUrlTemplate, _googleCloudConfiguration.Value.ApiKey);
 
         var request = new RefreshTokenRequest
         {
@@ -79,9 +78,11 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     /// <inheritdoc/>
     public async Task<PasswordResetTokenResponse> GetPasswordResetToken(PasswordResetTokenRequest passwordResetCodeRequest)
     {
+        const string getOobCodeApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode";
+
         await ConfigureHttpClient();
         var requestJson = SerialiseToCamelCaseJson(passwordResetCodeRequest);
-        var result = await _httpClient.PostAsync(GetOobCodeApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+        var result = await _httpClient.PostAsync(getOobCodeApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
 
         return result.StatusCode != HttpStatusCode.OK
             ? throw new ApplicationException($"Google API returned status code {result.StatusCode}")
@@ -92,9 +93,11 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     /// <inheritdoc/>
     public async Task ChangePasswordWithToken(PasswordChangeWithTokenRequest passwordChangeRequest)
     {
+        const string resetPasswordApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword";
+
         await ConfigureHttpClient();
         var requestJson = SerialiseToCamelCaseJson(passwordChangeRequest);
-        var result = await _httpClient.PostAsync(ResetPasswordApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+        var result = await _httpClient.PostAsync(resetPasswordApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
 
         if (result.StatusCode != HttpStatusCode.OK)
         {
@@ -104,16 +107,47 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
 
     public async Task<StartEnrollmentResponse> EnrollMfa(StartEnrollmentRequest request)
     {
+        const string mfaEnrollStartUrl = "https://identitytoolkit.googleapis.com/v2/accounts/mfaEnrollment:start";
         await ConfigureHttpClient();
         var requestJson = SerialiseToCamelCaseJson(request);
-        var result = await _httpClient.PostAsync(MfaEnrollStartUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-        
+        var result = await _httpClient.PostAsync(mfaEnrollStartUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+
         if (result.StatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException($"Google API returned status code {result.StatusCode}");
         }
 
         return JsonConvert.DeserializeObject<StartEnrollmentResponse>(await result.Content.ReadAsStringAsync());
+    }
+
+    public async Task<LookupUserResponse> LookupUser(string idToken, string userEmail, string tenantId)
+    {
+        var url = $"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={_googleCloudConfiguration.Value.ApiKey}";
+
+        var emails = new[] { userEmail };
+
+        var requestBody = $"{{\"idToken\": \"{idToken}\", \"email\": {GetJsonArray(emails)}, \"tenantId\": \"{tenantId}\"}}";
+
+
+        await ConfigureHttpClient();
+        var result = await _httpClient.PostAsync(url, new StringContent(requestBody, Encoding.UTF8, "application/json"));
+        
+        return result.StatusCode != HttpStatusCode.OK
+            ? throw new ApplicationException($"Google API returned status code {result.StatusCode}")
+            : JsonConvert.DeserializeObject<LookupUserResponse>(await result.Content.ReadAsStringAsync());
+    }
+
+    private static string GetJsonArray(string[] values)
+    {
+        // Convert array of strings to a JSON array string
+        var jsonArray = new StringBuilder("[");
+        foreach (var value in values)
+        {
+            jsonArray.Append($"\"{value}\",");
+        }
+        jsonArray.Length--; // Remove the trailing comma
+        jsonArray.Append("]");
+        return jsonArray.ToString();
     }
 
     /// <summary>

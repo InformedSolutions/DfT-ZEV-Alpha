@@ -36,7 +36,7 @@ public static class IdentityExtensions
                     ValidIssuer = googleConfig.Token.Issuer,
                     ValidateIssuer = true,
                     ValidAudience = googleConfig.Token.Audience,
-                    ValidateAudience = true,
+                    ValidateAudience = true
                 };
             })
            ;
@@ -48,8 +48,10 @@ public static class IdentityExtensions
 
     public static IApplicationBuilder UseIdentity(this IApplicationBuilder app)
     {
-        app.UseSession();
-
+        // app.UseAuthentication();
+        // app.UseAuthorization();
+        // app.UseSession();
+       
         //add token to request header.
         app.Use(async (context, next) =>
         {
@@ -62,7 +64,6 @@ public static class IdentityExtensions
         });
         app.UseMiddleware<TokenMiddleware>();
         app.UseStatusCodePages(async context => {
-            var request = context.HttpContext.Request;
             var response = context.HttpContext.Response;
 
             if (response.StatusCode == (int)HttpStatusCode.Unauthorized)   
@@ -70,8 +71,7 @@ public static class IdentityExtensions
                 response.Redirect("/account/sign-in");
             }
         });
-        app.UseAuthentication();
-        app.UseAuthorization();
+      
         
         return app;
     }

@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Lookup;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.RefreshToken;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Requests;
@@ -73,4 +74,6 @@ public interface IIdentityPlatform
     public Task ChangePasswordAsync(string oobCode, string newPassword, string tenantId);
 
     public Task<StartEnrollmentResponse> EnrollMfa(StartEnrollmentRequest request);
+    public Task<UserRecord> GetUserDetails(Guid userId, string tenantId);
+    public Task<LookupUserResponse> LookupUser(string idToken, string userEmail, string tenantId);
 }
