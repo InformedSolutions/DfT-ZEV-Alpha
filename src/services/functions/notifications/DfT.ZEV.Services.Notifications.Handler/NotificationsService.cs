@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DfT.ZEV.Common.Enumerations;
 using DfT.ZEV.Common.Models;
 using DfT.ZEV.Common.Services;
+using Google.Cloud.Functions.Hosting;
 using Microsoft.Extensions.Logging;
 using Notify.Interfaces;
 
@@ -15,6 +16,8 @@ namespace DfT.ZEV.Services.Notifications.Handler;
 /// <summary>
 /// Concrete implementation of notification service provider class.
 /// </summary>
+
+[FunctionsStartup(typeof(ServiceStartup))]
 public class NotificationsService : INotificationsService
 {
     private readonly ILogger<NotificationsService> _logger;
