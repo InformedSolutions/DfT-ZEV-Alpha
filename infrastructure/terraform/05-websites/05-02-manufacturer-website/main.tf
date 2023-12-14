@@ -28,6 +28,23 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
         container_port = 80
       }
 
+      startup_probe {
+        period_seconds    = 4
+        failure_threshold = 5
+
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
+
+      liveness_probe {
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
+
       env {
         name  = "DEPLOYED_AT"
         value = local.deployed_at
@@ -98,8 +115,6 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
         name  = "GoogleCloud__Queues__Notification__HandlerUrl"
         value = data.terraform_remote_state.notifications_function.outputs.function_url
       }
-
-      # TODO: Add startup and liveness probe
     }
   }
 
