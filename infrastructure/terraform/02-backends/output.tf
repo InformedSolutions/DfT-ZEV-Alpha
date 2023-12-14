@@ -38,3 +38,8 @@ output "identity_platform_config" {
     token_issuer               = "https://securetoken.google.com/${var.project}"
   }
 }
+
+output "email_notifications_queue_name" {
+  description = "The ID of the Cloud Tasks queue used to send email notifications"
+  value       = google_cloud_tasks_queue.email_notifications.name
+}
