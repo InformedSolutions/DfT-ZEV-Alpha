@@ -28,7 +28,22 @@ resource "google_cloud_run_v2_service" "organisation_api" {
         container_port = 80
       }
 
-      # TODO: Add startup and liveness probe
+      startup_probe {
+        period_seconds    = 4
+        failure_threshold = 5
+
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
+
+      liveness_probe {
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
 
       dynamic "env" {
         for_each = local.service_envs
