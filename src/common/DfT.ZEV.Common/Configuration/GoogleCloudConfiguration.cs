@@ -14,12 +14,28 @@ public class TokenConfiguration
 
 }
 
+public class NotificationQueue
+{
+    public string Name { get; set; }
+    public string HandlerUrl { get; set; }
+
+}
+
+public class Queues
+{
+    public NotificationQueue Notification { get; set; }
+}
+
 public class GoogleCloudConfiguration
 {
     public const string SectionName = "GoogleCloud";
+    
+    public string ServiceAccount {get; set; }
 
     public string ProjectId { get; set; } = null!;
     public string ApiKey { get; set; } = null!;
+    public string Location { get; set; } = null!;
     public TenancyConfiguration Tenancy { get; set; } = null!;
     public TokenConfiguration Token { get; set; } = null!;
+    public Queues Queues { get; set; }
 }
