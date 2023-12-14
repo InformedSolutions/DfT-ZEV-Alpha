@@ -34,13 +34,8 @@ public static class MapTestEndpointsExtensions
 
       
         var options = _options.Value;
+        var oidcToken = await GoogleCredential.GetApplicationDefault().GetOidcTokenAsync(OidcTokenOptions.FromTargetAudience(options.Queues.Notification.HandlerUrl)) ;
         var parentQueue = new QueueName(options.ProjectId, options.Location, options.Queues.Notification.Name);
-
-        var token = new OidcToken
-        {
-            ServiceAccountEmail = options.ServiceAccount,
-            Audience = options.Queues.Notification.HandlerUrl
-        };
         
         var response = await client.CreateTaskAsync(new CreateTaskRequest
         {
@@ -52,7 +47,7 @@ public static class MapTestEndpointsExtensions
                     HttpMethod = Google.Cloud.Tasks.V2.HttpMethod.Post,
                     Url = options.Queues.Notification.HandlerUrl,
                     Body = ByteString.CopyFromUtf8(payload),
-                    OidcToken = token
+                    Headers = { {"Authorization", $"Bearer {await oidcToken.GetAccessTokenAsync(cancellationToken)}"}  }
                 },
                 ScheduleTime = Timestamp.FromDateTime(
                     DateTime.UtcNow.AddSeconds(inSeconds)),
