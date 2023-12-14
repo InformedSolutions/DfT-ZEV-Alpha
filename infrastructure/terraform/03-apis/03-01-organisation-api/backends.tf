@@ -23,3 +23,13 @@ data "terraform_remote_state" "backends" {
     prefix = "terraform/backends"
   }
 }
+
+data "terraform_remote_state" "notifications_function" {
+  backend   = "gcs"
+  workspace = terraform.workspace
+
+  config = {
+    bucket = var.tf_state_bucket
+    prefix = "terraform/functions/notifications"
+  }
+}

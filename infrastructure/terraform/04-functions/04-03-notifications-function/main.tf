@@ -66,7 +66,7 @@ resource "google_cloudfunctions2_function" "notifications_service" {
     secret_environment_variables {
       project_id = var.project
       key        = "GovUkNotifyApiKey"
-      secret     = google_secret_manager_secret.govuk_notify_api_key.id
+      secret     = google_secret_manager_secret.govuk_notify_api_key.secret_id
       version    = "latest"
     }
   }

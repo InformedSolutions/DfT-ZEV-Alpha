@@ -49,6 +49,11 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       }
 
       env {
+        name  = "GoogleCloud__Location"
+        value = var.region
+      }
+
+      env {
         name  = "GoogleCloud__ApiKey"
         value = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token
       }
@@ -71,6 +76,16 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       env {
         name  = "GoogleCloud__Token__Audience"
         value = var.project
+      }
+
+      env {
+        name  = "GoogleCloud__Queues__Notification__Name"
+        value = data.terraform_remote_state.backends.outputs.email_notifications_queue_name
+      }
+
+      env {
+        name  = "GoogleCloud__Queues__Notification__HandlerUrl"
+        value = data.terraform_remote_state.notifications_function.outputs.function_url
       }
 
       env {
@@ -108,8 +123,6 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       }
     }
   }
-
-
 
   depends_on = [
     null_resource.docker_build,

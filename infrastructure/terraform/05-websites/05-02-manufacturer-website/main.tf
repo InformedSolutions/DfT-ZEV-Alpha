@@ -50,6 +50,11 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
       }
 
       env {
+        name  = "GoogleCloud__Location"
+        value = var.region
+      }
+
+      env {
         name  = "GoogleCloud__ApiKey"
         value = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token
       }
@@ -82,6 +87,16 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
       env {
         name  = "Services__SchemeDataApiBaseUrl"
         value = data.terraform_remote_state.scheme_data_api.outputs.service_url
+      }
+
+      env {
+        name  = "GoogleCloud__Queues__Notification__Name"
+        value = data.terraform_remote_state.backends.outputs.email_notifications_queue_name
+      }
+
+      env {
+        name  = "GoogleCloud__Queues__Notification__HandlerUrl"
+        value = data.terraform_remote_state.notifications_function.outputs.function_url
       }
 
       # TODO: Add startup and liveness probe
