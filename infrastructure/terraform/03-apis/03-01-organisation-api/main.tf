@@ -69,11 +69,6 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       }
 
       env {
-        name  = "GoogleCloud__ApiKey"
-        value = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token
-      }
-
-      env {
         name  = "GoogleCloud__Tenancy__Admin"
         value = data.terraform_remote_state.backends.outputs.identity_platform_config.administration_tenant_name
       }
@@ -108,6 +103,16 @@ resource "google_cloud_run_v2_service" "organisation_api" {
         value_source {
           secret_key_ref {
             secret  = data.terraform_remote_state.backends.outputs.postgres_config.password_secret_id
+            version = "latest"
+          }
+        }
+      }
+
+      env {
+        name = local.identity_platform_api_key_env_name
+        value_source {
+          secret_key_ref {
+            secret  = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token_secret_id
             version = "latest"
           }
         }

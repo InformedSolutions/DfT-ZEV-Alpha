@@ -9,6 +9,7 @@ resource "google_secret_manager_secret_iam_member" "organisation_api_secrets" {
     data.terraform_remote_state.backends.outputs.postgres_config.password_secret_id,
     data.terraform_remote_state.backends.outputs.postgres_config.client_certificate_secret_id,
     data.terraform_remote_state.backends.outputs.postgres_config.client_key_secret_id,
+    data.terraform_remote_state.backends.outputs.identity_platform_config.api_token_secret_id,
   ])
 
   project   = var.project
