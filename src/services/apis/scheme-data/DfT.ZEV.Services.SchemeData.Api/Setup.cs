@@ -6,10 +6,9 @@ using Microsoft.AspNetCore.Http.Json;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Services.SchemeData.Api.Features.Processes;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
-using DfT.ZEV.Common.MVC.Authentication.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
+using DfT.ZEV.Core.Infrastructure.Identity;
 using DfT.ZEV.Services.SchemeData.Api.Features.Vehicles;
 
 namespace DfT.ZEV.Services.SchemeData.Api;

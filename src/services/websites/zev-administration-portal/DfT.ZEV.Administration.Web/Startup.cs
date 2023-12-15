@@ -7,14 +7,13 @@ using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
-using DfT.ZEV.Common.MVC.Authentication.Identity;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Middleware;
+using DfT.ZEV.Common.MVC.Authentication.Middleware;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Application.Clients;
 using DfT.ZEV.Core.Infrastructure;
+using DfT.ZEV.Core.Infrastructure.Identity;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using GovUk.Frontend.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -102,7 +101,8 @@ public class Startup
         var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
         services.ConfigureGoogleCloudSettings(this.Configuration);
         services.AddIdentityPlatform(Configuration);
-        
+        services.AddTransient<TokenMiddleware>();
+
         services.AddDbContextPool<AppDbContext>(opt =>
         { 
             opt.UseNpgsql(postgresSettings.ConnectionString);
@@ -194,6 +194,7 @@ public class Startup
 
         app.UseSession();
         app.UseIdentity();
+        app.UseMiddleware<TokenMiddleware>();
         app.UseAuthentication();
         app.UseAuthorization();
         //app.UseMiddleware<MfaAlertMiddleware>();

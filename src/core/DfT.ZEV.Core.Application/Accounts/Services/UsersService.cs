@@ -1,7 +1,7 @@
-using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
-using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
+using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
 

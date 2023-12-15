@@ -1,4 +1,4 @@
-using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Core.Infrastructure.Identity;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Models;
 

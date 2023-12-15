@@ -1,6 +1,6 @@
 using DfT.ZEV.Common.MVC.Authentication.Attributes;
-using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
+using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
