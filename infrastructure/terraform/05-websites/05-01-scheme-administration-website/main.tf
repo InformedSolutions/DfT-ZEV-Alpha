@@ -82,11 +82,6 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       }
 
       env {
-        name  = "GoogleCloud__ApiKey"
-        value = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token
-      }
-
-      env {
         name  = "GoogleCloud__Tenancy__Admin"
         value = data.terraform_remote_state.backends.outputs.identity_platform_config.administration_tenant_name
       }
@@ -115,11 +110,23 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
         name  = "GoogleCloud__Queues__Notification__HandlerUrl"
         value = data.terraform_remote_state.notifications_function.outputs.function_url
       }
+
+      env {
+        name = "GoogleCloud__ApiKey"
+        value_source {
+          secret_key_ref {
+            secret  = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token_secret_id
+            version = "latest"
+          }
+        }
+      }
     }
   }
 
   depends_on = [
     null_resource.docker_build,
+    # Access to secrets is required to start the container
+    google_secret_manager_secret_iam_member.identity_platform_api_key_secret,
   ]
 }
 
