@@ -1,4 +1,4 @@
-﻿namespace DfT.ZEV.Core.Application;
+﻿namespace DfT.ZEV.Core.Application.Accounts.Queries.GetUserPermissions;
 
 public class ManufacturerPermission
 {

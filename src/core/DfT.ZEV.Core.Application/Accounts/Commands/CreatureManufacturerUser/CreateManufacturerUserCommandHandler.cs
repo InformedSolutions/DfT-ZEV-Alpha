@@ -11,7 +11,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
+namespace DfT.ZEV.Core.Application.Accounts.Commands.CreatureManufacturerUser;
 
 /// <summary>
 /// Handles the creation of a new user.

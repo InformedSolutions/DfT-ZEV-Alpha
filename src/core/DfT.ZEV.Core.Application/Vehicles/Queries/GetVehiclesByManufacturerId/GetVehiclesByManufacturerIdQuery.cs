@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerIdQuery;
+namespace DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerId;
 
 public class GetVehiclesByManufacturerIdQuery : IRequest<GetVehiclesByManufacturerIdQueryDto>
 {

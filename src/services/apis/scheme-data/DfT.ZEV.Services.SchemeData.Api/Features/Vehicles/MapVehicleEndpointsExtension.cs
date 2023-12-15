@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerId;
 using MediatR;
-using DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerIdQuery;
+using Microsoft.AspNetCore.Mvc;
 
-namespace DfT.ZEV.Services.SchemeData.Api;
+namespace DfT.ZEV.Services.SchemeData.Api.Features.Vehicles;
 
 public static class MapVehicleEndpointsExtension
 {

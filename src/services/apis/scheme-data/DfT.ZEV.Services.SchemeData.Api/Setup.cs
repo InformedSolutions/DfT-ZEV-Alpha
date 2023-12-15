@@ -10,6 +10,7 @@ using DfT.ZEV.Common.MVC.Authentication.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
+using DfT.ZEV.Services.SchemeData.Api.Features.Vehicles;
 
 namespace DfT.ZEV.Services.SchemeData.Api;
 

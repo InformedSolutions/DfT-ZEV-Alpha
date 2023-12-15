@@ -4,7 +4,7 @@ using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
 using MediatR;
 
-namespace DfT.ZEV.Core.Application;
+namespace DfT.ZEV.Core.Application.Accounts.Queries.GetUserPermissions;
 
 public class GetUserPermissionsQueryHandler : IRequestHandler<GetUserPermissionsQuery, GetUserPermissionsQueryDto>
 {
