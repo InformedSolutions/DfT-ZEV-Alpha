@@ -23,9 +23,9 @@ public partial class AccountController : Controller
     private readonly ILogger<AccountController> _logger;
     private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly GoogleAuthApiClient _authApi;
-    private readonly GoogleAccountApiClient _accountApi;
-    public AccountController(ILogger<AccountController> logger, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, GoogleAuthApiClient authApi, GoogleAccountApiClient accountApi)
+    private readonly IGoogleAuthApiClient _authApi;
+    private readonly IGoogleAccountApiClient _accountApi;
+    public AccountController(ILogger<AccountController> logger, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, IGoogleAuthApiClient authApi, IGoogleAccountApiClient accountApi)
     {
         _logger = logger;
         _googleOptions = options;

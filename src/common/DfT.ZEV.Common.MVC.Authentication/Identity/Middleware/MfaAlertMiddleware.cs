@@ -8,8 +8,8 @@ namespace DfT.ZEV.Common.MVC.Authentication.Identity.Middleware;
 public class MfaAlertMiddleware : IMiddleware
 {
     private readonly IHttpContextAccessor _contextAccessor;
-    private readonly GoogleAccountApiClient _accountApi;
-    public MfaAlertMiddleware(IHttpContextAccessor contextAccessor, GoogleAccountApiClient accountApi)
+    private readonly IGoogleAccountApiClient _accountApi;
+    public MfaAlertMiddleware(IHttpContextAccessor contextAccessor, IGoogleAccountApiClient accountApi)
     {
         _contextAccessor = contextAccessor;
         _accountApi = accountApi;

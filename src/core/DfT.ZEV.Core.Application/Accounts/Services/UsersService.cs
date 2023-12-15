@@ -12,8 +12,8 @@ namespace DfT.ZEV.Core.Application.Accounts.Services;
 internal sealed class UsersService : IUsersService
 {
     private readonly ILogger<UsersService> _logger;
-    private readonly GoogleAccountApiClient _accountApi;
-    public UsersService(ILogger<UsersService> logger, GoogleAccountApiClient accountApi)
+    private readonly IGoogleAccountApiClient _accountApi;
+    public UsersService(ILogger<UsersService> logger, IGoogleAccountApiClient accountApi)
     {
         _logger = logger;
         _accountApi = accountApi;
