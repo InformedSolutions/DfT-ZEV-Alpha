@@ -1,8 +1,7 @@
 using System.Net;
 using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Implementations;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Middleware;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,8 +41,13 @@ public static class IdentityExtensions
            ;
 
         services.AddTransient<TokenMiddleware>();
-        services.AddHttpClient<IGoogleIdentityApiClient, GoogleIdentityApiClient>();
-        services.AddTransient<IIdentityPlatform, IdentityPlatform>();
+
+        services.AddHttpClient<GoogleAuthApiClient>();
+
+        services.AddTransient<GoogleAccountApiClientDelegateHandler>();
+        services.AddHttpClient<GoogleAccountApiClient>()
+            .AddHttpMessageHandler<GoogleAccountApiClientDelegateHandler>();
+        
     }
 
     public static IApplicationBuilder UseIdentity(this IApplicationBuilder app)

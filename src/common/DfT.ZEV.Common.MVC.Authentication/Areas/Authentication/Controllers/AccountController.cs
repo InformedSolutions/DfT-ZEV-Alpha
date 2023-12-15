@@ -2,7 +2,6 @@ using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
-using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.MVC.Authentication.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -10,9 +9,10 @@ using Microsoft.Extensions.Options;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
-using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -21,16 +21,17 @@ namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 public partial class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
-    private readonly IIdentityPlatform _identityPlatform;
     private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor)
+    private readonly GoogleAuthApiClient _authApi;
+    private readonly GoogleAccountApiClient _accountApi;
+    public AccountController(ILogger<AccountController> logger, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, GoogleAuthApiClient authApi, GoogleAccountApiClient accountApi)
     {
         _logger = logger;
-        _identityPlatform = identityPlatform;
         _googleOptions = options;
         _httpContextAccessor = httpContextAccessor;
+        _authApi = authApi;
+        _accountApi = accountApi;
     }
 
     public IActionResult Index()
@@ -60,8 +61,14 @@ public partial class AccountController : Controller
 
         try
         {
-            var authenticationRequest = new AuthenticationRequest(viewModel.Email, viewModel.Password);
-            var result = await _identityPlatform.AuthenticateUser(authenticationRequest, _googleOptions.Value.Tenancy.AppTenant);
+            var rq = new AuthorisationRequest
+            {
+                Email = viewModel.Email,
+                Password = viewModel.Password,
+                TenantId = _googleOptions.Value.Tenancy.AppTenant
+            };
+            
+            var result = await _authApi.Authorise(rq);
 
             HttpContext.Session.SetString("Token", result.IdToken);
             HttpContext.Session.SetString("RefreshToken", result.RefreshToken);
@@ -142,16 +149,19 @@ public partial class AccountController : Controller
     [HttpPost("mfa-not-enabled")]
     public async Task<IActionResult> MfaNotEnabled(MfaEnrollmentViewModel model)
     {
-        var res = await _identityPlatform.EnrollMfa(new StartEnrollmentRequest
+        if (_httpContextAccessor.HttpContext != null)
         {
-            IdToken = _httpContextAccessor.HttpContext.Session.GetString("Token"),
-            TenantId =  _googleOptions.Value.Tenancy.AppTenant,
-            enrollment_info = new PhoneEnrollmentInfo
+            var res = await _accountApi.EnrollMfa(new InitializeMFAEnrollmentRequest
             {
-                PhoneNumber = model.PhoneNumber,
-                RecaptchaToken = null
-            }
-        });
+                IdToken = _httpContextAccessor.HttpContext.Session.GetString("Token"),
+                TenantId = _googleOptions.Value.Tenancy.AppTenant,
+                enrollment_info = new PhoneEnrollmentInfo
+                {
+                    PhoneNumber = model.PhoneNumber,
+                    RecaptchaToken = null
+                }
+            });
+        }
 
         return View("mfa/ContinueEnrollment");
     }

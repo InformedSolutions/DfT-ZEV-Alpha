@@ -1,7 +1,5 @@
 using System.Security.Cryptography;
 using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Common.MVC.Authentication.Identity;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
 using DfT.ZEV.Core.Application.Accounts.Exceptions;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
@@ -21,21 +19,18 @@ namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
 /// <remarks>
 /// This class is responsible for handling a <see cref="CreateManufacturerUserCommand"/> and returning a <see cref="CreateManufacturerUserCommandResponse"/>.
 /// It uses an instance of <see cref="IUnitOfWork"/> to interact with the database,
-/// an instance of <see cref="IIdentityPlatform"/> to interact with the identity platform,
 /// and an instance of <see cref="IUsersService"/> to manage user-related operations.
 /// </remarks>
 public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufacturerUserCommand, CreateManufacturerUserCommandResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IIdentityPlatform _identityPlatform;
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
     private readonly IOptions<ServicesConfiguration> _serviceConfiguration;
     private readonly IUsersService _usersService;
     private readonly ILogger<CreateManufacturerUserCommandHandler> _logger;
-    public CreateManufacturerUserCommandHandler(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IOptions<ServicesConfiguration> serviceConfiguration, IUnitOfWork unitOfWork, IIdentityPlatform identityPlatform, ILogger<CreateManufacturerUserCommandHandler> logger, IUsersService usersService)
+    public CreateManufacturerUserCommandHandler(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, IOptions<ServicesConfiguration> serviceConfiguration, IUnitOfWork unitOfWork, ILogger<CreateManufacturerUserCommandHandler> logger, IUsersService usersService)
     {
         _unitOfWork = unitOfWork;
-        _identityPlatform = identityPlatform;
         _logger = logger;
         _usersService = usersService;
         _googleCloudConfiguration = googleCloudConfiguration;
@@ -79,7 +74,10 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
 
         try
         {
-            await _identityPlatform.CreateUser(args, tenant);
+            //await _identityPlatform.CreateUser(args, tenant);
+            await FirebaseAuth.DefaultInstance.TenantManager
+                .AuthForTenant(tenant)
+                .CreateUserAsync(args);
             await CreateUser(args, tenant, id, manufacturer, permissions, cancellationToken);
         }
         catch (Exception e)
@@ -105,12 +103,15 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
             await _usersService.UpdateUserClaimsAsync(user, tenant);
 
             _logger.LogInformation("Created user with email {Email}", args.Email);
-            await _usersService.RequestPasswordResetAsync(user, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, tenant);
+            await _usersService.RequestPasswordResetAsync(args.Email, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, tenant);
         }
         catch (Exception ex)
         {
             _logger.LogError("Failed to create user: {Message}", ex.Message);
-            await _identityPlatform.DeleteUserAsync(id, tenant);
+            //await _identityPlatform.DeleteUserAsync(id, tenant);
+            await FirebaseAuth.DefaultInstance.TenantManager
+                .AuthForTenant(tenant)
+                .DeleteUserAsync(id.ToString());
             throw UserHandlerExceptions.CouldNotCreateUser(ex.Message);
 
         }

@@ -22,5 +22,5 @@ public interface IUsersService
     /// <param name="hostAddress">The base URL at which a service is deployed.</param>
     /// <param name="tenantId">The identity tenant in which a user can be located.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task RequestPasswordResetAsync(User user, string hostAddress, string tenantId);
+    Task RequestPasswordResetAsync(string email, string hostAddress, string tenantId);
 }

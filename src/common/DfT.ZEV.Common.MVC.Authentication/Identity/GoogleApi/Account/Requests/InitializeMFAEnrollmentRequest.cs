@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 
 public class PhoneEnrollmentInfo
 {
@@ -6,7 +6,7 @@ public class PhoneEnrollmentInfo
     public string RecaptchaToken { get; set; }
 }
 
-public class StartEnrollmentRequest
+public class InitializeMFAEnrollmentRequest
 {
     public string IdToken { get; set; }
     public string TenantId { get; set; }

@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -9,12 +8,10 @@ namespace DfT.ZEV.Common.MVC.Authentication.Identity.Middleware;
 public class TokenMiddleware : IMiddleware
 {
     private readonly ILogger<TokenMiddleware> _logger;
-    private readonly IIdentityPlatform _identityPlatform;
 
-    public TokenMiddleware(ILogger<TokenMiddleware> logger, IIdentityPlatform identityPlatform)
+    public TokenMiddleware(ILogger<TokenMiddleware> logger)
     {
         _logger = logger;
-        _identityPlatform = identityPlatform;
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

@@ -1,6 +1,6 @@
-namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Authorize;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
 
-internal class AuthorisationRequest
+public class AuthorisationRequest
 {
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
