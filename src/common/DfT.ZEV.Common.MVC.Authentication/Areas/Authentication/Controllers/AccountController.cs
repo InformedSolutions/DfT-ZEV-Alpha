@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.MultiFactor.Enroll;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Interfaces;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Requests;
 
@@ -134,6 +135,24 @@ public partial class AccountController : Controller
     [HttpGet("mfa-not-enabled")]
     public async Task<IActionResult> MfaNotEnabled()
     {
-        return View();
+        return View("mfa/MfaNotEnabled");
+    }
+    
+    [Authorize]
+    [HttpPost("mfa-not-enabled")]
+    public async Task<IActionResult> MfaNotEnabled(MfaEnrollmentViewModel model)
+    {
+        var res = await _identityPlatform.EnrollMfa(new StartEnrollmentRequest
+        {
+            IdToken = _httpContextAccessor.HttpContext.Session.GetString("Token"),
+            TenantId =  _googleOptions.Value.Tenancy.AppTenant,
+            enrollment_info = new PhoneEnrollmentInfo
+            {
+                PhoneNumber = model.PhoneNumber,
+                RecaptchaToken = null
+            }
+        });
+
+        return View("mfa/ContinueEnrollment");
     }
 }

@@ -1,0 +1,15 @@
+@model DfT.ZEV.Common.MVC.Authentication.ViewModels.MfaEnrollmentViewModel
+@{
+    ViewData["Title"] = "Continue enrollment";
+}
+
+<h1 class="govuk-heading-l">Continue enrollment</h1>
+@using (Html.BeginForm())
+{
+    <govuk-input type="tel" autocomplete="tel" asp-for="@Model.PhoneNumber" data-test="set-phone">
+        <govuk-input-label>Your phone number</govuk-input-label>
+        <govuk-input-hint></govuk-input-hint>
+    </govuk-input>
+
+    <govuk-button type="submit">Enroll</govuk-button>
+}

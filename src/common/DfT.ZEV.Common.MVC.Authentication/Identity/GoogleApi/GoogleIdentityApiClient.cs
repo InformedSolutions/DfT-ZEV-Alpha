@@ -19,7 +19,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
-    private static readonly string[] Scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
+    private static readonly string[] Scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase", "https://www.googleapis.com/auth/identitytoolkit" };
 
     public GoogleIdentityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
     {
@@ -111,7 +111,7 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
         await ConfigureHttpClient();
         var requestJson = SerialiseToCamelCaseJson(request);
         var result = await _httpClient.PostAsync(mfaEnrollStartUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-
+        var resultjson = await result.Content.ReadAsStringAsync();
         if (result.StatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException($"Google API returned status code {result.StatusCode}");
