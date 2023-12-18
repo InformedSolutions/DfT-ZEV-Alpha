@@ -5,6 +5,7 @@ using DfT.ZEV.Common.Middlewares.ErrorHandling;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.Notifications;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisations.Api.Features.Accounts;
@@ -28,6 +29,7 @@ public static class Setup
         builder.Services.AddTransient<RestExceptionHandlerMiddleware>();
         builder.Services.AddHttpContextAccessor();
 
+        builder.Services.AddTransient<INotificationService, NotificationService>();
 
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddApplication();

@@ -12,6 +12,7 @@
     </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Cloud.Tasks.V2" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Enrichers.CorrelationId" />

@@ -19,6 +19,7 @@ using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
+using DfT.ZEV.Common.Notifications;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Application.Clients;
 using DfT.ZEV.Core.Infrastructure;
@@ -70,7 +71,10 @@ public class Startup
         var secureCookiePolicy = Configuration.GetValue<bool>("SslHosted")
             ? CookieSecurePolicy.Always
             : CookieSecurePolicy.None;
+        
+        services.AddTransient<INotificationService, NotificationService>();
 
+        
         services.Configure<CookiePolicyOptions>(options =>
         {
             options.CheckConsentNeeded = context => true;
