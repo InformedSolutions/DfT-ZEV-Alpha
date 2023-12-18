@@ -1,3 +1,4 @@
+using DfT.ZEV.Common.Models;
 using DfT.ZEV.Common.MVC.Authentication.Attributes;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
@@ -33,11 +34,21 @@ public partial class AccountController : Controller
                 Email = viewModel.Email,
                 TenantId = _googleOptions.Value.Tenancy.AppTenant
             };
+
             var resetToken = await _accountApi.GetPasswordResetToken(req);
+
             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
-            _logger.LogInformation($"DEMO LINK FOR EMAIL: {host}/account/change-forgotten-password/{resetToken}");
+            var scheme = _httpContextAccessor.HttpContext.Request.Scheme;
+            var link = $"{scheme}://{host}/account/change-forgotten-password/{resetToken.Code}";
+
+            await _notificationService.SendNotificationAsync(new Notification
+            {
+                Recipients = new List<string> { viewModel.Email },
+                TemplateId = Guid.Parse(_googleOptions.Value.Queues.Notification.PasswordResetTemplateId),
+                TemplateParameters = new Dictionary<string, string> { { "password_reset_link", link } }
+            });
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             // ignore failed operation result not to reveal user existence in db.
             _logger.LogError(ex, ex.Message);

@@ -29,5 +29,5 @@ public class PostgresConfiguration
     ///     Gets the connection string for the PostgreSQL database based on included properties.
     /// </summary>
     public string ConnectionString =>
-        $"Host={Host};Port={Port};Database={DbName};Username={User};Password={Password};Maximum Pool Size={MaxPoolSize};SSL Mode={(UseSsl ? "Require" : "Disable")};Trust Server Certificate=true";
+        $"Host={Host};Port={Port};Database={DbName};Username={User};Password={Password};Maximum Pool Size={MaxPoolSize};SSL Mode={(UseSsl ? "Require" : "Disable")};Trust Server Certificate=true;Include Error Detail=True";
 }

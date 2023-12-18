@@ -21,7 +21,8 @@ public static class MapManufacturerEndpointsExtension
         app.MapPost(ManufacturersPath, CreateManufacturer)
             .WithTags("Manufacturers");
 
-        app.MapGet(ManufacturerByIdPath, GetManufacturerById);
+        app.MapGet(ManufacturerByIdPath, GetManufacturerById)
+            .WithTags("Manufacturers");
 
         app.MapPut(ManufacturerByIdPath, UpdateManufacturer)
             .WithTags("Manufacturers");

@@ -6,13 +6,14 @@ using DfT.ZEV.Common.MVC.Authentication.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
+using DfT.ZEV.Common.Notifications;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -25,14 +26,18 @@ public partial class AccountController : Controller
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IGoogleAuthApiClient _authApi;
     private readonly IGoogleAccountApiClient _accountApi;
-    public AccountController(ILogger<AccountController> logger, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, IGoogleAuthApiClient authApi, IGoogleAccountApiClient accountApi)
+    private readonly INotificationService _notificationService;
+
+    public AccountController(ILogger<AccountController> logger, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, IGoogleAuthApiClient authApi, IGoogleAccountApiClient accountApi, INotificationService notificationService)
     {
         _logger = logger;
         _googleOptions = options;
         _httpContextAccessor = httpContextAccessor;
         _authApi = authApi;
         _accountApi = accountApi;
+        _notificationService = notificationService;
     }
+
 
     public IActionResult Index()
     {

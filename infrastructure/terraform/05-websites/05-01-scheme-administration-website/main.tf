@@ -28,7 +28,22 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
         container_port = 80
       }
 
-      # TODO: Add startup and liveness probe
+      startup_probe {
+        period_seconds    = 4
+        failure_threshold = 5
+
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
+
+      liveness_probe {
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
 
       env {
         name  = "DEPLOYED_AT"
@@ -62,8 +77,8 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       }
 
       env {
-        name  = "GoogleCloud__ApiKey"
-        value = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token
+        name  = "GoogleCloud__Location"
+        value = var.region
       }
 
       env {
@@ -85,11 +100,33 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
         name  = "GoogleCloud__Token__Audience"
         value = var.project
       }
+
+      env {
+        name  = "GoogleCloud__Queues__Notification__Name"
+        value = data.terraform_remote_state.backends.outputs.email_notifications_queue_name
+      }
+
+      env {
+        name  = "GoogleCloud__Queues__Notification__HandlerUrl"
+        value = data.terraform_remote_state.notifications_function.outputs.function_url
+      }
+
+      env {
+        name = "GoogleCloud__ApiKey"
+        value_source {
+          secret_key_ref {
+            secret  = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token_secret_id
+            version = "latest"
+          }
+        }
+      }
     }
   }
 
   depends_on = [
     null_resource.docker_build,
+    # Access to secrets is required to start the container
+    google_secret_manager_secret_iam_member.identity_platform_api_key_secret,
   ]
 }
 

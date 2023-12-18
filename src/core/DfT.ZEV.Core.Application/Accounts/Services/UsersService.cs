@@ -1,9 +1,14 @@
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
+using DfT.ZEV.Common.Notifications;
+using DfT.ZEV.Common.Models;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using DfT.ZEV.Core.Domain.Accounts.Services;
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Task = System.Threading.Tasks.Task;
 
 namespace DfT.ZEV.Core.Application.Accounts.Services;
 
@@ -12,11 +17,15 @@ namespace DfT.ZEV.Core.Application.Accounts.Services;
 internal sealed class UsersService : IUsersService
 {
     private readonly ILogger<UsersService> _logger;
+    private readonly IOptions<GoogleCloudConfiguration> _options;
     private readonly IGoogleAccountApiClient _accountApi;
-    public UsersService(ILogger<UsersService> logger, IGoogleAccountApiClient accountApi)
+    private readonly INotificationService _notificationService;
+    public UsersService(ILogger<UsersService> logger, IOptions<GoogleCloudConfiguration> options, IGoogleAccountApiClient accountApi, INotificationService notificationService)
     {
         _logger = logger;
         _accountApi = accountApi;
+        _options = options;
+        _notificationService = notificationService;
     }
 
     /// <inheritdoc/>
@@ -35,7 +44,7 @@ internal sealed class UsersService : IUsersService
     }
 
     /// <inheritdoc/>
-    public async Task RequestPasswordResetAsync(string email, string hostAddress, string tenantId)
+    public async Task RequestPasswordResetAsync(User user, string email, string hostAddress, string tenantId)
     {
         var code = await _accountApi.GetPasswordResetToken(new GetPasswordResetTokenRequest()
         {
@@ -43,7 +52,15 @@ internal sealed class UsersService : IUsersService
             TenantId = tenantId
         });
         var link = $"{hostAddress}/account/set-initial-password/{code}";
+        var templateId = Guid.Parse(_options.Value.Queues.Notification.EmailVerificationTemplateId);
 
-        _logger.LogInformation("Generate password reset link for user {Id}: {ResetLink}", email, link);
+        var notification = new Notification
+        {
+            Recipients = new List<string> { email },
+            TemplateId = templateId,
+            TemplateParameters = new Dictionary<string, string> { { "activation_link", link } }
+        };
+        await _notificationService.SendNotificationAsync(notification);
+        _logger.LogInformation("Generate password reset link for user {Id}: {ResetLink}", user.Id, link);
     }
 }

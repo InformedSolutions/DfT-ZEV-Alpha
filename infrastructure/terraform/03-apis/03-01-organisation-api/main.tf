@@ -28,7 +28,22 @@ resource "google_cloud_run_v2_service" "organisation_api" {
         container_port = 80
       }
 
-      # TODO: Add startup and liveness probe
+      startup_probe {
+        period_seconds    = 4
+        failure_threshold = 5
+
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
+
+      liveness_probe {
+        http_get {
+          path = "/health"
+          port = 80
+        }
+      }
 
       dynamic "env" {
         for_each = local.service_envs
@@ -49,8 +64,8 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       }
 
       env {
-        name  = "GoogleCloud__ApiKey"
-        value = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token
+        name  = "GoogleCloud__Location"
+        value = var.region
       }
 
       env {
@@ -74,10 +89,30 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       }
 
       env {
+        name  = "GoogleCloud__Queues__Notification__Name"
+        value = data.terraform_remote_state.backends.outputs.email_notifications_queue_name
+      }
+
+      env {
+        name  = "GoogleCloud__Queues__Notification__HandlerUrl"
+        value = data.terraform_remote_state.notifications_function.outputs.function_url
+      }
+
+      env {
         name = local.db_password_env_name
         value_source {
           secret_key_ref {
             secret  = data.terraform_remote_state.backends.outputs.postgres_config.password_secret_id
+            version = "latest"
+          }
+        }
+      }
+
+      env {
+        name = local.identity_platform_api_key_env_name
+        value_source {
+          secret_key_ref {
+            secret  = data.terraform_remote_state.backends.outputs.identity_platform_config.api_token_secret_id
             version = "latest"
           }
         }
@@ -108,8 +143,6 @@ resource "google_cloud_run_v2_service" "organisation_api" {
       }
     }
   }
-
-
 
   depends_on = [
     null_resource.docker_build,

@@ -15,7 +15,6 @@ internal sealed class PermissionRepository : IPermissionRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<Permission>> GetAllAsync(CancellationToken cancellationToken = default)
         => await _dbContext.Permissions
-                .AsNoTracking()
                 .OrderByDescending(x => x.PermissionName)
                 .ToListAsync(cancellationToken);
 

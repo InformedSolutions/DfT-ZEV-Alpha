@@ -31,11 +31,7 @@ public class ServiceStartup : FunctionsStartup
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(configuration)
-            .Enrich.WithAssemblyCompilationModeLogging()
-            .Enrich.WithBuildIdLogging()
-            .Enrich.WithEnvironmentNameLogging()
+        Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration)
             .CreateLogger();
 
         services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));

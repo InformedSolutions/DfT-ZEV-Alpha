@@ -43,3 +43,13 @@ data "terraform_remote_state" "scheme_data_api" {
     prefix = "terraform/apis/scheme-data-api"
   }
 }
+
+data "terraform_remote_state" "notifications_function" {
+  backend   = "gcs"
+  workspace = terraform.workspace
+
+  config = {
+    bucket = var.tf_state_bucket
+    prefix = "terraform/functions/notifications"
+  }
+}

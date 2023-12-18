@@ -9,7 +9,8 @@ locals {
     PGSSLCERT             = "/secrets/postgres-cert/value"
     PGSSLKEY              = "/secrets/postgres-key/value"
   }
-  db_password_env_name = "Postgres__Password"
+  db_password_env_name               = "Postgres__Password"
+  identity_platform_api_key_env_name = "GoogleCloud__ApiKey"
 
   service_envs = merge(
     local.db_connection_envs,

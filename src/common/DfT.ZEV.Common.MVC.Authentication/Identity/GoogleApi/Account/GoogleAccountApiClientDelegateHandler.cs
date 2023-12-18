@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Options;
 

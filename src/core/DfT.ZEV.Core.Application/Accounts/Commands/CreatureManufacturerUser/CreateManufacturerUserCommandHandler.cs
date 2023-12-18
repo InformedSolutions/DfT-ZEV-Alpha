@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Core.Application.Accounts.Exceptions;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
 using DfT.ZEV.Core.Domain.Abstractions;
@@ -103,7 +104,7 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
             await _usersService.UpdateUserClaimsAsync(user, tenant);
 
             _logger.LogInformation("Created user with email {Email}", args.Email);
-            await _usersService.RequestPasswordResetAsync(args.Email, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, tenant);
+            await _usersService.RequestPasswordResetAsync(user, args.Email, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, tenant);
         }
         catch (Exception ex)
         {

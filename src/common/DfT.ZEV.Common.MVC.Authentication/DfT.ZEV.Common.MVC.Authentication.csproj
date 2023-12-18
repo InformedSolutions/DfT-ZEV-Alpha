@@ -18,6 +18,7 @@
     <PackageReference Include="FirebaseNet" />
     <PackageReference Include="Google.Apis" />
     <PackageReference Include="Google.Apis.Auth" />
+    <PackageReference Include="Google.Cloud.Tasks.V2" />
     <PackageReference Include="GovUk.Frontend.AspNetCore" />
     <PackageReference Include="idunno.Authentication.Basic" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />

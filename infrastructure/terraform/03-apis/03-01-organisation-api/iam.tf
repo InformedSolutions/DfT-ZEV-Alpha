@@ -9,6 +9,7 @@ resource "google_secret_manager_secret_iam_member" "organisation_api_secrets" {
     data.terraform_remote_state.backends.outputs.postgres_config.password_secret_id,
     data.terraform_remote_state.backends.outputs.postgres_config.client_certificate_secret_id,
     data.terraform_remote_state.backends.outputs.postgres_config.client_key_secret_id,
+    data.terraform_remote_state.backends.outputs.identity_platform_config.api_token_secret_id,
   ])
 
   project   = var.project
@@ -20,6 +21,18 @@ resource "google_secret_manager_secret_iam_member" "organisation_api_secrets" {
 resource "google_project_iam_member" "identity_platform_admin_member" {
   project = var.project
   role    = "roles/firebaseauth.admin"
+  member  = "serviceAccount:${google_service_account.organisation_api.email}"
+}
+
+resource "google_cloud_tasks_queue_iam_member" "organisation_api_email_notification_queue" {
+  name   = data.terraform_remote_state.backends.outputs.email_notifications_queue_name
+  role   = "roles/cloudtasks.enqueuer"
+  member = "serviceAccount:${google_service_account.organisation_api.email}"
+}
+
+resource "google_cloud_run_service_iam_member" "organisation_api_email_notification_invoke" {
+  service = data.terraform_remote_state.notifications_function.outputs.function_name
+  role    = "roles/run.invoker"
   member  = "serviceAccount:${google_service_account.organisation_api.email}"
 }
 

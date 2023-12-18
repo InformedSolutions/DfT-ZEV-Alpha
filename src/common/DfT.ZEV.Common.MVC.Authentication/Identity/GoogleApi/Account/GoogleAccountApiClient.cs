@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Responses;
 using Microsoft.Extensions.Options;

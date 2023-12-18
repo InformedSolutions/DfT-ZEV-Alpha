@@ -20,6 +20,7 @@
     <PackageVersion Include="Google.Apis.Auth" Version="1.64.0" />
     <PackageVersion Include="Google.Cloud.Functions.Hosting" Version="2.1.0" />
     <PackageVersion Include="Google.Cloud.Storage.V1" Version="4.7.0" />
+    <PackageVersion Include="Google.Cloud.Tasks.V2" Version="3.2.0" />
     <PackageVersion Include="GovUk.Frontend.AspNetCore" Version="1.4.0" />
     <PackageVersion Include="GovukNotify" Version="6.1.0" />
     <PackageVersion Include="idunno.Authentication.Basic" Version="2.3.1" />

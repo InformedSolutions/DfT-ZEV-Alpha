@@ -18,7 +18,6 @@ internal sealed class ProcessRepository : IProcessRepository
     /// <inheritdoc/>
     public async Task<Process?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _context.Processes
-                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
 

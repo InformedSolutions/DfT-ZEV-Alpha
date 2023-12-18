@@ -18,3 +18,4 @@ To deploy this project, the following GCP APIs need to be enabled at a project l
 1. Identity Platform
 1. Identity Toolkit API
 1. API Keys API
+1. Cloud Tasks API

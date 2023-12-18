@@ -10,6 +10,7 @@ using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.MVC.Authentication.Middleware;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
+using DfT.ZEV.Common.Notifications;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Application.Clients;
@@ -54,7 +55,7 @@ public class Startup
 
         services.AddAntiforgery(opts => opts.Cookie.Name = "Antiforgery");
         services.AddSession(options => { options.Cookie.Name = "Session"; });
-
+    
         services.AddControllersWithViews()
             .AddMvcOptions(options =>
             {
@@ -75,7 +76,9 @@ public class Startup
         var secureCookiePolicy = Configuration.GetValue<bool>("SslHosted")
             ? CookieSecurePolicy.Always
             : CookieSecurePolicy.None;
-
+        
+        services.AddTransient<INotificationService, NotificationService>();
+        
         services.Configure<CookiePolicyOptions>(options =>
         {
             options.CheckConsentNeeded = context => true;
@@ -109,7 +112,7 @@ public class Startup
         });
         
         services.AddApplication();
-        services.AddRepositories();
+        services.AddInfrastructureServices();
 
         services.AddApiServiceClients(Configuration);
         services.ForwardHeaders();

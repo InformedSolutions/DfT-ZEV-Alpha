@@ -32,9 +32,14 @@ output "identity_platform_config" {
   description = "The configuration of Identity Platform to be used by the applications"
   sensitive   = true
   value = {
-    api_token                  = google_apikeys_key.identity_platform.key_string
+    api_token_secret_id        = google_secret_manager_secret.identity_platform_api_key.secret_id
     administration_tenant_name = google_identity_platform_tenant.administration.name
     manufacturers_tenant_name  = google_identity_platform_tenant.manufacturers.name
     token_issuer               = "https://securetoken.google.com/${var.project}"
   }
+}
+
+output "email_notifications_queue_name" {
+  description = "The ID of the Cloud Tasks queue used to send email notifications"
+  value       = google_cloud_tasks_queue.email_notifications.name
 }
