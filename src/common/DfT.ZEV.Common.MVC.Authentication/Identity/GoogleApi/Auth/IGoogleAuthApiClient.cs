@@ -1,7 +1,7 @@
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Requests;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Responses;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Responses;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
 
 
 /// <summary>

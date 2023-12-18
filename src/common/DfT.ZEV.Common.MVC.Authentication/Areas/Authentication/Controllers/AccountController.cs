@@ -8,11 +8,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Core.Infrastructure.Identity.Extensions;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 

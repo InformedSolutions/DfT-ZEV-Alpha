@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Responses;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Responses;
 
 /// <summary>
 /// Represents the response received from the authorization endpoint of the Google API.

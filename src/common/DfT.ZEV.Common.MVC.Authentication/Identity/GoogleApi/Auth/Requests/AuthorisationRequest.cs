@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Requests;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
 
 /// <summary>
 /// Represents an authorization request for Google API.

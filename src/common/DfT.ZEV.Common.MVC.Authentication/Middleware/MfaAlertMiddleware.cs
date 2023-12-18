@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using Microsoft.AspNetCore.Http;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Middleware;

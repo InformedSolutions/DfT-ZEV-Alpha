@@ -3,7 +3,7 @@ using DfT.ZEV.Common.Configuration;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Options;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
 
 /// <summary>
 /// Represents a delegate handler for the Google Account API client.

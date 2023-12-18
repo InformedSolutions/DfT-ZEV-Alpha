@@ -8,7 +8,7 @@ using DfT.ZEV.Services.SchemeData.Api.Features.Processes;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Core.Infrastructure.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Services.SchemeData.Api.Features.Vehicles;
 
 namespace DfT.ZEV.Services.SchemeData.Api;

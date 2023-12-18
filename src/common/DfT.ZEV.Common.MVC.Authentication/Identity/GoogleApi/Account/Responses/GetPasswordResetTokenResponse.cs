@@ -1,6 +1,6 @@
 using System.Web;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Responses;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Responses;
 
 /// <summary>
 /// Represents the response for getting a password reset token.

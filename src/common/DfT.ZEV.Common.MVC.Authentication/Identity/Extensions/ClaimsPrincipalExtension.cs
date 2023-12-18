@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.Extensions;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 
 /// <summary>
 /// Retrieves the account details from the claims principal.

@@ -1,10 +1,10 @@
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 
 public static class DependencyInjection
 {

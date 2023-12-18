@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 
 /// <summary>
 /// Represents a request to change the password for a user account.

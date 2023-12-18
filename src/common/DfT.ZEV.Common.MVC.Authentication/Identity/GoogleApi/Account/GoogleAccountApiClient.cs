@@ -1,12 +1,12 @@
 using System.Net;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Responses;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Responses;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
 
 /// <summary>
 /// Represents a client for interacting with the Google Account API.

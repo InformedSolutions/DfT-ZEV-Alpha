@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Infrastructure.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 
 public class IdentityAccountDetails
 {

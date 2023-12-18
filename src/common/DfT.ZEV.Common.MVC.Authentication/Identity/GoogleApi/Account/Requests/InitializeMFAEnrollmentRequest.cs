@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 
 /// <summary>
 /// Represents the information required to enroll a phone for multi-factor authentication.

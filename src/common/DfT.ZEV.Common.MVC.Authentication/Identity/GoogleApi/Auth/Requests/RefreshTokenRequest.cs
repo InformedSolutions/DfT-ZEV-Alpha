@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Requests;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
 
 /// <summary>
 /// Represents a request to refresh an access token using a refresh token.

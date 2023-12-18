@@ -1,6 +1,6 @@
 using System.Net;
 using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 
 /// <summary>
 /// Provides extension methods for the <see cref="IServiceCollection"/> interface.

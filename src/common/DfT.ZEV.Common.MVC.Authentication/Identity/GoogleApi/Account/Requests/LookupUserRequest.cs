@@ -1,4 +1,4 @@
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 
 /// <summary>
 /// Represents a request to lookup a user in the Google API.

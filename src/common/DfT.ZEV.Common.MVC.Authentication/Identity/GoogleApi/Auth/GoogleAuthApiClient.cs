@@ -1,13 +1,13 @@
 using System.Net;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Requests;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth.Responses;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Responses;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Auth;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
 
 /// <summary>
 /// Represents a client for interacting with the Google Authentication API.
@@ -39,7 +39,9 @@ internal sealed class GoogleAuthApiClient : GoogleApiClientBase, IGoogleAuthApiC
 
         var requestJson = SerialiseToCamelCaseJson(req);
         var result = await _httpClient.PostAsync(url, new StringContent(requestJson, Encoding.UTF8, "application/json"));
-
+        
+        var resultJson = await result.Content.ReadAsStringAsync();
+        
         return result.StatusCode != HttpStatusCode.OK
             ? throw new ApplicationException($"Google API returned status code {result.StatusCode}")
             : JsonConvert.DeserializeObject<AuthorisationResponse>(await result.Content.ReadAsStringAsync());

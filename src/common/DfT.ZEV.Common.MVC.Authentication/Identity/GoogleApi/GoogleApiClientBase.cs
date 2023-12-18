@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 
 
 /// <summary>

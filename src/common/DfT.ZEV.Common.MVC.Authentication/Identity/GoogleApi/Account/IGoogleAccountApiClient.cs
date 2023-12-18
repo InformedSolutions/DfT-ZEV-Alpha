@@ -1,7 +1,7 @@
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Requests;
-using DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account.Responses;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Responses;
 
-namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
 
 /// <summary>
 /// Represents an interface for interacting with the Google Account API.
