@@ -10,7 +10,6 @@ using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Services.Organisations.Api.Features.Accounts;
 using DfT.ZEV.Services.Organisations.Api.Features.Manufacturers;
 using DfT.ZEV.Services.Organisations.Api.Features.Permissions;
-using DfT.ZEV.Services.Organisations.Api.Features.Test;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -41,7 +40,7 @@ public static class Setup
         //builder.Services.AddSerilog(builder.Configuration);
         //builder.Services.AddLogging();
         builder.UseCustomSerilog();
-        builder.Services.AddRepositories();
+        builder.Services.AddInfrastructureServices();
         return builder;
     }
 
@@ -53,7 +52,6 @@ public static class Setup
         app.MapAccountsEndpoints();
         app.MapManufacturerEndpoints();
         app.MapPermissionsEndpoints();
-        app.MapTestEndpoints();
         app.UseHealthChecks();
 
         return app;

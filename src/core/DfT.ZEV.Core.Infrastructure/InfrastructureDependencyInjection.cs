@@ -1,10 +1,12 @@
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Services;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Services;
 using DfT.ZEV.Core.Domain.Manufacturers.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
+using DfT.ZEV.Core.Infrastructure.Notifications;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +19,7 @@ public static class InfrastructureDependencyInjection
     ///     This method adds the repositories and unit of work to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    public static void AddRepositories(this IServiceCollection services)
+    public static void AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<IVehicleRepository, VehicleRepository>();
         services.AddScoped<IProcessRepository, ProcessRepository>();
@@ -25,6 +27,8 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+
+        services.AddTransient<INotificationService, NotificationService>();
     }
 
     public static void AddDbContext(this IServiceCollection services, PostgresConfiguration configuration)

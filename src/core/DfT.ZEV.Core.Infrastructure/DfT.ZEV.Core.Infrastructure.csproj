@@ -14,6 +14,7 @@
 
     <ItemGroup>
         <PackageReference Include="EFCore.BulkExtensions.MIT.PostgreSql" />
+        <PackageReference Include="Google.Cloud.Tasks.V2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
             <PrivateAssets>all</PrivateAssets>

@@ -108,7 +108,7 @@ public class Startup
             opt.UseNpgsql(postgresSettings.ConnectionString);
         });
         services.AddApplication();
-        services.AddRepositories();
+        services.AddInfrastructureServices();
 
         services.AddApiServiceClients(Configuration);
         services.ForwardHeaders();
