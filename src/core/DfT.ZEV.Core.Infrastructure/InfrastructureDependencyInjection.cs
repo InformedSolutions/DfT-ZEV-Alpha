@@ -38,7 +38,10 @@ public static class InfrastructureDependencyInjection
             // This causes errors while working in multi-threaded processing, need to deep dive this topic
             //  opt.UseNpgsql(configuration.ConnectionString,
             //     conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
-            opt.UseNpgsql(configuration.ConnectionString);
+            
+            opt.UseNpgsql(configuration.ConnectionString, conf =>
+            {
+            });
         });
     }
 }
