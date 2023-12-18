@@ -4,7 +4,6 @@ using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.Notifications;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using DfT.ZEV.Core.Domain.Accounts.Services;
-using DfT.ZEV.Core.Infrastructure.Notifications;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Task = System.Threading.Tasks.Task;
