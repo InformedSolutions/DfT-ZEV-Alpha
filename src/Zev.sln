@@ -15,11 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrator", "Migrator", "{EB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SchemeData", "SchemeData", "{4D459E78-223E-4034-85F9-2C7D4DF702D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Core.Domain", "Core\DfT.ZEV.Core.Domain\DfT.ZEV.Core.Domain.csproj", "{06C4D55C-DB6B-48C4-9526-653454F5261E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Core.Domain", "core\DfT.ZEV.Core.Domain\DfT.ZEV.Core.Domain.csproj", "{06C4D55C-DB6B-48C4-9526-653454F5261E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Core.Application", "Core\DfT.ZEV.Core.Application\DfT.ZEV.Core.Application.csproj", "{FCD9B6C0-D870-42DC-A629-DF89C1DFACDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Core.Application", "core\DfT.ZEV.Core.Application\DfT.ZEV.Core.Application.csproj", "{FCD9B6C0-D870-42DC-A629-DF89C1DFACDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Core.Infrastructure", "Core\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj", "{BE28F780-B1B6-4312-8E10-7A6529B122EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DfT.ZEV.Core.Infrastructure", "core\DfT.ZEV.Core.Infrastructure\DfT.ZEV.Core.Infrastructure.csproj", "{BE28F780-B1B6-4312-8E10-7A6529B122EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{9F9327F5-E113-48CD-B998-5FEBE1635533}"
 EndProject
