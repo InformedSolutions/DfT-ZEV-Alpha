@@ -1,9 +1,10 @@
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetAllManufacturers;
 using DfT.ZEV.Core.Application.Manufacturers.Queries.GetManufacturerById;
 using DfT.ZEV.Common.HttpClients;
+using DfT.ZEV.Core.Application.Accounts.Commands.CreatureManufacturerUser;
+using DfT.ZEV.Core.Application.Accounts.Queries.GetUserPermissions;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
-using DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
 
 namespace DfT.ZEV.Core.Application.Clients;
 

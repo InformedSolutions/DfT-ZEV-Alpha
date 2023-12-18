@@ -22,7 +22,10 @@
     <PackageReference Include="GovUk.Frontend.AspNetCore" />
     <PackageReference Include="idunno.Authentication.Basic" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" />
     <PackageReference Include="Npgsql" />
+    <PackageReference Include="Polly" />
+    <PackageReference Include="Polly.Extensions.Http" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="Serilog.Settings.Configuration" />
     <PackageReference Include="System.Diagnostics.Tracing" />

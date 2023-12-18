@@ -1,9 +1,9 @@
 ﻿using DfT.ZEV.Common.HttpClients;
-using DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerIdQuery;
+using DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerId;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace DfT.ZEV.Core.Application;
+namespace DfT.ZEV.Core.Application.Clients;
 
 /// <summary>
 /// Represents a client for the Scheme Data API.

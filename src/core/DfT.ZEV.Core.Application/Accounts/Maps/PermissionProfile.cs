@@ -1,5 +1,6 @@
 using AutoMapper;
 using DfT.ZEV.Core.Application.Accounts.Queries.GetAllPermissions;
+using DfT.ZEV.Core.Application.Accounts.Queries.GetUserPermissions;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 
 namespace DfT.ZEV.Core.Application.Accounts.Maps;

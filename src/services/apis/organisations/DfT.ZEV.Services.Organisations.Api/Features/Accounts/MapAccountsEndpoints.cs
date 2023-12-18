@@ -1,6 +1,7 @@
 using DfT.ZEV.Core.Application;
-using DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
+using DfT.ZEV.Core.Application.Accounts.Commands.CreatureManufacturerUser;
 using DfT.ZEV.Core.Application.Accounts.Queries.GetAllUsers;
+using DfT.ZEV.Core.Application.Accounts.Queries.GetUserPermissions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

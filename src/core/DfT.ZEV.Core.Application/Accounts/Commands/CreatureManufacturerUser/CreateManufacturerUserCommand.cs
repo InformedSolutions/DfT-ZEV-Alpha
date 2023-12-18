@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
+namespace DfT.ZEV.Core.Application.Accounts.Commands.CreatureManufacturerUser;
 
 public class CreateManufacturerUserCommand : IRequest<CreateManufacturerUserCommandResponse>
 {

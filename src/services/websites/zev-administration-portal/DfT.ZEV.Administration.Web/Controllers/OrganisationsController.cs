@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DfT.ZEV.Administration.Web.Models;
-using DfT.ZEV.Core.Application.Accounts.Commands.CreateManufacturerUser;
+using DfT.ZEV.Core.Application.Accounts.Commands.CreatureManufacturerUser;
 using DfT.ZEV.Core.Application.Clients;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

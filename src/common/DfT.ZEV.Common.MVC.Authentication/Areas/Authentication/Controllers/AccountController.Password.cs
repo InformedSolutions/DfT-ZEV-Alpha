@@ -1,5 +1,6 @@
 using DfT.ZEV.Common.Models;
 using DfT.ZEV.Common.MVC.Authentication.Attributes;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +29,17 @@ public partial class AccountController : Controller
 
         try
         {
-            var resetToken = await _identityPlatform.GetPasswordResetToken(viewModel.Email, _googleOptions.Value.Tenancy.AppTenant);
+            var req = new GetPasswordResetTokenRequest()
+            {
+                Email = viewModel.Email,
+                TenantId = _googleOptions.Value.Tenancy.AppTenant
+            };
+
+            var resetToken = await _accountApi.GetPasswordResetToken(req);
 
             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
             var scheme = _httpContextAccessor.HttpContext.Request.Scheme;
-            var link = $"{scheme}://{host}/account/change-forgotten-password/{resetToken}";
+            var link = $"{scheme}://{host}/account/change-forgotten-password/{resetToken.Code}";
 
             await _notificationService.SendNotificationAsync(new Notification
             {
@@ -73,7 +80,13 @@ public partial class AccountController : Controller
             return View("ForgottenPassword/ChangeForgottenPassword", viewModel);
         }
 
-        await _identityPlatform.ChangePasswordAsync(viewModel.Token, viewModel.Password, _googleOptions.Value.Tenancy.AppTenant);
+        var rq = new ChangePasswordRequest()
+        {
+            OobCode = viewModel.Token,
+            NewPassword = viewModel.Password,
+            TenantId = _googleOptions.Value.Tenancy.AppTenant
+        };
+        await _accountApi.ChangePasswordWithToken(rq);
 
         return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }
@@ -100,7 +113,13 @@ public partial class AccountController : Controller
 
         try
         {
-            await _identityPlatform.ChangePasswordAsync(viewModel.OobCode, viewModel.Password, _googleOptions.Value.Tenancy.AppTenant);
+            var rq = new ChangePasswordRequest()
+            {
+                NewPassword = viewModel.Password,
+                OobCode = oobCode,
+                TenantId = _googleOptions.Value.Tenancy.AppTenant
+            };
+            await _accountApi.ChangePasswordWithToken(rq);
             return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
         }
         catch (Exception ex)

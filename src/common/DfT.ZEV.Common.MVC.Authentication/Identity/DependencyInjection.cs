@@ -11,8 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Identity;
 
-public static class IdentityExtensions
+/// <summary>
+/// Provides extension methods for the <see cref="IServiceCollection"/> interface.
+/// </summary>
+public static class DependencyInjection
 {
+    /// <summary>
+    /// Adds the identity platform to the service collection.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
     public static void AddIdentityPlatform(this IServiceCollection services, IConfiguration configuration)
     {
         var googleConfig = configuration.GetGoogleCloudSettings();
@@ -33,21 +41,23 @@ public static class IdentityExtensions
                     ValidIssuer = googleConfig.Token.Issuer,
                     ValidateIssuer = true,
                     ValidAudience = googleConfig.Token.Audience,
-                    ValidateAudience = true,
+                    ValidateAudience = true
                 };
             })
            ;
 
-        services.AddTransient<TokenMiddleware>();
-        services.AddHttpClient<IGoogleIdentityApiClient, GoogleIdentityApiClient>();
-        services.AddTransient<IIdentityPlatform, IdentityPlatform>();
+
+        services.AddGoogleApiClients();
+
     }
 
+    /// <summary>
+    /// Adds the identity platform to the application pipeline.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
     public static IApplicationBuilder UseIdentity(this IApplicationBuilder app)
     {
-        app.UseSession();
-
-        //add token to request header.
         app.Use(async (context, next) =>
         {
             var token = context.Session.GetString("Token");
@@ -57,20 +67,18 @@ public static class IdentityExtensions
             }
             await next();
         });
-        app.UseMiddleware<TokenMiddleware>();
-        app.UseStatusCodePages(async context => {
-            var request = context.HttpContext.Request;
+        app.UseStatusCodePages(async context =>
+        {
             var response = context.HttpContext.Response;
 
-            if (response.StatusCode == (int)HttpStatusCode.Unauthorized)   
+            if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
             {
                 response.Redirect("/account/sign-in");
             }
         });
-        app.UseAuthentication();
-        app.UseAuthorization();
-        
+
+
         return app;
     }
-    
+
 }

@@ -1,9 +1,11 @@
 using DfT.ZEV.Common.Configuration.GoogleCloud;
-using DfT.ZEV.Common.Models;
-using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
 using DfT.ZEV.Common.Notifications;
+using DfT.ZEV.Common.Models;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Task = System.Threading.Tasks.Task;
@@ -14,14 +16,14 @@ namespace DfT.ZEV.Core.Application.Accounts.Services;
 /// <inheritdoc/>
 internal sealed class UsersService : IUsersService
 {
-    private readonly IIdentityPlatform _identityPlatform;
     private readonly ILogger<UsersService> _logger;
     private readonly IOptions<GoogleCloudConfiguration> _options;
+    private readonly IGoogleAccountApiClient _accountApi;
     private readonly INotificationService _notificationService;
-    public UsersService(IIdentityPlatform identityPlatform, ILogger<UsersService> logger, IOptions<GoogleCloudConfiguration> options, INotificationService notificationService)
+    public UsersService(ILogger<UsersService> logger, IOptions<GoogleCloudConfiguration> options, IGoogleAccountApiClient accountApi, INotificationService notificationService)
     {
-        _identityPlatform = identityPlatform;
         _logger = logger;
+        _accountApi = accountApi;
         _options = options;
         _notificationService = notificationService;
     }
@@ -34,13 +36,21 @@ internal sealed class UsersService : IUsersService
             => new { Id = x.Manufacturer.Id, Permissions = x.Permissions.Select(p => new { p.Id }) })
             .ToList();
         claims.Add("permissions", mappedPermissions);
-        await _identityPlatform.SetUserClaimsAsync(user.Id, claims, tenantId);
+        
+        //await _identityPlatform.SetUserClaimsAsync(user.Id, claims, tenantId);
+        await FirebaseAuth.DefaultInstance.TenantManager
+            .AuthForTenant(tenantId)
+            .SetCustomUserClaimsAsync(user.Id.ToString(), claims);
     }
 
     /// <inheritdoc/>
     public async Task RequestPasswordResetAsync(User user, string email, string hostAddress, string tenantId)
     {
-        var code = await _identityPlatform.GetPasswordResetToken(user.Id, tenantId);
+        var code = await _accountApi.GetPasswordResetToken(new GetPasswordResetTokenRequest()
+        {
+            Email = email,
+            TenantId = tenantId
+        });
         var link = $"{hostAddress}/account/set-initial-password/{code}";
         var templateId = Guid.Parse(_options.Value.Queues.Notification.EmailVerificationTemplateId);
 

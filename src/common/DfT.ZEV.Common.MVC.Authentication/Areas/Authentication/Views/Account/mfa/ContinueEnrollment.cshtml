@@ -1,0 +1,14 @@
+@model DfT.ZEV.Common.MVC.Authentication.ViewModels.MfaEnrollmentViewModel
+@{
+    ViewData["Title"] = "MFA not enabled";
+}
+
+<h1 class="govuk-heading-l">Please configure multifactor-authentication on your account</h1>
+<p class="govuk-body">We've sent you SMS verification code</p>
+
+@using (Html.BeginForm())
+{
+  
+
+    <govuk-button type="submit">Submit</govuk-button>
+}

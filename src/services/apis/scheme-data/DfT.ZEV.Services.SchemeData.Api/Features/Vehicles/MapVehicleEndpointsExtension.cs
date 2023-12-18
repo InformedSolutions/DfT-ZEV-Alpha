@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerId;
 using MediatR;
-using DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerIdQuery;
+using Microsoft.AspNetCore.Mvc;
 
-namespace DfT.ZEV.Services.SchemeData.Api;
+namespace DfT.ZEV.Services.SchemeData.Api.Features.Vehicles;
 
 public static class MapVehicleEndpointsExtension
 {
@@ -11,7 +11,9 @@ public static class MapVehicleEndpointsExtension
   public static WebApplication MapVehicleEndpoints(this WebApplication app)
   {
     app.MapGet(VehiclesPath, GetVehiclesByManufacturerId)
-        .WithTags("Vehicles");
+        .WithTags("Vehicles")
+        .Produces<GetVehiclesByManufacturerIdQueryDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status400BadRequest);
 
     return app;
   }

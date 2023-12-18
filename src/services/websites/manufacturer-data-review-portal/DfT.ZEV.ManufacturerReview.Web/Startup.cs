@@ -17,6 +17,7 @@ using DfT.ZEV.Common.Logging;
 using DfT.ZEV.Common.Middlewares;
 using DfT.ZEV.Common.MVC.Authentication.HealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
+using DfT.ZEV.Common.MVC.Authentication.Middleware;
 using DfT.ZEV.Common.Security;
 using DfT.ZEV.Common.MVC.Authentication.ServiceCollectionExtensions;
 using DfT.ZEV.Common.Notifications;
@@ -25,6 +26,7 @@ using DfT.ZEV.Core.Application.Clients;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace DfT.ZEV.ManufacturerReview.Web;
 
@@ -43,15 +45,15 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        if (Configuration.GetSection("BasicAuth").GetValue<bool>("IsEnabled"))
+       if (Configuration.GetSection("BasicAuth").GetValue<bool>("IsEnabled"))
         {
             services.AddBasicAuthentication();
         }
 
-        services.AddAntiforgery(opts => opts.Cookie.Name = "Antiforgery");
-        services.AddSession(options => { options.Cookie.Name = "Session"; });
+       services.AddAntiforgery(opts => opts.Cookie.Name = "Antiforgery");
+       services.AddSession(options => { options.Cookie.Name = "Session"; });
 
-        services.AddControllersWithViews()
+       services.AddControllersWithViews()
             .AddMvcOptions(options =>
             {
                 options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor(
@@ -68,14 +70,13 @@ public class Startup
                 options.Conventions.Add(new BasicAuthConvention(Configuration));
             });
 
-        var secureCookiePolicy = Configuration.GetValue<bool>("SslHosted")
+       var secureCookiePolicy = Configuration.GetValue<bool>("SslHosted")
             ? CookieSecurePolicy.Always
             : CookieSecurePolicy.None;
         
         services.AddTransient<INotificationService, NotificationService>();
 
-        
-        services.Configure<CookiePolicyOptions>(options =>
+       services.Configure<CookiePolicyOptions>(options =>
         {
             options.CheckConsentNeeded = context => true;
             options.Secure = secureCookiePolicy;
@@ -84,7 +85,7 @@ public class Startup
             options.ConsentCookie.Name = "AdditionalCookiesConsent";
         });
 
-        services.Configure<CookieTempDataProviderOptions>(options =>
+       services.Configure<CookieTempDataProviderOptions>(options =>
         {
             options.Cookie.IsEssential = true;
             options.Cookie.HttpOnly = true;
@@ -92,53 +93,53 @@ public class Startup
             options.Cookie.SecurePolicy = secureCookiePolicy;
         });
 
-        services.AddHttpContextAccessor();
-        services.ForwardHeaders();
-        var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
-        services.ConfigureGoogleCloudSettings(this.Configuration);
-        services.AddIdentityPlatform(Configuration);
-        services.AddDbContextPool<AppDbContext>(opt =>
+       services.AddHttpContextAccessor();
+
+       Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration)
+            .CreateLogger();
+
+       var postgresSettings = services.ConfigurePostgresSettings(this.Configuration);
+       services.ConfigureGoogleCloudSettings(this.Configuration);
+       services.AddIdentityPlatform(Configuration);
+       services.AddTransient<TokenMiddleware>();
+
+       services.AddDbContextPool<AppDbContext>(opt =>
         {
-            // This causes errors while working in multi-threaded processing, need to deep dive this topic
-            //  opt.UseNpgsql(configuration.ConnectionString,
-            //     conf => { conf.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), new List<string> { "4060" }); });
             opt.UseNpgsql(postgresSettings.ConnectionString);
         });
-        services.AddApplication();
-        services.AddInfrastructureServices();
 
-        services.AddApiServiceClients(Configuration);
+       services.AddApplication();
+       services.AddInfrastructureServices();
 
+       services.AddApiServiceClients(Configuration);
+       services.ForwardHeaders();
 
-        services.AddOptions();
-        services.ConfigureServicesSettings(Configuration);
-        services.AddGovUkFrontend(options => options.AddImportsToHtml = false);
+       services.AddOptions();
+       services.ConfigureServicesSettings(Configuration);
+       services.AddGovUkFrontend(options => options.AddImportsToHtml = false);
 
-        services.AddResponseCompression();
+       services.AddResponseCompression();
 
-        //services.AddHealthChecks();
-
-        services.AddHealthChecks();
-        // Register the Google Analytics configuration
-        services.Configure<GoogleAnalyticsOptions>(options =>
+       services.AddHealthChecks();
+       services.AddTransient<MfaAlertMiddleware>();
+       services.Configure<GoogleAnalyticsOptions>(options =>
             Configuration.GetSection("GoogleAnalytics").Bind(options));
 
         // Register the TagHelperComponent
-        services.AddTransient<ITagHelperComponent, GoogleAnalyticsTagHelperComponent>();
+       services.AddTransient<ITagHelperComponent, GoogleAnalyticsTagHelperComponent>();
 
-        services.AddAuthServices();
+       services.AddAuthServices();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseExceptionHandler("/Error/500");
-        app.UseMiddleware<WebsiteExceptionMiddleware>();
-        app.UseMiddleware<CorrelationIdLoggerMiddleware>();
-        app.UseIdentity();
-        var allowedHostnames = Configuration.GetValue<string>("AllowedHostnames").Split(",");
+       app.UseExceptionHandler("/Error/500");
+       app.UseMiddleware<WebsiteExceptionMiddleware>();
+       app.UseMiddleware<CorrelationIdLoggerMiddleware>();
+       var allowedHostnames = Configuration.GetValue<string>("AllowedHostnames").Split(",");
 
-        app.UseAllowedHostFilteringMiddleware(new HostFilteringOptions
+       app.UseAllowedHostFilteringMiddleware(new HostFilteringOptions
         {
             AllowedHostnames = new List<string>(allowedHostnames),
             ExcludedPaths = new List<string> { "/health" },
@@ -146,17 +147,15 @@ public class Startup
         });
 
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
-
-        if (!env.IsDevelopment())
+       app.UseHsts();
+       if (!env.IsDevelopment())
         {
             app.UseHttpsRedirection();
         }
 
-        var cachingPragmaHeaderInHours = Configuration.GetValue<int>("StaticFilesCachePragmaInHours");
-        var cachePragmaInSeconds = 60 * 60 * cachingPragmaHeaderInHours;
-
-        app.UseStaticFiles(new StaticFileOptions
+       var cachingPragmaHeaderInHours = Configuration.GetValue<int>("StaticFilesCachePragmaInHours");
+       var cachePragmaInSeconds = 60 * 60 * cachingPragmaHeaderInHours;
+       app.UseStaticFiles(new StaticFileOptions
         {
             OnPrepareResponse = ctx =>
             {
@@ -170,11 +169,11 @@ public class Startup
             },
         });
 
-        app.UseCookiePolicy();
+       app.UseCookiePolicy();
 
-        app.UseResponseCompression();
+       app.UseResponseCompression();
 
-        app.Use(async (ctx, next) =>
+       app.Use(async (ctx, next) =>
         {
             SecurityHeadersHelper.ConfigureCommonSecurityHeaders(
                 ctx, Configuration.GetValue<string>("AdditionalCspSourceValues"));
@@ -188,15 +187,18 @@ public class Startup
             }
         });
 
-        app.UseRouting();
+       app.UseRouting();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
+       app.UseSession();
+       app.UseIdentity();
+       app.UseMiddleware<TokenMiddleware>();
+       app.UseAuthentication();
+       app.UseAuthorization();
+       app.UseMiddleware<MfaAlertMiddleware>();
 
-        app.UseSession();
-        app.UseMiddleware<PageViewLoggerMiddleware>();
+       app.UseMiddleware<PageViewLoggerMiddleware>();
 
-        app.UseEndpoints(endpoints =>
+       app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
             endpoints.MapAreaControllerRoute(
@@ -208,6 +210,6 @@ public class Startup
                 "{controller=Home}/{action=Index}");
         });
 
-        app.UseHealthChecksMvc();
+       app.UseHealthChecksMvc();
     }
 }

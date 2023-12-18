@@ -2,14 +2,17 @@ using DfT.ZEV.Common.MVC.Authentication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
-using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.MVC.Authentication.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Account.Requests;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth;
+using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi.Auth.Requests;
 using DfT.ZEV.Common.Notifications;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
@@ -19,18 +22,22 @@ namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 public partial class AccountController : Controller
 {
     private readonly ILogger<AccountController> _logger;
-    private readonly IIdentityPlatform _identityPlatform;
     private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IGoogleAuthApiClient _authApi;
+    private readonly IGoogleAccountApiClient _accountApi;
     private readonly INotificationService _notificationService;
-    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, INotificationService notificationService)
+
+    public AccountController(ILogger<AccountController> logger, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, IGoogleAuthApiClient authApi, IGoogleAccountApiClient accountApi, INotificationService notificationService)
     {
         _logger = logger;
-        _identityPlatform = identityPlatform;
         _googleOptions = options;
         _httpContextAccessor = httpContextAccessor;
+        _authApi = authApi;
+        _accountApi = accountApi;
         _notificationService = notificationService;
     }
+
 
     public IActionResult Index()
     {
@@ -59,8 +66,14 @@ public partial class AccountController : Controller
 
         try
         {
-            var authenticationRequest = new AuthenticationRequest(viewModel.Email, viewModel.Password);
-            var result = await _identityPlatform.AuthenticateUser(authenticationRequest, _googleOptions.Value.Tenancy.AppTenant);
+            var rq = new AuthorisationRequest
+            {
+                Email = viewModel.Email,
+                Password = viewModel.Password,
+                TenantId = _googleOptions.Value.Tenancy.AppTenant
+            };
+            
+            var result = await _authApi.Authorise(rq);
 
             HttpContext.Session.SetString("Token", result.IdToken);
             HttpContext.Session.SetString("RefreshToken", result.RefreshToken);
@@ -128,5 +141,33 @@ public partial class AccountController : Controller
         }
 
         return Redirect(returnUrl);
+    }
+
+    [Authorize]
+    [HttpGet("mfa-not-enabled")]
+    public async Task<IActionResult> MfaNotEnabled()
+    {
+        return View("mfa/MfaNotEnabled");
+    }
+    
+    [Authorize]
+    [HttpPost("mfa-not-enabled")]
+    public async Task<IActionResult> MfaNotEnabled(MfaEnrollmentViewModel model)
+    {
+        if (_httpContextAccessor.HttpContext != null)
+        {
+            var res = await _accountApi.InitializeMfaEnrollment(new InitializeMFAEnrollmentRequest
+            {
+                IdToken = _httpContextAccessor.HttpContext.Session.GetString("Token"),
+                TenantId = _googleOptions.Value.Tenancy.AppTenant,
+                phoneEnrollmentInfo = new PhoneEnrollmentInfo
+                {
+                    PhoneNumber = model.PhoneNumber,
+                    RecaptchaToken = null
+                }
+            });
+        }
+
+        return View("mfa/ContinueEnrollment");
     }
 }

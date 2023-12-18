@@ -1,9 +1,19 @@
 using System.Security.Claims;
 
-namespace DfT.ZEV.Common.MVC.Authentication.Identity;
+namespace DfT.ZEV.Common.MVC.Authentication.Identity.Extensions;
 
+/// <summary>
+/// Retrieves the account details from the claims principal.
+/// </summary>
+/// <param name="principal">The claims principal.</param>
+/// <returns>An instance of <see cref="IdentityAccountDetails"/> containing the account details, or null if no claims are present.</returns>
 public static class ClaimsPrincipalExtension
 {
+    /// <summary>
+    /// Retrieves the account details from the claims principal.
+    /// </summary>
+    /// <param name="principal">The claims principal.</param>
+    /// <returns>An instance of <see cref="IdentityAccountDetails"/> containing the account details, or null if no claims are present.</returns>
     public static IdentityAccountDetails GetAccountDetails(this ClaimsPrincipal principal)
     {
         var claims = principal.Claims.ToList();
@@ -18,6 +28,6 @@ public static class ClaimsPrincipalExtension
 
         return null;
     }
-    
-    
+
+
 }

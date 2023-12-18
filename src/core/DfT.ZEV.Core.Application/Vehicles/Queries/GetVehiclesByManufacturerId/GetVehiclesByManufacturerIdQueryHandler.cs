@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using DfT.ZEV.Core.Application.Manufacturers.Exceptions;
-using DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerIdQuery;
 using DfT.ZEV.Core.Domain.Abstractions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DfT.ZEV.Core.Application;
+namespace DfT.ZEV.Core.Application.Vehicles.Queries.GetVehiclesByManufacturerId;
 
 public class GetVehiclesByManufacturerIdQueryHandler : IRequestHandler<GetVehiclesByManufacturerIdQuery, GetVehiclesByManufacturerIdQueryDto>
 {
