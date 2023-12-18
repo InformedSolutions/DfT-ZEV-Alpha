@@ -29,20 +29,19 @@ public partial class AccountController : Controller
         try
         {
             var resetToken = await _identityPlatform.GetPasswordResetToken(viewModel.Email, _googleOptions.Value.Tenancy.AppTenant);
-            
+
             string host = _httpContextAccessor.HttpContext.Request.Host.Value;
             var scheme = _httpContextAccessor.HttpContext.Request.Scheme;
             var link = $"{scheme}://{host}/account/change-forgotten-password/{resetToken}";
-           
-            await _notificationService.SendNotificationAsync(new Notification()
+
+            await _notificationService.SendNotificationAsync(new Notification
             {
                 Recipients = new List<string> { viewModel.Email },
                 TemplateId = Guid.Parse(_googleOptions.Value.Queues.Notification.PasswordResetTemplateId),
                 TemplateParameters = new Dictionary<string, string> { { "password_reset_link", link } }
             });
-            _logger.LogInformation($"DEMO LINK FOR EMAIL: {host}/account/change-forgotten-password/{resetToken}");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             // ignore failed operation result not to reveal user existence in db.
             _logger.LogError(ex, ex.Message);
