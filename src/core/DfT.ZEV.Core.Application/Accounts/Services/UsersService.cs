@@ -4,6 +4,7 @@ using DfT.ZEV.Common.MVC.Authentication.Identity;
 using DfT.ZEV.Common.Notifications;
 using DfT.ZEV.Core.Domain.Accounts.Models;
 using DfT.ZEV.Core.Domain.Accounts.Services;
+using DfT.ZEV.Core.Infrastructure.Notifications;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Task = System.Threading.Tasks.Task;
@@ -38,17 +39,17 @@ internal sealed class UsersService : IUsersService
     }
 
     /// <inheritdoc/>
-    public async Task RequestPasswordResetAsync(User user, string email,string hostAddress, string tenantId)
+    public async Task RequestPasswordResetAsync(User user, string email, string hostAddress, string tenantId)
     {
         var code = await _identityPlatform.GetPasswordResetToken(user.Id, tenantId);
         var link = $"{hostAddress}/account/set-initial-password/{code}";
         var templateId = Guid.Parse(_options.Value.Queues.Notification.EmailVerificationTemplateId);
-        
+
         var notification = new Notification
         {
-            Recipients = new List<string>{email},
+            Recipients = new List<string> { email },
             TemplateId = templateId,
-            TemplateParameters = new Dictionary<string, string>{{"activation_link",link}}
+            TemplateParameters = new Dictionary<string, string> { { "activation_link", link } }
         };
         await _notificationService.SendNotificationAsync(notification);
         _logger.LogInformation("Generate password reset link for user {Id}: {ResetLink}", user.Id, link);
