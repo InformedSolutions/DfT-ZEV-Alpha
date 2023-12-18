@@ -35,7 +35,7 @@ public static class Setup
 
         builder.Services.AddApplication();
 
-        builder.Services.AddRepositories();
+        builder.Services.AddInfrastructureServices();
         return builder;
     }
 

@@ -1,3 +1,4 @@
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

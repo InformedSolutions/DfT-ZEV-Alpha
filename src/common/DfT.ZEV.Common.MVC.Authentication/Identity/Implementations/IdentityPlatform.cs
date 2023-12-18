@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.MVC.Authentication.Identity.GoogleApi;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;

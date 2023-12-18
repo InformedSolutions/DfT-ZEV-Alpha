@@ -40,7 +40,7 @@ public static class Setup
         //builder.Services.AddSerilog(builder.Configuration);
         //builder.Services.AddLogging();
         builder.UseCustomSerilog();
-        builder.Services.AddRepositories();
+        builder.Services.AddInfrastructureServices();
         return builder;
     }
 
