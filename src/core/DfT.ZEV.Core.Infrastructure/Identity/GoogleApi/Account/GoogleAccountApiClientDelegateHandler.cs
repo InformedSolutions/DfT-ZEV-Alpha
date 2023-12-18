@@ -11,7 +11,7 @@ namespace DfT.ZEV.Core.Infrastructure.Identity.GoogleApi.Account;
 internal sealed class GoogleAccountApiClientDelegateHandler : DelegatingHandler
 {
     private readonly IOptions<GoogleCloudConfiguration> _options;
-    private readonly string[] _authorizedEndpoints = { "accounts:sendOobCode", "accounts:resetPassword" };
+    private readonly string[] _authorizedEndpoints = { "accounts:sendOobCode", "accounts:resetPassword","mfaEnrollment" };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GoogleAccountApiClientDelegateHandler"/> class.

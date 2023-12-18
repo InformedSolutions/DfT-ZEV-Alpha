@@ -197,7 +197,7 @@ public class Startup
         app.UseMiddleware<TokenMiddleware>();
         app.UseAuthentication();
         app.UseAuthorization();
-        //app.UseMiddleware<MfaAlertMiddleware>();
+        app.UseMiddleware<MfaAlertMiddleware>();
         app.UseMiddleware<PageViewLoggerMiddleware>();
 
 

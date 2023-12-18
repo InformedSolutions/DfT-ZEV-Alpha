@@ -99,14 +99,17 @@ internal sealed class GoogleAccountApiClient : GoogleApiClientBase, IGoogleAccou
     /// <returns>An instance of the <see cref="InitializeEnrollmentResponse"/> class representing the response from the Google API.</returns>
     public async Task<InitializeEnrollmentResponse> InitializeMfaEnrollment(InitializeMFAEnrollmentRequest request)
     {
-        const string mfaEnrollStartUrl = "https://identitytoolkit.googleapis.com/v2/accounts/mfaEnrollment:start";
+        var mfaEnrollStartUrl = $"https://identitytoolkit.googleapis.com/v2/accounts/mfaEnrollment:start";
         var requestJson = SerialiseToCamelCaseJson(request);
         var result = await _httpClient.PostAsync(mfaEnrollStartUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+        var resJson = await result.Content.ReadAsStringAsync();
+        
         if (result.StatusCode != HttpStatusCode.OK)
         {
             throw new ApplicationException($"Google API returned status code {result.StatusCode}");
         }
-        
+
         return JsonConvert.DeserializeObject<InitializeEnrollmentResponse>(await result.Content.ReadAsStringAsync());
     }
+
 }
