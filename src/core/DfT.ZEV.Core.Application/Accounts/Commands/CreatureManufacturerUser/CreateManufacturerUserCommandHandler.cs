@@ -105,7 +105,7 @@ public class CreateManufacturerUserCommandHandler : IRequestHandler<CreateManufa
             await _usersService.UpdateUserClaimsAsync(user, tenant);
 
             _logger.LogInformation("Created user with email {Email}", args.Email);
-            await _usersService.RequestPasswordResetAsync(user, _serviceConfiguration.Value.ManufacturerPortalBaseUrl, tenant);
+            await _usersService.RequestPasswordResetAsync(user, args.Email,_serviceConfiguration.Value.ManufacturerPortalBaseUrl, tenant);
         }
         catch (Exception ex)
         {

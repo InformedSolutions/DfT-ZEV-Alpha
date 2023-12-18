@@ -48,7 +48,7 @@ internal sealed class ManufacturerRepository : IManufacturerRepository
 
     /// <inheritdoc/>
     public async ValueTask<IEnumerable<string>> GetManufacturerNamesAsync(CancellationToken cancellationToken = default)
-        => await _context.Manufacturers.Select(x => x.Name).ToListAsync(cancellationToken);
+        => await _context.Manufacturers.Select(x => x.Name).AsNoTracking().ToListAsync(cancellationToken);
 
     /// <inheritdoc/>
     public async Task InsertAsync(Manufacturer manufacturer, CancellationToken cancellationToken = default)
