@@ -1,4 +1,5 @@
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.Models;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Tasks.V2;

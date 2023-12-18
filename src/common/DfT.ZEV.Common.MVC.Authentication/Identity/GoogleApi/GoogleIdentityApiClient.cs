@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using DfT.ZEV.Common.Configuration;
+using DfT.ZEV.Common.Configuration.GoogleCloud;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
