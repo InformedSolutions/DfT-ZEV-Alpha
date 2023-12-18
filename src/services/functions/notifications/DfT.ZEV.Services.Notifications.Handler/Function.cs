@@ -45,6 +45,6 @@ public class Function : IHttpFunction
 
         var notification = JsonSerializer.Deserialize<Notification>(json, jsonSerializerOptions);
         _logger.LogDebug("Invoking service layer");
-        //var result = _notificationsService.SendNotification(notification);
+        var result = await _notificationsService.SendNotification(notification);
     }
 }
