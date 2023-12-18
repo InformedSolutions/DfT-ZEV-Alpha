@@ -1,4 +1,3 @@
-using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.Models;
 using Google.Apis.Auth.OAuth2;
@@ -11,9 +10,9 @@ using Newtonsoft.Json;
 using OidcToken = Google.Cloud.Tasks.V2.OidcToken;
 using Task = System.Threading.Tasks.Task;
 
-namespace DfT.ZEV.Core.Infrastructure.Notifications;
+namespace DfT.ZEV.Common.Notifications;
 
-internal class NotificationService : INotificationService
+public class NotificationService : INotificationService
 {
     private readonly IOptions<GoogleCloudConfiguration> _options;
     private readonly ILogger<NotificationService> _logger;
@@ -42,7 +41,7 @@ internal class NotificationService : INotificationService
             Parent = parentQueue.ToString(),
             Task = new Google.Cloud.Tasks.V2.Task
             {
-                HttpRequest = new HttpRequest
+                HttpRequest = new Google.Cloud.Tasks.V2.HttpRequest
                 {
                     HttpMethod = Google.Cloud.Tasks.V2.HttpMethod.Post,
                     Url = _options.Value.Queues.Notification.HandlerUrl,

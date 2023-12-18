@@ -1,6 +1,6 @@
 using DfT.ZEV.Common.Models;
 
-namespace DfT.ZEV.Core.Infrastructure.Notifications;
+namespace DfT.ZEV.Common.Notifications;
 
 public interface INotificationService
 {

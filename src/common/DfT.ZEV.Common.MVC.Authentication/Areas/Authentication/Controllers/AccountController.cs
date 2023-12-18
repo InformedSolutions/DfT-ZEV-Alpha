@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Common.Notifications;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 
@@ -21,13 +22,14 @@ public partial class AccountController : Controller
     private readonly IIdentityPlatform _identityPlatform;
     private readonly IOptions<GoogleCloudConfiguration> _googleOptions;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor)
+    private readonly INotificationService _notificationService;
+    public AccountController(ILogger<AccountController> logger, IIdentityPlatform identityPlatform, IOptions<GoogleCloudConfiguration> options, IHttpContextAccessor httpContextAccessor, INotificationService notificationService)
     {
         _logger = logger;
         _identityPlatform = identityPlatform;
         _googleOptions = options;
         _httpContextAccessor = httpContextAccessor;
+        _notificationService = notificationService;
     }
 
     public IActionResult Index()
