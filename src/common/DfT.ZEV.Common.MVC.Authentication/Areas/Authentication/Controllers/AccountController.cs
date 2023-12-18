@@ -155,7 +155,7 @@ public partial class AccountController : Controller
             {
                 IdToken = _httpContextAccessor.HttpContext.Session.GetString("Token"),
                 TenantId = _googleOptions.Value.Tenancy.AppTenant,
-                enrollment_info = new PhoneEnrollmentInfo
+                phoneEnrollmentInfo = new PhoneEnrollmentInfo
                 {
                     PhoneNumber = model.PhoneNumber,
                     RecaptchaToken = null

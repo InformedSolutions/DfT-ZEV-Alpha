@@ -34,5 +34,5 @@ public class InitializeMFAEnrollmentRequest
     /// <summary>
     /// Gets or sets the phone enrollment information.
     /// </summary>
-    public PhoneEnrollmentInfo enrollment_info { get; set; }
+    public PhoneEnrollmentInfo phoneEnrollmentInfo { get; set; }
 }
