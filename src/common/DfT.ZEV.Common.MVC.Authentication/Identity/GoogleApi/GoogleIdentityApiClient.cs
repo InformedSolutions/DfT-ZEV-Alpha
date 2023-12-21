@@ -16,8 +16,8 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     private readonly IOptions<GoogleCloudConfiguration> _googleCloudConfiguration;
     private const string VerifyPasswordApiUrlTemplate = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key={0}";
     private const string RefreshTokenApiUrlTemplate = "https://securetoken.googleapis.com/v1/token?key={0}";
-    private const string GetOobCodeApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode";
-    private const string ResetPasswordApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword";
+    private const string GetOobCodeApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={0}";
+    private const string ResetPasswordApiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key={0}";
     private static string[] _scopes = { "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/firebase" };
 
     public GoogleIdentityApiClient(IOptions<GoogleCloudConfiguration> googleCloudConfiguration, HttpClient httpClient)
@@ -74,9 +74,11 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     /// <inheritdoc/>
     public async Task<PasswordResetTokenResponse> GetPasswordResetToken(PasswordResetTokenRequest passwordResetCodeRequest)
     {
-        await ConfigureHttpClient();
+        //await ConfigureHttpClient();
+        var apiUrl = string.Format(GetOobCodeApiUrl, _googleCloudConfiguration.Value.ApiKey);
+
         var requestJson = SerialiseToCamelCaseJson(passwordResetCodeRequest);
-        var result = await _httpClient.PostAsync(GetOobCodeApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+        var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
 
         return result.StatusCode != HttpStatusCode.OK
             ? throw new ApplicationException($"Google API returned status code {result.StatusCode}")
@@ -87,9 +89,11 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
     /// <inheritdoc/>
     public async Task ChangePasswordWithToken(PasswordChangeWithTokenRequest passwordChangeRequest)
     {
-        await ConfigureHttpClient();
+        //await ConfigureHttpClient();
+        var apiUrl = string.Format(ResetPasswordApiUrl, _googleCloudConfiguration.Value.ApiKey);
+
         var requestJson = SerialiseToCamelCaseJson(passwordChangeRequest);
-        var result = await _httpClient.PostAsync(ResetPasswordApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+        var result = await _httpClient.PostAsync(apiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
 
         if (result.StatusCode != HttpStatusCode.OK)
         {
