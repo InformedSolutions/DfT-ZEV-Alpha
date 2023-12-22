@@ -9,6 +9,9 @@ using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using DfT.ZEV.Common.Logging;
+using DfT.ZEV.Services.SchemeData.Api.Features.Files;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace DfT.ZEV.Services.SchemeData.Api;
 
@@ -16,8 +19,24 @@ public static class Setup
 {
     public static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
+        builder.Services.Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = null; // Unlimited
+        });
+
+        builder.Services.Configure<FormOptions>(options =>
+        {
+            options.ValueCountLimit = int.MaxValue; // Increase the limit
+            options.MultipartBodyLengthLimit = long.MaxValue; // Increase the limit
+        });
+
+
+        
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(opt =>
+        {
+            opt.EnableAnnotations();
+        });
 
         builder.Services.AddHealthChecks()
                  .AddCheck<PostgresHealthCheck>("postgres", HealthStatus.Unhealthy)
@@ -26,10 +45,11 @@ public static class Setup
         builder.Services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.ConfigureServicesSettings(builder.Configuration);
         var postgresSettings = builder.Services.ConfigurePostgresSettings(builder.Configuration);
+        builder.Services.ConfigureBucketSettings(builder.Configuration);
         builder.Services.ConfigureGoogleCloudSettings(builder.Configuration);
         builder.Services.AddIdentityPlatform(builder.Configuration);
         builder.Services.AddDbContext(postgresSettings);
-
+        
 
         builder.UseCustomSerilog();
 
@@ -46,7 +66,7 @@ public static class Setup
 
         app.MapProcessesEndpoints();
         app.MapVehicleEndpoints();
-
+        app.MapFilesEndpoints();
         app.UseHealthChecks();
         return app;
     }

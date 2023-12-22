@@ -1,6 +1,5 @@
 using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.Models;
-using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Tasks.V2;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -10,7 +9,7 @@ using Newtonsoft.Json;
 using OidcToken = Google.Cloud.Tasks.V2.OidcToken;
 using Task = System.Threading.Tasks.Task;
 
-namespace DfT.ZEV.Common.Notifications;
+namespace DfT.ZEV.Core.Infrastructure.Notifications;
 
 public class NotificationService : INotificationService
 {
