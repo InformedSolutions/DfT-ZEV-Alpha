@@ -87,3 +87,27 @@ variable "identity_platform_authorized_redirect_domains" {
   description = "List of domains that authentication servers are allowed to redirect to after signing a user in"
   default     = []
 }
+
+variable "malware_scanner_min_instance_count" {
+  type        = number
+  description = "Minimum number of malware scanner instances. Startup time is relatively high so at least 1 is recommended"
+  default     = 1
+}
+
+variable "malware_scanner_max_instance_count" {
+  type        = number
+  description = "Maximum number of malware scanner instances"
+  default     = 1
+}
+
+variable "malware_scanner_cpu_quota" {
+  type        = number
+  description = "CPU quota for malware scanner instances"
+  default     = 1
+}
+
+variable "malware_scanner_ram_quota" {
+  type        = string
+  description = "CPU quota for malware scanner instances"
+  default     = "4Gi"
+}
