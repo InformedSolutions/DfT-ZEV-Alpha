@@ -10,13 +10,54 @@
         </h2>
         
        
-        <form enctype="multipart/form-data" method="post">
-             <govuk-file-upload name="FileUpload1">
-                 <govuk-file-upload-label>Upload a file</govuk-file-upload-label>
-                 </govuk-file-upload> 
+        <form id="uploadForm" enctype="multipart/form-data" method="post">
+            <govuk-file-upload name="FileUpload1">
+                <govuk-file-upload-label>Upload a file</govuk-file-upload-label>
+            </govuk-file-upload> 
                         
-                        <govuk-button type="submit" asp-action="UploadFile"  data-test="search">Upload</govuk-button>
+            <govuk-button id="uploadButton"  data-test="upload">Upload</govuk-button>
         </form>
-        
+       <div class="progress">
+           <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+       </div>
     </div>
 </div>
+
+<script>
+    console.log("elo")
+    document.getElementById('uploadButton').addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log("uploadButton clicked")
+        var formData = new FormData(document.getElementById('uploadForm'));
+
+        var progressBar = document.getElementById('progressBar');
+        var progressContainer = document.querySelector('.progress');
+
+        fetch('@Url.Page("/Upload")', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            },
+            onUploadProgress: function (progressEvent) {
+                if (progressEvent.lengthComputable) {
+                    var percentComplete = (progressEvent.loaded / progressEvent.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                }
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle success or error
+        })
+        .catch(error => {
+            // Handle errors
+        })
+        .finally(() => {
+            progressContainer.style.display = 'none';
+        });
+
+        // Display the progress bar
+        progressContainer.style.display = 'block';
+    });
+</script>
