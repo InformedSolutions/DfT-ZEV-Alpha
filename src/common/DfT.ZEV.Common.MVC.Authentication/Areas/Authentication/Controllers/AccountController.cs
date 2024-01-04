@@ -7,9 +7,10 @@ using DfT.ZEV.Common.MVC.Authentication.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using DfT.ZEV.Common.Configuration;
 using DfT.ZEV.Common.Configuration.GoogleCloud;
 using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Common.Notifications;
+using DfT.ZEV.Core.Infrastructure.Notifications;
 
 namespace DfT.ZEV.Common.MVC.Authentication.Areas.Authentication.Controllers;
 

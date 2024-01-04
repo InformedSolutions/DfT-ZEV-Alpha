@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using OidcToken = Google.Cloud.Tasks.V2.OidcToken;
 using Task = System.Threading.Tasks.Task;
 
-namespace DfT.ZEV.Common.Notifications;
+namespace DfT.ZEV.Core.Infrastructure.Notifications;
 
 public class NotificationService : INotificationService
 {
