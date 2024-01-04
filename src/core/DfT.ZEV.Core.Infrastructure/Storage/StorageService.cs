@@ -19,8 +19,6 @@ public class StorageService : IStorageService
 
     public async Task UploadFile(UploadFileToBucketDto dto, CancellationToken ct = default)
     {
-        //var fileSizeMb = Math.Round((double)file.Length / (1024 * 1024), 2); // Convert bytes to megabytes
-        //var fileSizeGb = Math.Round(fileSizeMb / 1024, 2); // Convert megabytes to gigabytes
         _logger.LogInformation("Started uploading file to Google Cloud Storage: {FileName}", dto.Filename);
         var storageClient = await StorageClient.CreateAsync();
         
