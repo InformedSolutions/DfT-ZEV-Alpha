@@ -26,7 +26,13 @@ public static class Extensions
             options.DefaultRequestHeaders.Add("Accept", "application/json");
         }).AddPolicyHandler(GetRetryPolicy())
             .SetHandlerLifetime(TimeSpan.FromMinutes(5));
-
+        
+        services.AddHttpClient<SchemeDataApiClient>(options =>
+            {
+                options.BaseAddress = new Uri(servicesConfiguration.SchemeDataApiBaseUrl);
+                options.DefaultRequestHeaders.Add("Accept", "application/json");
+            }).AddPolicyHandler(GetRetryPolicy())
+            .SetHandlerLifetime(TimeSpan.FromMinutes(5));
 
         return services;
     }

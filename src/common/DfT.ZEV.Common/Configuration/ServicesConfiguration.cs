@@ -6,4 +6,5 @@ public class ServicesConfiguration
 
     public string OrganisationApiBaseUrl { get; set; } = null!;
     public string ManufacturerPortalBaseUrl { get; set; } = null!;
+    public string SchemeDataApiBaseUrl { get; set; }
 }

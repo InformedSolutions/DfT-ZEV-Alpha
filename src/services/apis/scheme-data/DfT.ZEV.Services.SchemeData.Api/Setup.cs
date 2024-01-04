@@ -9,7 +9,6 @@ using DfT.ZEV.Common.MVC.Authentication.HealthChecks.CustomHealthChecks;
 using DfT.ZEV.Common.MVC.Authentication.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using DfT.ZEV.Common.Logging;
-using DfT.ZEV.Services.SchemeData.Api.Features.Files;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
@@ -19,16 +18,7 @@ public static class Setup
 {
     public static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
-        builder.Services.Configure<KestrelServerOptions>(options =>
-        {
-            options.Limits.MaxRequestBodySize = null; // Unlimited
-        });
-
-        builder.Services.Configure<FormOptions>(options =>
-        {
-            options.ValueCountLimit = int.MaxValue; // Increase the limit
-            options.MultipartBodyLengthLimit = long.MaxValue; // Increase the limit
-        });
+      
 
 
         
@@ -66,7 +56,6 @@ public static class Setup
 
         app.MapProcessesEndpoints();
         app.MapVehicleEndpoints();
-        app.MapFilesEndpoints();
         app.UseHealthChecks();
         return app;
     }

@@ -1,10 +1,6 @@
-@using Microsoft.Extensions.Configuration
-
-@inject IConfiguration Configuration
-
 @{
-    ViewData["Title"] = "Home";
-    ViewData["ActivePage"] = "Home";
+    ViewData["Title"] = "Upload file";
+    ViewData["ActivePage"] = "Upload file";
 }
 
 <div class="govuk-grid-row">
@@ -13,13 +9,14 @@
             <a class="govuk-link" asp-action="Index" asp-controller="Home">Placeholder</a>
         </h2>
         
-        @using (Html.BeginForm())
-        {
-            <govuk-file-upload name="FileUpload1">
-                <govuk-file-upload-label>Upload a file</govuk-file-upload-label>
-            </govuk-file-upload> 
-                    
-            <govuk-button type="submit" data-test="search">Upload!</govuk-button>
-        }
+       
+        <form enctype="multipart/form-data" method="post">
+             <govuk-file-upload name="FileUpload1">
+                 <govuk-file-upload-label>Upload a file</govuk-file-upload-label>
+                 </govuk-file-upload> 
+                        
+                        <govuk-button type="submit" asp-action="UploadFile"  data-test="search">Upload</govuk-button>
+        </form>
+        
     </div>
 </div>
