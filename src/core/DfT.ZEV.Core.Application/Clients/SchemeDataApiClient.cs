@@ -10,8 +10,6 @@ namespace DfT.ZEV.Core.Application;
 /// </summary>
 public class SchemeDataApiClient : BaseHttpClient
 {
-  private readonly HttpClient _httpClient;
-
   /// <summary>
   /// Initializes a new instance of the <see cref="SchemeDataApiClient"/> class.
   /// </summary>
@@ -23,9 +21,7 @@ public class SchemeDataApiClient : BaseHttpClient
     ILogger<BaseHttpClient> logger,
     IHttpContextAccessor httpContextAccessor
   ) : base(httpClient, logger, httpContextAccessor)
-  {
-    _httpClient = HttpClient;
-  }
+  { }
 
   /// <summary>
   /// Gets the vehicles by manufacturer ID asynchronously.

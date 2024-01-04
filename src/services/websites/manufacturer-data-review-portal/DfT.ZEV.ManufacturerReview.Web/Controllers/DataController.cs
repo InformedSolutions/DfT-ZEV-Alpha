@@ -42,6 +42,6 @@ public class DataController : Controller
             };
             await _storageService.UploadFile(dto);
         }
-        return View();
+        return Ok(new {Message = "File uploaded successfully!"});
     }
 }
