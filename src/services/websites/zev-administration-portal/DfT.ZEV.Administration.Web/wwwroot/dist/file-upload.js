@@ -3,6 +3,8 @@ var __webpack_exports__ = {};
 /*!***************************!*\
   !*** ./js/file-upload.js ***!
   \***************************/
+//let MODE = 'upload' // 'upload' or 'submit';
+
 /**
  * Validates the file input and returns an array of error messages.
  * @param {HTMLInputElement} fileInput - The file input element.
@@ -88,15 +90,34 @@ function hideErrors() {
     fileUpload.classList.remove('govuk-file-upload--error');
 }
 
+
 document.addEventListener('DOMContentLoaded', function () {
     // Get elements
     const uploadForm = document.querySelector('.async-upload-form');
     const uploadSubmit = document.querySelector('.async-upload-submit');
-    const progressBar = document.querySelector('.async-upload-progress');
     const fileInput = document.querySelector('.async-upload-input');
+
+    const submitFileButton = document.querySelector('.submit-file-button');
+    const progressBar = document.querySelector('.async-upload-progress');
+    const progressText = document.querySelector('.async-upload-progress-text');
+    const uploadFileName = document.querySelector('.async-upload-file-name');
+    const submtiStageContainer = document.querySelector('.submit-stage-container');
+    const cancelUploadButton = document.querySelector('.cancel-file-upload');
+    
+    const xhr = new XMLHttpRequest();
+
+    cancelUploadButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        uploadForm.style.display = 'block';
+        submtiStageContainer.style.display = 'none';
+        progressBar.style.display = 'none';
+        uploadSubmit.disabled = false;
+        xhr.abort();
+    });
 
     fileInput.addEventListener('change', function () {
         hideErrors();
+        uploadFileName.innerHTML = fileInput.files[0].name;
         const errorMessages = validateFileInput(fileInput);
         if (errorMessages.length > 0) {
             drawErrors(errorMessages);
@@ -112,7 +133,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Disable the submit button
         uploadSubmit.disabled = true;
+        uploadForm.style.display = 'none';
+        submtiStageContainer.style.display = 'block';
 
+        submitFileButton.disabled = true;
         // Create a new FormData object
         const formData = new FormData(uploadForm);
 
@@ -120,25 +144,29 @@ document.addEventListener('DOMContentLoaded', function () {
         progressBar.style.display = 'block';
 
         // Create a new XMLHttpRequest
-        const xhr = new XMLHttpRequest();
 
         // Track upload progress
         xhr.upload.addEventListener('progress', function (event) {
             if (event.lengthComputable) {
                 const percentComplete = (event.loaded / event.total) * 100;
-                progressBar.value = Math.min(percentComplete, 90);
+                const val = Math.min(percentComplete, 90);
+                progressBar.value = val;
+                progressText.innerHTML = `Uploading ${Math.round(val)}%`;
             }
         });
 
         // Handle successful upload
         xhr.onload = function () {
             if (xhr.status === 200) {
-                progressBar.value = 100;
+                document.querySelector('.upload-status-container').style.display = 'none';
+                document.querySelector('.uploaded-status').style.display = 'block';
+
 
                 //This is UX improvement so user can see the progress bar at 100% for a short time
                 setTimeout(function () {
-                    window.location.href = '/Data/upload-success';
-                }, 300);
+                    //window.location.href = '/Data/upload-success';
+                    submitFileButton.disabled = false;
+                }, 333);
             } else {
                 // Enable the submit button if the upload failed
                 uploadSubmit.disabled = false;
