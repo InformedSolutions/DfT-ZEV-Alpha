@@ -58,4 +58,8 @@
     <ProjectReference Include="..\DfT.ZEV.Administration.Infrastructure\DfT.ZEV.Administration.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="Views\Data\Index.cshtml" />
+  </ItemGroup>
+
 </Project>
