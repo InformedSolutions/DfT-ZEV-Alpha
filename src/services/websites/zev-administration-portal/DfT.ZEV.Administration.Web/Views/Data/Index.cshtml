@@ -2,6 +2,8 @@
     ViewData["Title"] = "Upload File";
     ViewData["ActivePage"] = "Upload File";
 }
+  <link rel="stylesheet" href="~/dist/file-upload-css.css" nonce="owned-assets" asp-append-version="true">
+
 <partial name="_ErrorSummary"/>
 
 
@@ -32,73 +34,6 @@
     </div>
 </div>
 
-
-<style nonce="owned-assets">
-    .uploaded-status {
-        display: none;
-    }
-    
-    .submit-stage-container {
-        display: none;
-        margin: 15px 0;
-    }
-    
-    .submit-stage-data {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #b1b4b6;
-        border-bottom: 1px solid #b1b4b6;
-        margin-bottom: 32px;
-        margin-top:  16px;
-    }
-    
-    .submit-stage-actions {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        align-items: flex-end;
-        justify-content: flex-start;
-        gap: 1rem;
-    }
-
-    .govuk-button {
-        margin-bottom: 0 !important;
-    }
-    
-    .upload-status-container {
-        display: flex;
-        justify-content: center;
-        align-content: center;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .async-upload-progress {
-        display: none;
-        width: 300px;
-        height: 2.2rem;
-        border: none;
-        border-radius: 10px;
-    }
-
-    .async-upload-progress-text {
-        margin-right: 5px;
-    }
-
-    .async-upload-progress::-webkit-progress-bar {
-        background-color: #5694ca;
-    }
-
-    .async-upload-progress::-webkit-progress-value {
-        background-color: #1d70b8;
-    }
-
-    .async-upload-progress::-moz-progress-bar {
-        background-color: #1d70b8;
-    }
-</style>
 
 @section Scripts
 {
