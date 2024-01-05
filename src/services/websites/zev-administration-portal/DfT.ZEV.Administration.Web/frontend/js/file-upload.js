@@ -1,10 +1,84 @@
-//let MODE = 'upload' // 'upload' or 'submit';
+document.addEventListener('DOMContentLoaded', function () {
+    const uploadForm = document.querySelector('.async-upload-form');
+    const uploadSubmit = document.querySelector('.async-upload-submit');
+    const fileInput = document.querySelector('.async-upload-input');
+    const submitFileButton = document.querySelector('.submit-file-button');
+    const progressBar = document.querySelector('.async-upload-progress');
+    const progressText = document.querySelector('.async-upload-progress-text');
+    const uploadFileName = document.querySelector('.async-upload-file-name');
+    const submitStageContainer = document.querySelector('.submit-stage-container');
+    const cancelUploadButton = document.querySelector('.cancel-file-upload');
+    const submitStageButton = document.querySelector('.submit-file-button');
+    const xhr = new XMLHttpRequest();
 
-/**
- * Validates the file input and returns an array of error messages.
- * @param {HTMLInputElement} fileInput - The file input element.
- * @returns {string[]} - Array of error messages.
- */
+
+    submitStageButton.addEventListener('click', function (e) {
+        window.location.href = '/data/upload-success';
+    });
+
+    cancelUploadButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        uploadForm.style.display = 'block';
+        submitStageContainer.style.display = 'none';
+        progressBar.style.display = 'none';
+        uploadSubmit.disabled = false;
+        xhr.abort();
+        window.location.reload();
+    });
+
+    fileInput.addEventListener('change', function () {
+        hideErrors();
+        uploadFileName.innerHTML = fileInput.files[0].name;
+        const errorMessages = validateFileInput(fileInput);
+        uploadSubmit.disabled = errorMessages.length > 0;
+        if (errorMessages.length > 0) {
+            drawErrors(errorMessages);
+        }
+    });
+
+    uploadSubmit.addEventListener('click', function (e) {
+        e.preventDefault();
+        uploadSubmit.disabled = true;
+        uploadForm.style.display = 'none';
+        submitStageContainer.style.display = 'block';
+        submitFileButton.disabled = true;
+        const formData = new FormData(uploadForm);
+        progressBar.style.display = 'block';
+
+        xhr.upload.addEventListener('progress', function (event) {
+            if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+                const val = Math.min(percentComplete, 90);
+                progressBar.value = val;
+                progressText.innerHTML = `Uploading ${Math.round(val)}%`;
+            }
+        });
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                document.querySelector('.upload-status-container').style.display = 'none';
+                cancelUploadButton.innerHTML = 'Remove';
+
+                document.querySelector('.uploaded-status').style.display = 'block';
+
+                setTimeout(function () {
+                    submitFileButton.disabled = false;
+                }, 333);
+            } else {
+                uploadSubmit.disabled = false;
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('Error during upload');
+            uploadSubmit.disabled = false;
+        };
+
+        xhr.open('POST', '/data/upload-file', true);
+        xhr.send(formData);
+    });
+});
+
 function validateFileInput(fileInput) {
     const errorMessages = [];
     const file = fileInput.files[0];
@@ -27,13 +101,8 @@ function validateFileInput(fileInput) {
     return errorMessages;
 }
 
-/**
- * Draws error messages on the page.
- * @param {string[]} errors - Array of error messages.
- */
 function drawErrors(errors) {
     hideErrors();
-
     const errorsSummary = document.createElement('div');
     errorsSummary.setAttribute('aria-labelledby', 'error-summary-title');
     errorsSummary.setAttribute('role', 'alert');
@@ -47,7 +116,7 @@ function drawErrors(errors) {
             </ul>
         </div>
     `;
-    document.getElementById('main-content').prepend(errorsSummary);
+    document.querySelector('.error-summary-output').prepend(errorsSummary);
 
     const formGroup = document.querySelector('.govuk-form-group');
     formGroup.classList.add('govuk-form-group--error');
@@ -64,9 +133,6 @@ function drawErrors(errors) {
     fileUpload.classList.add('govuk-file-upload--error');
 }
 
-/**
- * Hides error messages on the page.
- */
 function hideErrors() {
     const errorSummary = document.querySelector('.govuk-error-summary');
     if (errorSummary) {
@@ -84,99 +150,3 @@ function hideErrors() {
     const fileUpload = document.querySelector('.govuk-file-upload');
     fileUpload.classList.remove('govuk-file-upload--error');
 }
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Get elements
-    const uploadForm = document.querySelector('.async-upload-form');
-    const uploadSubmit = document.querySelector('.async-upload-submit');
-    const fileInput = document.querySelector('.async-upload-input');
-
-    const submitFileButton = document.querySelector('.submit-file-button');
-    const progressBar = document.querySelector('.async-upload-progress');
-    const progressText = document.querySelector('.async-upload-progress-text');
-    const uploadFileName = document.querySelector('.async-upload-file-name');
-    const submtiStageContainer = document.querySelector('.submit-stage-container');
-    const cancelUploadButton = document.querySelector('.cancel-file-upload');
-    
-    const xhr = new XMLHttpRequest();
-
-    cancelUploadButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        uploadForm.style.display = 'block';
-        submtiStageContainer.style.display = 'none';
-        progressBar.style.display = 'none';
-        uploadSubmit.disabled = false;
-        xhr.abort();
-    });
-
-    fileInput.addEventListener('change', function () {
-        hideErrors();
-        uploadFileName.innerHTML = fileInput.files[0].name;
-        const errorMessages = validateFileInput(fileInput);
-        if (errorMessages.length > 0) {
-            drawErrors(errorMessages);
-            uploadSubmit.disabled = true;
-            return;
-        }else {
-            uploadSubmit.disabled = false;
-        }
-    });
-
-    uploadSubmit.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        // Disable the submit button
-        uploadSubmit.disabled = true;
-        uploadForm.style.display = 'none';
-        submtiStageContainer.style.display = 'block';
-
-        submitFileButton.disabled = true;
-        // Create a new FormData object
-        const formData = new FormData(uploadForm);
-
-        // Show the progress bar
-        progressBar.style.display = 'block';
-
-        // Create a new XMLHttpRequest
-
-        // Track upload progress
-        xhr.upload.addEventListener('progress', function (event) {
-            if (event.lengthComputable) {
-                const percentComplete = (event.loaded / event.total) * 100;
-                const val = Math.min(percentComplete, 90);
-                progressBar.value = val;
-                progressText.innerHTML = `Uploading ${Math.round(val)}%`;
-            }
-        });
-
-        // Handle successful upload
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                document.querySelector('.upload-status-container').style.display = 'none';
-                document.querySelector('.uploaded-status').style.display = 'block';
-
-
-                //This is UX improvement so user can see the progress bar at 100% for a short time
-                setTimeout(function () {
-                    //window.location.href = '/Data/upload-success';
-                    submitFileButton.disabled = false;
-                }, 333);
-            } else {
-                // Enable the submit button if the upload failed
-                uploadSubmit.disabled = false;
-            }
-        };
-
-        // Handle errors
-        xhr.onerror = function () {
-            console.error('Error during upload');
-            // Enable the submit button if an error occurred
-            uploadSubmit.disabled = false;
-        };
-
-        // Send the request
-        xhr.open('POST', '/data/upload-file', true);
-        xhr.send(formData);
-    });
-});

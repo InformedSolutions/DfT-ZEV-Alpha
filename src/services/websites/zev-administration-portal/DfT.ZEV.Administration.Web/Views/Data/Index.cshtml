@@ -1,112 +1,102 @@
 @{
-    ViewData["Title"] = "Upload file";
-    ViewData["ActivePage"] = "Upload file";
+    ViewData["Title"] = "Upload File";
+    ViewData["ActivePage"] = "Upload File";
 }
+<partial name="_ErrorSummary"/>
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l">
-            Upload vehicle data
-        </h2>
-        <p class="govuk-body">
-            Your data must be saved as a CSV file and be formatted according to the <a href="">data rules</a>. You should read data rules before you upload a file to avoid errors.
-        </p>
-        <form id="uploadForm" class="async-upload-form" enctype="multipart/form-data" method="post">
-            <govuk-file-upload input-class="async-upload-input" name="FileUpload1">
-                <govuk-file-upload-label>Upload a file</govuk-file-upload-label>
-            </govuk-file-upload> 
-            <govuk-button id="uploadButton" class="async-upload-submit"  data-test="upload">Upload</govuk-button>
-        </form>
-        <div class="submit-stage-container">
-            <div class="submit-stage-data">
-                <p class="async-upload-file-name"></p>
-                            
-                <div class="upload-status-container">
-                                                    <p class="async-upload-progress-text"></p>
-                    <progress id="progressBar" class="async-upload-progress" value="0" max="100"></progress>
-                </div>
-                            
-                            <govuk-tag class="uploaded-status">UPLOADED</govuk-tag>
-            </div>
 
-            <div class="submit-stage-actions">
-                <govuk-button id="submitButton" class="submit-file-button">Submit file</govuk-button>
-                            <a class="cancel-file-upload" href="">Cancel upload</a>
-            </div>
+<h2 class="govuk-heading-l">
+    Upload Vehicle Data
+</h2>
+<p class="govuk-body">
+    Your data must be saved as a CSV file and be formatted according to the <a href="#">data rules</a>. Please read the data rules before uploading a file to avoid errors.
+</p>
+<form id="uploadForm" class="async-upload-form" enctype="multipart/form-data" method="post">
+    <govuk-file-upload input-class="async-upload-input" name="FileUpload">
+        <govuk-file-upload-label>Upload a File</govuk-file-upload-label>
+    </govuk-file-upload>
+    <govuk-button id="uploadButton" class="async-upload-submit" data-test="upload">Upload</govuk-button>
+</form>
+<div class="submit-stage-container">
+    <div class="submit-stage-data">
+        <p class="async-upload-file-name"></p>
+        <div class="upload-status-container">
+            <p class="async-upload-progress-text"></p>
+            <progress id="progressBar" class="async-upload-progress" value="0" max="100"></progress>
         </div>
+        <govuk-tag class="uploaded-status">UPLOADED</govuk-tag>
+    </div>
+    <div class="submit-stage-actions">
+        <govuk-button id="submitButton" class="submit-file-button">Submit File</govuk-button>
+        <a class="cancel-file-upload" href="#">Cancel Upload</a>
     </div>
 </div>
 
+
 <style nonce="owned-assets">
-   
-    
     .uploaded-status {
         display: none;
     }
     
     .submit-stage-container {
         display: none;
+        margin: 15px 0;
     }
     
     .submit-stage-data {
         display: flex;
-            flex-wrap: nowrap;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
         border-top: 1px solid #b1b4b6;
         border-bottom: 1px solid #b1b4b6;
-        margin-bottom: 15px;
-        margin-top:  15px;
+        margin-bottom: 32px;
+        margin-top:  16px;
     }
     
-.submit-stage-actions {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 1rem;
-}
+    .submit-stage-actions {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: flex-start;
+        gap: 1rem;
+    }
 
-.govuk-button {
-    margin-bottom: 0 !important;
-}
+    .govuk-button {
+        margin-bottom: 0 !important;
+    }
     
     .upload-status-container {
         display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-content: center;
-            flex-wrap: wrap;
-            align-items: center;
+        justify-content: center;
+        align-content: center;
+        flex-wrap: wrap;
+        align-items: center;
     }
-    
-     .async-upload-progress {
-       display: none; /* Hide the progress bar */
-       
-       width: 300px;
-       height: 2.2rem;
-       border: none;
-       border-radius: 10px;
-       background-color: #ddd;
-     }
-     
-     
-     .async-upload-progress-text {
+
+    .async-upload-progress {
+        display: none;
+        width: 300px;
+        height: 2.2rem;
+        border: none;
+        border-radius: 10px;
+    }
+
+    .async-upload-progress-text {
         margin-right: 5px;
-     }
-        
+    }
+
     .async-upload-progress::-webkit-progress-bar {
-      background-color: 	#5694ca;
+        background-color: #5694ca;
     }
-    
-   .async-upload-progress::-webkit-progress-value {
-      background-color: 	#1d70b8;
+
+    .async-upload-progress::-webkit-progress-value {
+        background-color: #1d70b8;
     }
-    
+
     .async-upload-progress::-moz-progress-bar {
-      background-color:	#1d70b8;
+        background-color: #1d70b8;
     }
 </style>
 
