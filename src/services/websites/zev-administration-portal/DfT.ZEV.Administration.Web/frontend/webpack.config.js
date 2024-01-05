@@ -6,6 +6,7 @@ module.exports = {
     entry: {
         'gds.site': './js/gds/site.js',
         'gds.back': './js/gds/back.js',
+        'file-upload': './js/file-upload.js',
     },
     output: {
         filename: '[name].js',

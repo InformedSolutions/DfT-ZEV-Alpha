@@ -11,13 +11,12 @@
         <p class="govuk-body">
             Your data must be saved as a CSV file and be formatted according to the <a href="">data rules</a>. You should read data rules before you upload a file to avoid errors.
         </p>
-        <form id="uploadForm" enctype="multipart/form-data" method="post">
-            <govuk-file-upload name="FileUpload1">
+        <form id="uploadForm" class="async-upload-form" enctype="multipart/form-data" method="post">
+            <govuk-file-upload input-class="async-upload-input" name="FileUpload1">
                 <govuk-file-upload-label>Upload a file</govuk-file-upload-label>
             </govuk-file-upload> 
-            <progress id="progressBar" value="0" max="100"></progress>
-            <p id="message"></p>
-            <govuk-button id="uploadButton"  data-test="upload">Upload</govuk-button>
+            <progress id="progressBar" class="async-upload-progress" value="0" max="100"></progress>
+            <govuk-button id="uploadButton" class="async-upload-submit"  data-test="upload">Upload</govuk-button>
         </form>
     </div>
 </div>
@@ -32,50 +31,7 @@
 @section Scripts
 {
     <script nonce="owned-assets">
-        document.getElementById('uploadButton').addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            document.getElementById('uploadButton').disabled = true;
-
-            var formData = new FormData(document.getElementById('uploadForm'));
-            var progressBar = document.getElementById('progressBar');
-            progressBar.style.display = 'block';
-            
-            var message = document.getElementById('message');
-            var xhr = new XMLHttpRequest();
-
-            // Track upload progress
-            xhr.upload.addEventListener('progress', function (event) {
-                if (event.lengthComputable) {
-                    var percentComplete = (event.loaded / event.total) * 100;
-                    percentComplete = Math.min(percentComplete, 90);
-                    progressBar.value = percentComplete;
-                }
-            });
-
-            // Handle successful upload
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    progressBar.value = 100;
-                    
-                    setTimeout(function () {
-                        window.location.href = '/Data/upload-success';
-                    }, 200);
-                } else {
-                    message.innerHTML = `Upload failed with status ${xhr.status}`;
-                    document.getElementById('uploadButton').disabled = false;
-                }
-            };
-
-            // Handle errors
-            xhr.onerror = function () {
-                console.error('Error during upload');
-            };
-
-            // Open and send the request
-            xhr.open('POST', '/Data/upload-file', true);
-            xhr.send(formData);
-
-        });
+        var VALID_EXTENSIONS = ["csv"];
     </script>
+    <script type="module" nonce="owned-assets" asp-append-version="true" src="/dist/file-upload.js"></script>
 }
