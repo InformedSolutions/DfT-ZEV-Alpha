@@ -57,7 +57,10 @@
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     progressBar.value = 100;
-                    window.location.href = '/Data/upload-success';
+                    
+                    setTimeout(function () {
+                        window.location.href = '/Data/upload-success';
+                    }, 200);
                 } else {
                     message.innerHTML = `Upload failed with status ${xhr.status}`;
                     document.getElementById('uploadButton').disabled = false;
