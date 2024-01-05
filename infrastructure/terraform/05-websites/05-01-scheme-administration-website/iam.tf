@@ -45,3 +45,9 @@ resource "google_secret_manager_secret_iam_member" "identity_platform_api_key_se
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.scheme_administration_portal.email}"
 }
+
+resource "google_storage_bucket_iam_member" "safe_uploaded_files" {
+  bucket = data.terraform_remote_state.backends.outputs.app_data_buckets.manufacturer_portal_uploads_safe_id
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.scheme_administration_portal.email}"
+}

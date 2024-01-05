@@ -62,6 +62,11 @@ resource "google_cloud_run_v2_service" "manufacturer_portal" {
       }
 
       env {
+        name  = "Buckets__PortalUploadsUnscanned"
+        value = data.terraform_remote_state.backends.outputs.app_data_buckets.manufacturer_portal_uploads_unscanned_id
+      }
+
+      env {
         name  = "GoogleCloud__ProjectId"
         value = var.project
       }

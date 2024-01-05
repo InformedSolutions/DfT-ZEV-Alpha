@@ -62,6 +62,11 @@ resource "google_cloud_run_v2_service" "scheme_administration_portal" {
       }
 
       env {
+        name  = "Buckets__PortalUploadsSafe"
+        value = data.terraform_remote_state.backends.outputs.app_data_buckets.manufacturer_portal_uploads_safe_id
+      }
+
+      env {
         name  = "Services__OrganisationApiBaseUrl"
         value = data.terraform_remote_state.organisation_api.outputs.service_url
       }

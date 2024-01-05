@@ -24,7 +24,9 @@ output "cloud_function_packages_bucket_name" {
 output "app_data_buckets" {
   description = "The names of the buckets used to store application data"
   value = {
-    manufacturer_data_bucket_id = google_storage_bucket.manufacturer_data.id
+    manufacturer_data_bucket_id              = google_storage_bucket.manufacturer_data.id
+    manufacturer_portal_uploads_unscanned_id = google_storage_bucket.manufacturer_portal_uploads_unscanned.id
+    manufacturer_portal_uploads_safe_id      = google_storage_bucket.manufacturer_portal_uploads_safe.id
   }
 }
 
