@@ -4,11 +4,13 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <h2 class="govuk-heading-s">
-            <a class="govuk-link" asp-action="Index" asp-controller="Home">Placeholder</a>
+    <div class="">
+        <h2 class="govuk-heading-l">
+            Upload vehicle data
         </h2>
-       
+        <p class="govuk-body">
+            Your data must be saved as a CSV file and be formatted according to the <a href="">data rules</a>. You should read data rules before you upload a file to avoid errors.
+        </p>
         <form id="uploadForm" enctype="multipart/form-data" method="post">
             <govuk-file-upload name="FileUpload1">
                 <govuk-file-upload-label>Upload a file</govuk-file-upload-label>
@@ -32,7 +34,8 @@
     <script nonce="owned-assets">
         document.getElementById('uploadButton').addEventListener('click', function (e) {
             e.preventDefault();
-            console.log("uploadButton clicked");
+            
+            document.getElementById('uploadButton').disabled = true;
 
             var formData = new FormData(document.getElementById('uploadForm'));
             var progressBar = document.getElementById('progressBar');
@@ -45,7 +48,7 @@
             xhr.upload.addEventListener('progress', function (event) {
                 if (event.lengthComputable) {
                     var percentComplete = (event.loaded / event.total) * 100;
-                    console.log(percentComplete);
+                    percentComplete = Math.min(percentComplete, 90);
                     progressBar.value = percentComplete;
                 }
             });
@@ -53,11 +56,11 @@
             // Handle successful upload
             xhr.onload = function () {
                 if (xhr.status === 200) {
-                    console.log('Upload successful');
-                    message.innerHTML = 'Upload successful';
+                    progressBar.value = 100;
+                    window.location.href = '/Data/upload-success';
                 } else {
-                    console.error(`Upload failed with status ${xhr.status}`);
                     message.innerHTML = `Upload failed with status ${xhr.status}`;
+                    document.getElementById('uploadButton').disabled = false;
                 }
             };
 
@@ -67,7 +70,7 @@
             };
 
             // Open and send the request
-            xhr.open('POST', '/Data/UploadFile', true);
+            xhr.open('POST', '/Data/upload-file', true);
             xhr.send(formData);
 
         });

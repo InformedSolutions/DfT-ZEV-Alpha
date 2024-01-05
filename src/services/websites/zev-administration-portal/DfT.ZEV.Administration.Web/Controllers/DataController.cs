@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace DfT.ZEV.Administration.Web.Controllers;
 
+[Route("data")]
 public class DataController : Controller
 {
     private readonly IOptions<BucketsConfiguration> _bucketOptions;
@@ -17,13 +18,19 @@ public class DataController : Controller
         _storageService = storageService;
     }
 
-    // GET
+    [HttpGet("upload")]
     public IActionResult Index()
     {
         return View();
     }
     
-    [HttpPost]
+    [HttpGet("upload-success")]
+    public IActionResult UploadSuccess()
+    {
+        return View();
+    }
+    
+    [HttpPost("upload-file")]
     public async Task<IActionResult> UploadFile()
     {
         var file = Request.Form.Files[0];
