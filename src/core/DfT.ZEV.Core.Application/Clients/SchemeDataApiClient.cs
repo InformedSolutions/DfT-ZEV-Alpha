@@ -10,7 +10,6 @@ namespace DfT.ZEV.Core.Application;
 /// </summary>
 public class SchemeDataApiClient : BaseHttpClient
 {
-
   /// <summary>
   /// Initializes a new instance of the <see cref="SchemeDataApiClient"/> class.
   /// </summary>
@@ -21,7 +20,7 @@ public class SchemeDataApiClient : BaseHttpClient
     HttpClient httpClient,
     ILogger<BaseHttpClient> logger,
     IHttpContextAccessor httpContextAccessor
-    ) : base(httpClient, logger, httpContextAccessor)
+  ) : base(httpClient, logger, httpContextAccessor)
   { }
 
   /// <summary>
@@ -31,7 +30,9 @@ public class SchemeDataApiClient : BaseHttpClient
   /// <param name="pageNumber">The page number.</param>
   /// <param name="pageSize">The page size.</param>
   /// <returns>A task that represents the asynchronous operation. The task result contains the vehicles.</returns>
-  public async Task<GetVehiclesByManufacturerIdQueryDto> GetVehiclesByManufacturerIdAsync(Guid manufacturerId, int pageNumber, int pageSize)
-    => await GetAsync<GetVehiclesByManufacturerIdQueryDto>($"vehicles?manufacturerId={manufacturerId}&pageNumber={pageNumber}&pageSize={pageSize}");
-
+  public async Task<GetVehiclesByManufacturerIdQueryDto> GetVehiclesByManufacturerIdAsync(Guid manufacturerId,
+    int pageNumber, int pageSize)
+    => await GetAsync<GetVehiclesByManufacturerIdQueryDto>(
+      $"vehicles?manufacturerId={manufacturerId}&pageNumber={pageNumber}&pageSize={pageSize}");
+  
 }

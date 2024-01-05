@@ -1,5 +1,5 @@
 using DfT.ZEV.Common.Configuration;
-using DfT.ZEV.Common.Services;
+using DfT.ZEV.Common.Notifications;
 using DfT.ZEV.Core.Domain.Abstractions;
 using DfT.ZEV.Core.Domain.Accounts.Services;
 using DfT.ZEV.Core.Domain.Manufacturers.Services;
@@ -8,6 +8,7 @@ using DfT.ZEV.Core.Domain.Processes.Services;
 using DfT.ZEV.Core.Domain.Vehicles.Services;
 using DfT.ZEV.Core.Infrastructure.Persistence;
 using DfT.ZEV.Core.Infrastructure.Repositories;
+using DfT.ZEV.Core.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfT.ZEV.Core.Infrastructure;
@@ -27,6 +28,8 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
+        services.AddTransient<IStorageService, StorageService>();
+        services.AddTransient<INotificationService, NotificationService>();
     }
 
     public static void AddDbContext(this IServiceCollection services, PostgresConfiguration configuration)

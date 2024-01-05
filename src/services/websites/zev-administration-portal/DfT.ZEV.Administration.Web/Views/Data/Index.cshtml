@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Upload File";
+    ViewData["ActivePage"] = "Upload File";
+}
+  <link rel="stylesheet" href="~/dist/file-upload-css.css" nonce="owned-assets" asp-append-version="true">
+
+<partial name="_ErrorSummary"/>
+
+
+<h2 class="govuk-heading-l">
+    Upload Vehicle Data
+</h2>
+<p class="govuk-body">
+    Your data must be saved as a CSV file and be formatted according to the <a href="#">data rules</a>. Please read the data rules before uploading a file to avoid errors.
+</p>
+<form id="uploadForm" class="async-upload-form" enctype="multipart/form-data" method="post">
+    <govuk-file-upload input-class="async-upload-input" name="FileUpload">
+        <govuk-file-upload-label>Upload a File</govuk-file-upload-label>
+    </govuk-file-upload>
+    <govuk-button id="uploadButton" class="async-upload-submit" data-test="upload">Upload</govuk-button>
+</form>
+<div class="submit-stage-container">
+    <div class="submit-stage-data">
+        <p class="async-upload-file-name"></p>
+        <div class="upload-status-container">
+            <p class="async-upload-progress-text"></p>
+            <progress id="progressBar" class="async-upload-progress" value="0" max="100"></progress>
+        </div>
+        <govuk-tag class="uploaded-status">UPLOADED</govuk-tag>
+    </div>
+    <div class="submit-stage-actions">
+        <govuk-button id="submitButton" class="submit-file-button">Submit File</govuk-button>
+        <a class="cancel-file-upload" href="#">Cancel Upload</a>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script nonce="owned-assets">
+        var VALID_EXTENSIONS = ["csv"];
+    </script>
+    <script type="module" nonce="owned-assets" asp-append-version="true" src="/dist/file-upload.js"></script>
+}

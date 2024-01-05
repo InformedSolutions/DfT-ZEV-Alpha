@@ -19,8 +19,10 @@ using GovUk.Frontend.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,17 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = int.MaxValue;
+        });
+        
+        services.Configure<FormOptions>(x =>
+        {
+            x.ValueLengthLimit = int.MaxValue;
+            x.MultipartBodyLengthLimit = int.MaxValue;
+            x.MultipartHeadersLengthLimit = int.MaxValue;
+        });
         if (Configuration.GetSection("BasicAuth").GetValue<bool>("IsEnabled"))
         {
             services.AddBasicAuthentication();
@@ -131,7 +144,7 @@ public class Startup
 
         // Register the TagHelperComponent
         services.AddTransient<ITagHelperComponent, GoogleAnalyticsTagHelperComponent>();
-
+        services.ConfigureBucketSettings(Configuration);
         services.AddAuthServices();
     }
 

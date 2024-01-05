@@ -58,4 +58,8 @@
     <ProjectReference Include="..\DfT.ZEV.ManufacturerReview.Infrastructure\DfT.ZEV.ManufacturerReview.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Data\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

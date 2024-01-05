@@ -24,6 +24,8 @@ using DfT.ZEV.Core.Application;
 using DfT.ZEV.Core.Application.Clients;
 using DfT.ZEV.Core.Infrastructure;
 using DfT.ZEV.Core.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfT.ZEV.ManufacturerReview.Web;
@@ -43,6 +45,17 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.Configure<KestrelServerOptions>(options =>
+        {
+            options.Limits.MaxRequestBodySize = int.MaxValue;
+        });
+        
+        services.Configure<FormOptions>(x =>
+        {
+            x.ValueLengthLimit = int.MaxValue;
+            x.MultipartBodyLengthLimit = int.MaxValue;
+            x.MultipartHeadersLengthLimit = int.MaxValue;
+        });
         if (Configuration.GetSection("BasicAuth").GetValue<bool>("IsEnabled"))
         {
             services.AddBasicAuthentication();
@@ -125,7 +138,7 @@ public class Startup
 
         // Register the TagHelperComponent
         services.AddTransient<ITagHelperComponent, GoogleAnalyticsTagHelperComponent>();
-
+        services.ConfigureBucketSettings(Configuration);
         services.AddAuthServices();
     }
 
