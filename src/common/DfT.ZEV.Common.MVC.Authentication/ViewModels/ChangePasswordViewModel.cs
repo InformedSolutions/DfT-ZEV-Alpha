@@ -12,6 +12,8 @@ public class ChangePasswordViewModel
     public string OldPassword { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
+    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{12,}$", 
+        ErrorMessage = AuthErrorMessages.PasswordNotValid)]
     public string Password { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]

@@ -13,6 +13,7 @@ public static class AuthErrorMessages
     public const string NewPasswordEmpty = "Enter your new password";
 
     public const string PasswordsMustMatch = "Password and password confirmation must be the same";
+    public const string PasswordNotValid = "Password must be at least 12 characters long, have at least one uppercase letter, one number, and one special character.";
 
     public const string PasswordUsed = "You have already used that password, choose a new one";
 

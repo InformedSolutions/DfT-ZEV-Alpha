@@ -17,6 +17,8 @@ public class ForgottenPasswordChangeViewModel
     public string Token { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
+    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{12,}$", 
+        ErrorMessage = AuthErrorMessages.PasswordNotValid)]
     public string Password { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
