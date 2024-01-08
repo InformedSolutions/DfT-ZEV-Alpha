@@ -12,7 +12,7 @@ public class SetInitialPasswordViewModel
     //public string TemporaryPassword { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
-    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{12,}$", 
+    [RegularExpression(ValidationExpressions.PasswordRequirements, 
         ErrorMessage = AuthErrorMessages.PasswordNotValid)]
     public string Password { get; set; }
 
