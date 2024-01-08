@@ -31,4 +31,11 @@ public interface IGoogleIdentityApiClient
     /// <param name="passwordChangeRequest">The password change request.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task ChangePasswordWithToken(PasswordChangeWithTokenRequest passwordChangeRequest);
+    
+    /// <summary>
+    ///  Changes the password with the old password.
+    /// </summary>
+    /// <param name="passwordChangeRequest"></param>
+    /// <returns></returns>
+    Task ChangePasswordWithOldPassword(PasswordChangeWithPasswordRequest passwordChangeRequest);
 }
