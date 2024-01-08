@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DfT.ZEV.Common.Models;
 using DfT.ZEV.Common.MVC.Authentication.Attributes;
 using DfT.ZEV.Common.MVC.Authentication.ViewModels;
@@ -133,6 +134,22 @@ public partial class AccountController : Controller
     public IActionResult ChangePassword()
     {
         return View();
+    }
+    
+    [UserPasswordManagement]
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePasswordFinish(ChangePasswordViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(viewModel);
+        }
+
+        var userEmail = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "email").Value;
+        await _identityPlatform.ChangePasswordAsync(userEmail,viewModel.OldPassword, viewModel.Password, _googleOptions.Value.Tenancy.AppTenant);
+
+        return RedirectToAction(nameof(SignIn), "Account", new { message = "PasswordChangedSuccess" });
     }
 
     #endregion
