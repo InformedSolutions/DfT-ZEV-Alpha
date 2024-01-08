@@ -96,6 +96,19 @@ public class GoogleIdentityApiClient : IGoogleIdentityApiClient
             throw new ApplicationException($"Google API returned status code {result.StatusCode}");
         }
     }
+    
+    /// <inheritdoc/>
+    public async Task ChangePasswordWithOldPassword(PasswordChangeWithPasswordRequest passwordChangeRequest)
+    {
+        await ConfigureHttpClient();
+        var requestJson = SerialiseToCamelCaseJson(passwordChangeRequest);
+        var result = await _httpClient.PostAsync(ResetPasswordApiUrl, new StringContent(requestJson, Encoding.UTF8, "application/json"));
+
+        if (result.StatusCode != HttpStatusCode.OK)
+        {
+            throw new ApplicationException($"Google API returned status code {result.StatusCode}");
+        }
+    }
 
     /// <summary>
     /// Private helper to serialise to camel case JSON.
