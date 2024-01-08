@@ -115,6 +115,20 @@ internal sealed class IdentityPlatform : IIdentityPlatform
         await _googleIdentityApiClient.ChangePasswordWithToken(request);
     }
 
+    /// <inheritdoc/>
+    public async Task ChangePasswordAsync(string email, string oldPassword, string newPassword, string tenantId)
+    {
+        var request = new PasswordChangeWithPasswordRequest
+        {
+            Email = email,
+            OldPassword = oldPassword,
+            NewPassword = newPassword,
+            TenantId = tenantId
+        };
+        
+        await _googleIdentityApiClient.ChangePasswordWithOldPassword(request);
+    }
+
     /// <inheritdocs/>
     public async Task DeleteUserAsync(Guid userId, string tenantId)
     {

@@ -68,4 +68,14 @@ public interface IIdentityPlatform
     /// <param name="tenantId">The tenant's identifier.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task ChangePasswordAsync(string oobCode, string newPassword, string tenantId);
+    
+    /// <summary>
+    /// Change the user's password with the specified old password, new password, and tenant ID.
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="oldPassword"></param>
+    /// <param name="newPassword"></param>
+    /// <param name="tenantId"></param>
+    /// <returns></returns>
+    public Task ChangePasswordAsync(string email,string oldPassword, string newPassword, string tenantId);
 }
