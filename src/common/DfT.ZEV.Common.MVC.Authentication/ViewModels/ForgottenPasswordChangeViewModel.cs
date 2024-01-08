@@ -17,6 +17,8 @@ public class ForgottenPasswordChangeViewModel
     public string Token { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
+    [RegularExpression(ValidationExpressions.PasswordRequirements, 
+        ErrorMessage = AuthErrorMessages.PasswordNotValid)]
     public string Password { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]

@@ -20,6 +20,8 @@ public class ChangeExpiredPasswordViewModel
     public string OldPassword { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
+    [RegularExpression(ValidationExpressions.PasswordRequirements, 
+        ErrorMessage = AuthErrorMessages.PasswordNotValid)]
     public string Password { get; set; }
 
     [Required(ErrorMessage = AuthErrorMessages.NewPasswordEmpty)]
